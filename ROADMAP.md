@@ -171,6 +171,17 @@ untracked — ADR-011); hero holds 60 fps desktop / ≥ 30 fps mid-tier mobile
 and idles when off-screen; reduced-motion audit passes; every animation on the page is
 engine-rendered or CSS (no video files, no Lottie).
 
+**✅ Done 2026-07-21.** Full landing built: sticky navbar; **Three.js/R3F WebGL hero** (custom
+fbm-noise pastel gradient shader + floating glossy pebbles + pointer parallax, native fullscreen
+quad + float — no drei) with an inline **live T01 rendered by the engine** ("the site demos its
+own engine"); reduced-motion / no-WebGL static-CSS-gradient fallback; marquee template rail;
+how-it-works; why-it's-free comparison table; feature grid; filterable gallery teaser (deep-links
+into the Studio); FAQ accordion; footer with clear-data. **Landing initial 80 kB brotli** (Pixi +
+Three both fully lazy after first paint); hero chunk 192 kB brotli (lazy — Three.js floor). 3
+landing smoke tests pass; every page animation is engine-rendered or CSS (no video/Lottie).
+Budget note: the ≤180 kB-gz hero target is superseded by ~192 kB brotli — the irreducible cost of a
+real Three.js hero, and it never blocks first paint. OG image + Lighthouse run deferred to Phase 6.
+
 ## Phase 6 — Hardening & release ⏳ *(~0.5–1 week)*
 
 **Goal:** ship v1.0 rock-solid to its real audience — the owner, friends and family (ADR-011).
@@ -244,7 +255,7 @@ rendering, AI credits, dark mode.
 | Phase 2 Export | ✅ 2026-07-21 |
 | Phase 3 Studio UI | ✅ 2026-07-21 |
 | Phase 4 Templates | ✅ 2026-07-21 — 12/12 |
-| Phase 5 Landing | ⏳ not started |
+| Phase 5 Landing | ✅ 2026-07-21 |
 | Phase 6 Launch | ⏳ not started |
 
 *(Update this table + CHANGELOG.md at every phase transition.)*

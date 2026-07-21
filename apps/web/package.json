@@ -16,11 +16,13 @@
     "@fontsource/space-grotesk": "^5.3.0",
     "@jima/engine": "workspace:*",
     "@jima/templates": "workspace:*",
+    "@react-three/fiber": "^9.6.1",
     "mediabunny": "^1.50.9",
     "pixi.js": "^8.19.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1",
+    "three": "^0.185.1",
     "zustand": "^5.0.14"
   },
   "devDependencies": {
@@ -28,6 +30,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
+    "@types/three": "^0.185.1",
     "@vitejs/plugin-react": "^6.0.3",
     "size-limit": "^11.1.6",
     "tailwindcss": "^4.3.3",
@@ -36,12 +39,14 @@
   },
   "size-limit": [
     {
-      "name": "app shell (React + Router + landing route, excl. lazy studio/hero)",
-      "path": [
-        "dist/assets/index-*.js",
-        "dist/assets/Landing-*.js"
-      ],
-      "limit": "220 kB"
+      "name": "landing initial (app shell + landing route, excl. lazy engine/hero)",
+      "path": ["dist/assets/index-*.js", "dist/assets/Landing-*.js"],
+      "limit": "160 kB"
+    },
+    {
+      "name": "hero WebGL chunk (lazy three.js, loads after first paint)",
+      "path": ["dist/assets/HeroBackground-*.js"],
+      "limit": "250 kB"
     }
   ]
 }

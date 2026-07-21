@@ -94,8 +94,18 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 - Golden suite now covers all 12 templates × 4 aspects (48 poster frames) + 12 determinism
   re-seek tests, stable across two runs
 
+### Added — Phase 5 · Landing page (2026-07-21)
+- Sticky navbar; **Three.js/R3F WebGL hero** — custom fbm-noise pastel gradient shader + floating
+  glossy pebbles + pointer parallax (native fullscreen quad + float, drei dropped); inline **live
+  T01 rendered by the engine**; reduced-motion / no-WebGL static-gradient fallback
+- Marquee template rail, how-it-works, why-it's-free comparison table, feature grid, filterable
+  gallery teaser (deep-links into the Studio), FAQ accordion, footer with clear-data
+- Engine (Pixi) and Three.js are both lazy-loaded after first paint — landing initial 80 kB brotli;
+  hero chunk 192 kB brotli (lazy). Every page animation is engine-rendered or CSS (no video/Lottie)
+- 3 landing smoke tests (CTA → Studio, gallery deep-link, FAQ accordion)
+
 ### Planned
-- Phase 5 — Landing page: Three.js/WebGL hero, light-mode brand site
+- Phase 6 — Hardening & release: cross-browser QA, DE/contrast template audit, a11y sweep, v1.0.0
 - Phase 6 — Hardening & release: QA matrix, performance budgets, private release
 
 ## [0.1.1] — 2026-07-21 · Owner decisions folded in
