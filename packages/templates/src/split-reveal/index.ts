@@ -48,6 +48,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const textColor = str(values.textColor, pc("textColor", "#101014"));
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
   const headline = str(values.headline, "Split and reveal");
+  const showAccentBar = values.accentBar !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
   const L = layout(ctx.aspect);
@@ -115,16 +116,18 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const bottom = Math.max(...boxes.map((b) => b.cy)) + fontSize * 0.74;
   const left = Math.min(...boxes.map((b) => b.cx - b.width / 2));
   const right = Math.max(...boxes.map((b) => b.cx + b.width / 2));
-  const ruleW = right - left;
-  const rule = new Graphics().roundRect(-ruleW / 2, 0, ruleW, Math.max(3, fontSize * 0.06), 2).fill(accent);
-  rule.position.set((left + right) / 2, bottom);
-  rule.alpha = 0;
-  rule.scale.set(0, 1);
-  root.addChild(rule);
   const ruleStart = 0.35 + (lineIndices.length - 1) * 0.16 + 0.7;
-  timeline
-    .to(rule, { prop: "alpha", from: 0, to: 1, start: ruleStart, duration: 0.5, ease: outCubic })
-    .to(rule, { prop: "scale.x", from: 0, to: 1, start: ruleStart, duration: 0.7, ease: outExpo });
+  if (showAccentBar) {
+    const ruleW = right - left;
+    const rule = new Graphics().roundRect(-ruleW / 2, 0, ruleW, Math.max(3, fontSize * 0.06), 2).fill(accent);
+    rule.position.set((left + right) / 2, bottom);
+    rule.alpha = 0;
+    rule.scale.set(0, 1);
+    root.addChild(rule);
+    timeline
+      .to(rule, { prop: "alpha", from: 0, to: 1, start: ruleStart, duration: 0.5, ease: outCubic })
+      .to(rule, { prop: "scale.x", from: 0, to: 1, start: ruleStart, duration: 0.7, ease: outExpo });
+  }
 
   return { timeline, duration: Math.max(3.6, ruleStart + 0.7 + 0.8) };
 }
@@ -141,6 +144,7 @@ export const splitReveal: TemplateDefinition = {
   palettes: PALETTES,
   fields: [
     { key: "headline", type: "text", label: "Headline", default: "Split and reveal", maxLength: 60, shrinkToFit: true },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

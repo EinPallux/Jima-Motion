@@ -186,19 +186,22 @@ function build(ctx: TemplateContext): BuiltTemplate {
   });
 
   // A short accent underline sweeps in beneath the keyword (per line it spans).
-  emphByLine.forEach((lineBoxes) => {
-    const left = Math.min(...lineBoxes.map((b) => b.cx - b.width / 2));
-    const right = Math.max(...lineBoxes.map((b) => b.cx + b.width / 2));
-    const cyLine = lineBoxes[0]!.cy;
-    const uy = cyLine + fontSize * 0.6;
-    const uw = right - left;
-    const uh = Math.max(3, fontSize * 0.07);
-    const u = new Graphics().roundRect(0, 0, uw, uh, uh / 2).fill(accent);
-    u.position.set(left, uy);
-    u.scale.set(0, 1);
-    content.addChild(u);
-    timeline.to(u, { prop: "scale.x", from: 0, to: 1, start: POP_START - 0.1, duration: 0.6, ease: outExpo });
-  });
+  const showAccentBar = values.accentBar !== false;
+  if (showAccentBar) {
+    emphByLine.forEach((lineBoxes) => {
+      const left = Math.min(...lineBoxes.map((b) => b.cx - b.width / 2));
+      const right = Math.max(...lineBoxes.map((b) => b.cx + b.width / 2));
+      const cyLine = lineBoxes[0]!.cy;
+      const uy = cyLine + fontSize * 0.6;
+      const uw = right - left;
+      const uh = Math.max(3, fontSize * 0.07);
+      const u = new Graphics().roundRect(0, 0, uw, uh, uh / 2).fill(accent);
+      u.position.set(left, uy);
+      u.scale.set(0, 1);
+      content.addChild(u);
+      timeline.to(u, { prop: "scale.x", from: 0, to: 1, start: POP_START - 0.1, duration: 0.6, ease: outExpo });
+    });
+  }
 
   return { timeline, duration: 3.6 };
 }
@@ -216,6 +219,7 @@ export const emphasisLine: TemplateDefinition = {
   fields: [
     { key: "text", type: "text", label: "Text", default: "Your posts deserve better motion", maxLength: 80, shrinkToFit: true },
     { key: "emphasis", type: "text", label: "Emphasis", default: "better motion", maxLength: 30 },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

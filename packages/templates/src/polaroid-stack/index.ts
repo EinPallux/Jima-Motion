@@ -79,6 +79,7 @@ function makePolaroid(
   muted: string,
   accent: string,
   placeholder: string,
+  showAccentDot: boolean,
 ): Container {
   const card = new Container();
   const r = cardW * 0.02;
@@ -117,11 +118,13 @@ function makePolaroid(
   card.addChild(cap);
 
   // Accent "pin" on the top border.
-  const pinR = cardW * 0.035;
-  const pin = new Graphics().circle(0, 0, pinR).fill(accent);
-  pin.circle(-pinR * 0.32, -pinR * 0.32, pinR * 0.32).fill({ color: 0xffffff, alpha: 0.5 });
-  pin.position.set(0, -cardH / 2 + border * 0.42);
-  card.addChild(pin);
+  if (showAccentDot) {
+    const pinR = cardW * 0.035;
+    const pin = new Graphics().circle(0, 0, pinR).fill(accent);
+    pin.circle(-pinR * 0.32, -pinR * 0.32, pinR * 0.32).fill({ color: 0xffffff, alpha: 0.5 });
+    pin.position.set(0, -cardH / 2 + border * 0.42);
+    card.addChild(pin);
+  }
 
   return card;
 }
@@ -145,6 +148,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const placeholder = pc("placeholder", "#ECE4DA");
   const caps = captionList(values);
   const N = caps.length;
+  const showAccentDot = values.accentDot !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -175,7 +179,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
     const startRot = finalRot + rng.range(7, 12) * DEG;
     const startY = finalY - h * 0.16;
 
-    const card = makePolaroid(fonts, photos[i] ?? null, caps[i] ?? "", cardW, cardH, border, photoSide, captionColor, cardC, muted, accent, placeholder);
+    const card = makePolaroid(fonts, photos[i] ?? null, caps[i] ?? "", cardW, cardH, border, photoSide, captionColor, cardC, muted, accent, placeholder, showAccentDot);
     card.position.set(finalX, startY);
     card.rotation = startRot;
     card.alpha = 0;
@@ -208,6 +212,7 @@ export const polaroidStack: TemplateDefinition = {
     { key: "photo2", type: "image", label: "Photo 2", default: "", optional: true },
     { key: "photo3", type: "image", label: "Photo 3", default: "", optional: true },
     { key: "photo4", type: "image", label: "Photo 4", default: "", optional: true },
+    { key: "accentDot", type: "toggle", label: "Accent dot", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Caption", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

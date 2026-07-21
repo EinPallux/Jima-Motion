@@ -52,6 +52,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
   const headline = str(values.headline, "Say it softly, and let it move.");
   const subline = str(values.subline, "");
+  const showAccentBar = values.accentBar !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
   const L = layout(ctx.aspect);
@@ -90,15 +91,17 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const right = Math.max(...boxes.map((b) => b.cx + b.width / 2));
   const lineW = Math.min(right - left, size.width * 0.2);
   const cxMid = (left + right) / 2;
-  const accentLine = new Graphics().roundRect(-lineW / 2, 0, lineW, Math.max(3, fontSize * 0.06), 2).fill(accent);
-  accentLine.position.set(cxMid, bottom);
-  accentLine.alpha = 0;
-  accentLine.scale.set(0.4, 1);
-  content.addChild(accentLine);
   const lineStart = 0.3 + boxes.length * 0.12 + 0.1;
-  timeline
-    .to(accentLine, { prop: "alpha", from: 0, to: 1, start: lineStart, duration: 0.6, ease: outCubic })
-    .to(accentLine, { prop: "scale.x", from: 0.4, to: 1, start: lineStart, duration: 0.7, ease: outExpo });
+  if (showAccentBar) {
+    const accentLine = new Graphics().roundRect(-lineW / 2, 0, lineW, Math.max(3, fontSize * 0.06), 2).fill(accent);
+    accentLine.position.set(cxMid, bottom);
+    accentLine.alpha = 0;
+    accentLine.scale.set(0.4, 1);
+    content.addChild(accentLine);
+    timeline
+      .to(accentLine, { prop: "alpha", from: 0, to: 1, start: lineStart, duration: 0.6, ease: outCubic })
+      .to(accentLine, { prop: "scale.x", from: 0.4, to: 1, start: lineStart, duration: 0.7, ease: outExpo });
+  }
 
   let end = lineStart + 0.7;
   if (subline.length > 0) {
@@ -130,6 +133,7 @@ export const fadeCascade: TemplateDefinition = {
   fields: [
     { key: "headline", type: "text", label: "Headline", default: "Say it softly, and let it move.", maxLength: 70, shrinkToFit: true },
     { key: "subline", type: "text", label: "Subline", default: "Made in Jima Studio", maxLength: 80, optional: true },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

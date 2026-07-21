@@ -91,6 +91,7 @@ function makeCard(
   muted: string,
   tileC: string,
   borderC: string,
+  showFrame: boolean,
 ): Container {
   const card = new Container();
   const { w, h } = rect;
@@ -122,7 +123,9 @@ function makeCard(
     card.addChild(new Graphics().roundRect(-w * 0.26, h * 0.26, w * 0.52, Math.max(4, h * 0.05), h * 0.025).fill({ color: muted, alpha: 0.5 }));
   }
   // Hairline border.
-  card.addChild(new Graphics().roundRect(-w / 2, -h / 2, w, h, r).stroke({ color: borderC, width: Math.max(1, w * 0.006), alpha: 0.4 }));
+  if (showFrame) {
+    card.addChild(new Graphics().roundRect(-w / 2, -h / 2, w, h, r).stroke({ color: borderC, width: Math.max(1, w * 0.006), alpha: 0.4 }));
+  }
   return card;
 }
 
@@ -157,10 +160,11 @@ function build(ctx: TemplateContext): BuiltTemplate {
 
   const rects = cardRects(size, cfg);
   const imgs: (Texture | null)[] = [images.image1 ?? null, images.image2 ?? null, images.image3 ?? null, images.image4 ?? null];
+  const showFrame = values.frame !== false;
 
   rects.forEach((rect, i) => {
     const r = Math.min(rect.w, rect.h) * 0.09;
-    const card = makeCard(imgs[i] ?? null, rect, r, accent, muted, tileC, textColor);
+    const card = makeCard(imgs[i] ?? null, rect, r, accent, muted, tileC, textColor, showFrame);
     const off = rect.h * 0.14;
     card.position.set(rect.cx, rect.cy + off);
     card.scale.set(0);
@@ -224,6 +228,7 @@ export const galleryStrip: TemplateDefinition = {
     { key: "image3", type: "image", label: "Image 3", default: "", optional: true },
     { key: "image4", type: "image", label: "Image 4", default: "", optional: true },
     { key: "caption", type: "text", label: "Caption", default: "", maxLength: 40, optional: true },
+    { key: "frame", type: "toggle", label: "Frame", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

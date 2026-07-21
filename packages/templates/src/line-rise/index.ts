@@ -33,6 +33,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
   const headline = str(values.headline, "Rise into view, line by line.");
   const align = str(values.align, "left") === "center" ? "center" : "left";
+  const showAccentBar = values.accentBar !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -82,13 +83,15 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const bottom = Math.max(...boxes.map((b) => b.cy)) + fontSize * 0.7;
   const left = Math.min(...boxes.map((b) => b.cx - b.width / 2));
   const right = Math.max(...boxes.map((b) => b.cx + b.width / 2));
-  const rule = new Graphics().roundRect(left, bottom, right - left, Math.max(3, fontSize * 0.07), 2).fill(accent);
-  rule.pivot.set(align === "left" ? left : (left + right) / 2, 0);
-  rule.position.set(align === "left" ? left : (left + right) / 2, 0);
-  rule.scale.set(0, 1);
-  root.addChild(rule);
   const ruleStart = 0.35 + lineIndices.length * 0.2 + 0.1;
-  timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: ruleStart, duration: 0.7, ease: outCubic });
+  if (showAccentBar) {
+    const rule = new Graphics().roundRect(left, bottom, right - left, Math.max(3, fontSize * 0.07), 2).fill(accent);
+    rule.pivot.set(align === "left" ? left : (left + right) / 2, 0);
+    rule.position.set(align === "left" ? left : (left + right) / 2, 0);
+    rule.scale.set(0, 1);
+    root.addChild(rule);
+    timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: ruleStart, duration: 0.7, ease: outCubic });
+  }
 
   return { timeline, duration: Math.max(3.0, ruleStart + 1.2) };
 }
@@ -106,6 +109,7 @@ export const lineRise: TemplateDefinition = {
   fields: [
     { key: "headline", type: "text", label: "Headline", default: "Rise into view, line by line.", maxLength: 80, shrinkToFit: true },
     { key: "align", type: "select", label: "Align", default: "left", options: [{ value: "left", label: "Left" }, { value: "center", label: "Center" }] },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

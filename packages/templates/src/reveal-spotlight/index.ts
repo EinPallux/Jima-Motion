@@ -66,7 +66,7 @@ function wrapAndFit(
 }
 
 /** The product: a cover-fit masked image in a lit frame, or a lit silhouette. */
-function productReveal(pv: number, tex: Texture | null, light: string, accent: string): Container {
+function productReveal(pv: number, tex: Texture | null, light: string, accent: string, showFrame: boolean): Container {
   const c = new Container();
   const glow = new Sprite(radialGlowTexture());
   glow.anchor.set(0.5);
@@ -84,7 +84,9 @@ function productReveal(pv: number, tex: Texture | null, light: string, accent: s
     const mask = new Graphics().roundRect(-side / 2, -side / 2, side, side, r).fill(0xffffff);
     c.addChild(s, mask);
     s.mask = mask;
-    c.addChild(new Graphics().roundRect(-side / 2, -side / 2, side, side, r).stroke({ color: light, width: Math.max(2, pv * 0.008), alpha: 0.5 }));
+    if (showFrame) {
+      c.addChild(new Graphics().roundRect(-side / 2, -side / 2, side, side, r).stroke({ color: light, width: Math.max(2, pv * 0.008), alpha: 0.5 }));
+    }
   } else {
     const bw = pv * 0.46;
     const bh = pv * 0.9;
@@ -130,6 +132,9 @@ function build(ctx: TemplateContext): BuiltTemplate {
 
   const name = str(values.name, "Introducing Aura");
   const tagline = str(values.tagline, "The future, revealed");
+  const showFrame = values.frame !== false;
+  const showSparkles = values.sparkles !== false;
+  const showAccentBar = values.accentBar !== false;
 
   const W = size.width;
   const H = size.height;
@@ -190,7 +195,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   timeline.to(pool, { prop: "alpha", from: 0, to: 0.28, start: 0.7, duration: 0.6, ease: outQuad });
 
   // --- Product: rises into the light ---
-  const product = productReveal(pv, images.product ?? null, light, accent);
+  const product = productReveal(pv, images.product ?? null, light, accent, showFrame);
   product.position.set(cx, productCy + pv * 0.16);
   product.scale.set(0.8);
   product.alpha = 0;
@@ -209,19 +214,21 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const dustBot = productCy + pv * 0.4;
   const span = Math.max(1, dustBot - dustTop);
   const motes: { g: Graphics; x: number; y0: number; speed: number; phase: number; base: number }[] = [];
-  for (let i = 0; i < 9; i++) {
-    const r = minDim * rng.range(0.003, 0.007);
-    const g = new Graphics().circle(0, 0, r).fill(light);
-    g.alpha = 0;
-    root.addChild(g);
-    motes.push({
-      g,
-      x: cx + rng.range(-pv * 0.42, pv * 0.42),
-      y0: rng.range(dustTop, dustBot),
-      speed: span / (DUR * rng.range(1.6, 3.2)),
-      phase: rng.range(0, Math.PI * 2),
-      base: rng.range(0.1, 0.22),
-    });
+  if (showSparkles) {
+    for (let i = 0; i < 9; i++) {
+      const r = minDim * rng.range(0.003, 0.007);
+      const g = new Graphics().circle(0, 0, r).fill(light);
+      g.alpha = 0;
+      root.addChild(g);
+      motes.push({
+        g,
+        x: cx + rng.range(-pv * 0.42, pv * 0.42),
+        y0: rng.range(dustTop, dustBot),
+        speed: span / (DUR * rng.range(1.6, 3.2)),
+        phase: rng.range(0, Math.PI * 2),
+        base: rng.range(0.1, 0.22),
+      });
+    }
   }
 
   // --- Name ---
@@ -237,12 +244,14 @@ function build(ctx: TemplateContext): BuiltTemplate {
   // --- Accent rule + tagline ---
   if (hasTagline) {
     const ruleY = nameY + nameBlockH + ruleGap * 0.5;
-    const ruleW = minDim * 0.12;
-    const rule = new Graphics().roundRect(-ruleW / 2, 0, ruleW, Math.max(3, minDim * 0.006), 3).fill(accent);
-    rule.position.set(cx, ruleY);
-    rule.scale.set(0, 1);
-    root.addChild(rule);
-    timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 1.95, duration: 0.5, ease: outExpo });
+    if (showAccentBar) {
+      const ruleW = minDim * 0.12;
+      const rule = new Graphics().roundRect(-ruleW / 2, 0, ruleW, Math.max(3, minDim * 0.006), 3).fill(accent);
+      rule.position.set(cx, ruleY);
+      rule.scale.set(0, 1);
+      root.addChild(rule);
+      timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 1.95, duration: 0.5, ease: outExpo });
+    }
 
     const taglineY = ruleY + ruleGap * 0.5 + taglineSize * 0.2;
     const taglineText = makeText(fonts, { text: tagline, role: "body", weight: 500, size: taglineSize, color: muted, anchor: { x: 0.5, y: 0 }, align: "center", letterSpacing: 1 });
@@ -283,6 +292,9 @@ export const revealSpotlight: TemplateDefinition = {
     { key: "product", type: "image", label: "Product image", default: "", optional: true, help: "Revealed under the light; a clean product photo works best." },
     { key: "name", type: "text", label: "Name", default: "Introducing Aura", maxLength: 30, shrinkToFit: true },
     { key: "tagline", type: "text", label: "Tagline", default: "The future, revealed", maxLength: 44, optional: true },
+    { key: "frame", type: "toggle", label: "Frame", default: true },
+    { key: "sparkles", type: "toggle", label: "Sparkles", default: true },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

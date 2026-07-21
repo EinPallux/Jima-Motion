@@ -93,6 +93,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const name = str(values.name, "It's here.");
   const cta = str(values.cta, "Shop now");
   const hasCta = cta.length > 0;
+  const showSparkles = values.sparkles !== false;
 
   const W = size.width;
   const H = size.height;
@@ -198,27 +199,31 @@ function build(ctx: TemplateContext): BuiltTemplate {
 
   // Burst ring at the box opening.
   const openY = boxCy - boxH * 0.42;
-  const ring = new Graphics().circle(0, 0, boxW * 0.42).stroke({ color: accent, width: Math.max(3, minDim * 0.012) });
-  ring.position.set(cx, openY);
-  ring.scale.set(0.4);
-  ring.alpha = 0;
-  root.addChild(ring);
-  timeline
-    .to(ring, { prop: "scale.x", from: 0.4, to: 1.7, start: 1.6, duration: 0.7, ease: outExpo })
-    .to(ring, { prop: "scale.y", from: 0.4, to: 1.7, start: 1.6, duration: 0.7, ease: outExpo })
-    .to(ring, { prop: "alpha", from: 0.9, to: 0, start: 1.6, duration: 0.7, ease: outQuad });
+  if (showSparkles) {
+    const ring = new Graphics().circle(0, 0, boxW * 0.42).stroke({ color: accent, width: Math.max(3, minDim * 0.012) });
+    ring.position.set(cx, openY);
+    ring.scale.set(0.4);
+    ring.alpha = 0;
+    root.addChild(ring);
+    timeline
+      .to(ring, { prop: "scale.x", from: 0.4, to: 1.7, start: 1.6, duration: 0.7, ease: outExpo })
+      .to(ring, { prop: "scale.y", from: 0.4, to: 1.7, start: 1.6, duration: 0.7, ease: outExpo })
+      .to(ring, { prop: "alpha", from: 0.9, to: 0, start: 1.6, duration: 0.7, ease: outQuad });
+  }
 
   // Confetti burst (pure f(t) physics).
   const dots: { g: Graphics; vx: number; vy: number }[] = [];
-  for (let i = 0; i < 11; i++) {
-    const s = minDim * rng.range(0.01, 0.02);
-    const g = new Graphics().circle(0, 0, s).fill(rng.pick([accent, textColor]));
-    g.position.set(cx, openY);
-    g.visible = false;
-    root.addChild(g);
-    const a = -Math.PI / 2 + rng.range(-1.05, 1.05);
-    const speed = rng.range(0.5, 0.95) * minDim;
-    dots.push({ g, vx: Math.cos(a) * speed, vy: Math.sin(a) * speed });
+  if (showSparkles) {
+    for (let i = 0; i < 11; i++) {
+      const s = minDim * rng.range(0.01, 0.02);
+      const g = new Graphics().circle(0, 0, s).fill(rng.pick([accent, textColor]));
+      g.position.set(cx, openY);
+      g.visible = false;
+      root.addChild(g);
+      const a = -Math.PI / 2 + rng.range(-1.05, 1.05);
+      const speed = rng.range(0.5, 0.95) * minDim;
+      dots.push({ g, vx: Math.cos(a) * speed, vy: Math.sin(a) * speed });
+    }
   }
   const BURST = 1.6;
   const LIFE = 0.95;
@@ -279,6 +284,7 @@ export const unboxReveal: TemplateDefinition = {
     { key: "product", type: "image", label: "Product image", default: "", optional: true, help: "Rises out of the box; a transparent PNG works best." },
     { key: "name", type: "text", label: "Name", default: "It's here.", maxLength: 28, shrinkToFit: true },
     { key: "cta", type: "text", label: "Button", default: "Shop now", maxLength: 18, optional: true },
+    { key: "sparkles", type: "toggle", label: "Sparkles", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

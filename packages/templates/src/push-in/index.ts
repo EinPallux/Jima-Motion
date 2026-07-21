@@ -126,17 +126,20 @@ function build(ctx: TemplateContext): BuiltTemplate {
   });
 
   // A short accent rule settles in beneath the headline as the push lands.
+  const showAccentBar = values.accentBar !== false;
   const bottom = boxes.length ? Math.max(...boxes.map((b) => b.cy)) + fontSize * 0.72 : centerY;
-  const ruleW = Math.min(size.width * 0.14, fontSize * 2.4);
-  const rule = new Graphics().roundRect(-ruleW / 2, 0, ruleW, Math.max(3, fontSize * 0.055), 2).fill(accent);
-  rule.position.set(cx, bottom);
-  rule.alpha = 0;
-  rule.scale.set(0.3, 1);
-  content.addChild(rule);
   const ruleStart = 1.15;
-  timeline
-    .to(rule, { prop: "alpha", from: 0, to: 1, start: ruleStart, duration: 0.5, ease: outCubic })
-    .to(rule, { prop: "scale.x", from: 0.3, to: 1, start: ruleStart, duration: 0.7, ease: outExpo });
+  if (showAccentBar) {
+    const ruleW = Math.min(size.width * 0.14, fontSize * 2.4);
+    const rule = new Graphics().roundRect(-ruleW / 2, 0, ruleW, Math.max(3, fontSize * 0.055), 2).fill(accent);
+    rule.position.set(cx, bottom);
+    rule.alpha = 0;
+    rule.scale.set(0.3, 1);
+    content.addChild(rule);
+    timeline
+      .to(rule, { prop: "alpha", from: 0, to: 1, start: ruleStart, duration: 0.5, ease: outCubic })
+      .to(rule, { prop: "scale.x", from: 0.3, to: 1, start: ruleStart, duration: 0.7, ease: outExpo });
+  }
 
   let end = ruleStart + 0.7;
   if (subline.length > 0) {
@@ -176,6 +179,7 @@ export const pushIn: TemplateDefinition = {
   fields: [
     { key: "headline", type: "text", label: "Headline", default: "Lean in close", maxLength: 50, shrinkToFit: true },
     { key: "subline", type: "text", label: "Subline", default: "Every detail counts", maxLength: 70, optional: true },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

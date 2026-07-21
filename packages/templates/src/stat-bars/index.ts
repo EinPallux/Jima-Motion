@@ -82,6 +82,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const bg = str(values.background, pc("background", "#FFFFFF"));
   const textColor = str(values.textColor, pc("textColor", "#101014"));
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
+  const showAccentBar = values.accentBar !== false;
 
   const w = size.width;
   const h = size.height;
@@ -112,12 +113,14 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(title, { prop: "alpha", from: 0, to: 1, start: 0, duration: 0.4, ease: outQuad })
     .to(title, { prop: "x", from: marginX - 18, to: marginX, start: 0, duration: 0.5, ease: outExpo });
 
-  const ruleW = titleSize * 2.2;
-  const rule = new Graphics().roundRect(0, 0, ruleW, Math.max(3, titleSize * 0.09), 3).fill(accent);
-  rule.position.set(marginX, band.titleY + titleSize * 1.35);
-  rule.scale.set(0, 1);
-  root.addChild(rule);
-  timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 0.3, duration: 0.4, ease: outExpo });
+  if (showAccentBar) {
+    const ruleW = titleSize * 2.2;
+    const rule = new Graphics().roundRect(0, 0, ruleW, Math.max(3, titleSize * 0.09), 3).fill(accent);
+    rule.position.set(marginX, band.titleY + titleSize * 1.35);
+    rule.scale.set(0, 1);
+    root.addChild(rule);
+    timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 0.3, duration: 0.4, ease: outExpo });
+  }
 
   // --- Bars ---
   const chartH = band.bottom - band.top;
@@ -188,6 +191,7 @@ export const statBars: TemplateDefinition = {
   fields: [
     { key: "title", type: "text", label: "Title", default: "Followers this week", maxLength: 40, shrinkToFit: true },
     { key: "bars", type: "textlist", label: "Bars", default: DEFAULT_BARS, minItems: 2, maxItems: 4, maxLength: 24 },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

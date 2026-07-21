@@ -272,5 +272,6 @@ rendering, AI credits, dark mode.
 | Post-v1 template expansions | ✅ 2026-07-21 — **v1.1–v1.4**, library 12 → 95 |
 | Sound + editable speed/length | ✅ 2026-07-21 — **v1.5** (ADR-012) |
 | Transparent (alpha) WebM export | ✅ 2026-07-21 — **v1.6** (ADR-013) |
+| +50 templates, new categories, editable decorations | ✅ 2026-07-21 — **v1.7**, library 95 → 145 |
 
 *(Update this table + CHANGELOG.md at every phase transition.)*

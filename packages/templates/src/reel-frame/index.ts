@@ -111,6 +111,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const caption = str(values.caption, "Make it move ✨ new drop");
   const likes = str(values.likes, "12.4K");
   const comments = str(values.comments, "318");
+  const showGlow = values.glow !== false;
 
   const w = size.width;
   const h = size.height;
@@ -123,28 +124,30 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const DUR = 4.5;
 
   // --- Background gradient blobs -----------------------------------------
-  const glowTex = radialGlowTexture();
-  const blobSpecs: { tint: string; alpha: number; fx: number; fy: number; drift: number }[] = [
-    { tint: pc("blob1", "#7C5CFF"), alpha: 0.6, fx: 0.24, fy: 0.3, drift: 0.05 },
-    { tint: pc("blob2", "#2E7DF6"), alpha: 0.5, fx: 0.8, fy: 0.74, drift: 0.06 },
-  ];
-  for (const spec of blobSpecs) {
-    const s = new Sprite(glowTex);
-    s.anchor.set(0.5);
-    s.tint = spec.tint;
-    s.width = maxDim * 0.95;
-    s.height = maxDim * 0.95;
-    s.alpha = spec.alpha;
-    const bx = w * spec.fx;
-    const by = h * spec.fy;
-    const dr = minDim * spec.drift;
-    s.position.set(bx, by);
-    root.addChild(s);
-    timeline
-      .to(s, { prop: "x", from: bx - dr, to: bx + dr, start: 0, duration: DUR / 2, ease: outQuad })
-      .to(s, { prop: "x", from: bx + dr, to: bx - dr, start: DUR / 2, duration: DUR / 2, ease: outQuad })
-      .to(s, { prop: "y", from: by + dr, to: by - dr, start: 0, duration: DUR / 2, ease: outQuad })
-      .to(s, { prop: "y", from: by - dr, to: by + dr, start: DUR / 2, duration: DUR / 2, ease: outQuad });
+  if (showGlow) {
+    const glowTex = radialGlowTexture();
+    const blobSpecs: { tint: string; alpha: number; fx: number; fy: number; drift: number }[] = [
+      { tint: pc("blob1", "#7C5CFF"), alpha: 0.6, fx: 0.24, fy: 0.3, drift: 0.05 },
+      { tint: pc("blob2", "#2E7DF6"), alpha: 0.5, fx: 0.8, fy: 0.74, drift: 0.06 },
+    ];
+    for (const spec of blobSpecs) {
+      const s = new Sprite(glowTex);
+      s.anchor.set(0.5);
+      s.tint = spec.tint;
+      s.width = maxDim * 0.95;
+      s.height = maxDim * 0.95;
+      s.alpha = spec.alpha;
+      const bx = w * spec.fx;
+      const by = h * spec.fy;
+      const dr = minDim * spec.drift;
+      s.position.set(bx, by);
+      root.addChild(s);
+      timeline
+        .to(s, { prop: "x", from: bx - dr, to: bx + dr, start: 0, duration: DUR / 2, ease: outQuad })
+        .to(s, { prop: "x", from: bx + dr, to: bx - dr, start: DUR / 2, duration: DUR / 2, ease: outQuad })
+        .to(s, { prop: "y", from: by + dr, to: by - dr, start: 0, duration: DUR / 2, ease: outQuad })
+        .to(s, { prop: "y", from: by - dr, to: by + dr, start: DUR / 2, duration: DUR / 2, ease: outQuad });
+    }
   }
 
   // --- Top segmented progress bar ----------------------------------------
@@ -334,6 +337,7 @@ export const reelFrame: TemplateDefinition = {
     { key: "caption", type: "text", label: "Caption", default: "Make it move ✨ new drop", maxLength: 90, shrinkToFit: true },
     { key: "likes", type: "text", label: "Likes", default: "12.4K", maxLength: 10 },
     { key: "comments", type: "text", label: "Comments", default: "318", maxLength: 10 },
+    { key: "glow", type: "toggle", label: "Glow", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },
   ],

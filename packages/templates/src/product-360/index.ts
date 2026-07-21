@@ -69,6 +69,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   // Optional badge: respect an explicit empty string (hide) vs. unset (default).
   const badgeRaw = typeof values.badge === "string" ? values.badge : "360° VIEW";
   const badge = badgeRaw.trim().toUpperCase();
+  const showGlow = values.glow !== false;
 
   const W = size.width;
   const H = size.height;
@@ -83,11 +84,13 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const timeline = new JimaTimeline();
 
   // --- Soft stage circle behind the product ---
-  const stage = new Graphics().circle(0, 0, ringR * 1.06).fill({ color: accent, alpha: 0.08 });
-  stage.position.set(cx, prodCy);
-  stage.alpha = 0;
-  root.addChild(stage);
-  timeline.to(stage, { prop: "alpha", from: 0, to: 1, start: 0.1, duration: 0.6, ease: outQuad });
+  if (showGlow) {
+    const stage = new Graphics().circle(0, 0, ringR * 1.06).fill({ color: accent, alpha: 0.08 });
+    stage.position.set(cx, prodCy);
+    stage.alpha = 0;
+    root.addChild(stage);
+    timeline.to(stage, { prop: "alpha", from: 0, to: 1, start: 0.1, duration: 0.6, ease: outQuad });
+  }
 
   // --- Turntable ring: faint full track + a rotating accent "comet" ---
   const track = new Graphics().circle(0, 0, ringR).stroke({ color: textColor, width: Math.max(2, Math.min(W, H) * 0.008), alpha: 0.14 });
@@ -211,6 +214,7 @@ export const product360: TemplateDefinition = {
     { key: "product", type: "image", label: "Product image", default: "", optional: true, help: "Transparent PNG works best; the whole product is shown." },
     { key: "name", type: "text", label: "Name", default: "The New One", maxLength: 28, shrinkToFit: true },
     { key: "badge", type: "text", label: "Badge", default: "360° VIEW", maxLength: 14, optional: true },
+    { key: "glow", type: "toggle", label: "Glow", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

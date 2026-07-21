@@ -42,6 +42,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const label = str(values.label, "happy customers");
   const context = str(values.context, "");
   const celebrate = values.celebrate !== false;
+  const showAccentBar = values.accentBar !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -72,13 +73,15 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(labelText, { prop: "y", from: labelY + 12, to: labelY, start: 2.5, duration: 0.4, ease: outQuint });
 
   // Accent rule under the label.
-  const ruleW = numSize * 1.1;
-  const rule = new Graphics().roundRect(0, 0, ruleW, Math.max(3, numSize * 0.04), 3).fill(accent);
-  rule.pivot.set(0, 0);
-  rule.position.set(cx - ruleW / 2, labelY + numSize * 0.28);
-  rule.scale.set(0, 1);
-  root.addChild(rule);
-  timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 0.0, duration: 0.4, ease: outExpo });
+  if (showAccentBar) {
+    const ruleW = numSize * 1.1;
+    const rule = new Graphics().roundRect(0, 0, ruleW, Math.max(3, numSize * 0.04), 3).fill(accent);
+    rule.pivot.set(0, 0);
+    rule.position.set(cx - ruleW / 2, labelY + numSize * 0.28);
+    rule.scale.set(0, 1);
+    root.addChild(rule);
+    timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 0.0, duration: 0.4, ease: outExpo });
+  }
 
   if (context.length > 0) {
     const ctxText = makeText(fonts, { text: context, role: "body", weight: 500, size: Math.round(numSize * 0.17), color: labelColor, anchor: 0.5, align: "center" });
@@ -146,6 +149,7 @@ export const bigNumber: TemplateDefinition = {
     { key: "label", type: "text", label: "Label", default: "happy customers", maxLength: 48 },
     { key: "context", type: "text", label: "Context", default: "and counting", maxLength: 60, optional: true },
     { key: "celebrate", type: "toggle", label: "Confetti", default: true },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "numberColor", type: "color", label: "Number", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

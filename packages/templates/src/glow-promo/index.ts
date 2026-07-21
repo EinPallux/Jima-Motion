@@ -51,6 +51,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const ctaText = pc("ctaText", "#FFFFFF");
   const blobs = [pc("blob1", "#FF4D1C"), pc("blob2", "#FF8A3D"), pc("blob3", "#FF2E9E")];
   const energy = num(values.blobEnergy, 0.6);
+  const showGlow = values.glow !== false;
 
   const kicker = str(values.kicker, "SUMMER SALE");
   const headline = str(values.headline, "30% OFF");
@@ -62,33 +63,35 @@ function build(ctx: TemplateContext): BuiltTemplate {
 
   // --- Background + drifting glow blobs ---
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
-  const maxDim = Math.max(size.width, size.height);
-  const glowTex = radialGlowTexture();
-  const driftR = 0.13 * Math.min(size.width, size.height) * energy;
-  for (let i = 0; i < 3; i++) {
-    const s = new Sprite(glowTex);
-    s.anchor.set(0.5);
-    s.tint = blobs[i]!;
-    const diameter = maxDim * rng.range(0.7, 1.05);
-    s.width = diameter;
-    s.height = diameter;
-    s.alpha = 0.85;
-    const cx = size.width * rng.range(0.2, 0.8);
-    const cy = size.height * rng.range(0.2, 0.8);
-    const phase = rng.range(0, Math.PI * 2);
-    root.addChild(s);
-    // Four waypoints around a small circle, looping back to the start.
-    const pts = [0, 1, 2, 3, 4].map((k) => {
-      const a = phase + (k * Math.PI) / 2;
-      return { x: cx + Math.cos(a) * driftR, y: cy + Math.sin(a) * driftR };
-    });
-    for (let k = 0; k < 4; k++) {
-      const seg = DUR / 4;
-      timeline
-        .to(s, { prop: "x", from: pts[k]!.x, to: pts[k + 1]!.x, start: k * seg, duration: seg, ease: outQuad })
-        .to(s, { prop: "y", from: pts[k]!.y, to: pts[k + 1]!.y, start: k * seg, duration: seg, ease: outQuad });
+  if (showGlow) {
+    const maxDim = Math.max(size.width, size.height);
+    const glowTex = radialGlowTexture();
+    const driftR = 0.13 * Math.min(size.width, size.height) * energy;
+    for (let i = 0; i < 3; i++) {
+      const s = new Sprite(glowTex);
+      s.anchor.set(0.5);
+      s.tint = blobs[i]!;
+      const diameter = maxDim * rng.range(0.7, 1.05);
+      s.width = diameter;
+      s.height = diameter;
+      s.alpha = 0.85;
+      const cx = size.width * rng.range(0.2, 0.8);
+      const cy = size.height * rng.range(0.2, 0.8);
+      const phase = rng.range(0, Math.PI * 2);
+      root.addChild(s);
+      // Four waypoints around a small circle, looping back to the start.
+      const pts = [0, 1, 2, 3, 4].map((k) => {
+        const a = phase + (k * Math.PI) / 2;
+        return { x: cx + Math.cos(a) * driftR, y: cy + Math.sin(a) * driftR };
+      });
+      for (let k = 0; k < 4; k++) {
+        const seg = DUR / 4;
+        timeline
+          .to(s, { prop: "x", from: pts[k]!.x, to: pts[k + 1]!.x, start: k * seg, duration: seg, ease: outQuad })
+          .to(s, { prop: "y", from: pts[k]!.y, to: pts[k + 1]!.y, start: k * seg, duration: seg, ease: outQuad });
+      }
+      s.position.set(pts[0]!.x, pts[0]!.y);
     }
-    s.position.set(pts[0]!.x, pts[0]!.y);
   }
 
   // --- Content (fades out at the end for a seamless loop) ---
@@ -162,6 +165,7 @@ export const glowPromo: TemplateDefinition = {
     { key: "detail", type: "text", label: "Detail", default: "Everything. This week only.", maxLength: 60 },
     { key: "cta", type: "text", label: "Button", default: "Shop now", maxLength: 20 },
     { key: "blobEnergy", type: "slider", label: "Background energy", default: 0.6, min: 0, max: 1, step: 0.05 },
+    { key: "glow", type: "toggle", label: "Glow", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "ctaBg", type: "color", label: "Button", default: "", optional: true },

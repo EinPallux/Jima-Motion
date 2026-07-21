@@ -149,16 +149,19 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const frameCy = top + side / 2;
 
   // --- Energetic accent ring flash behind the frame ---
-  const ring = new Graphics().circle(0, 0, side * 0.62).stroke({ color: accent, width: Math.max(3, side * 0.02) });
-  ring.position.set(cx, frameCy);
-  ring.scale.set(0.6);
-  ring.alpha = 0;
-  root.addChild(ring);
-  timeline
-    .to(ring, { prop: "alpha", from: 0, to: 0.5, start: 0.25, duration: 0.2, ease: outQuad })
-    .to(ring, { prop: "alpha", from: 0.5, to: 0, start: 0.45, duration: 0.5, ease: outQuad })
-    .to(ring, { prop: "scale.x", from: 0.6, to: 1.5, start: 0.25, duration: 0.7, ease: outCubic })
-    .to(ring, { prop: "scale.y", from: 0.6, to: 1.5, start: 0.25, duration: 0.7, ease: outCubic });
+  const showGlow = values.glow !== false;
+  if (showGlow) {
+    const ring = new Graphics().circle(0, 0, side * 0.62).stroke({ color: accent, width: Math.max(3, side * 0.02) });
+    ring.position.set(cx, frameCy);
+    ring.scale.set(0.6);
+    ring.alpha = 0;
+    root.addChild(ring);
+    timeline
+      .to(ring, { prop: "alpha", from: 0, to: 0.5, start: 0.25, duration: 0.2, ease: outQuad })
+      .to(ring, { prop: "alpha", from: 0.5, to: 0, start: 0.45, duration: 0.5, ease: outQuad })
+      .to(ring, { prop: "scale.x", from: 0.6, to: 1.5, start: 0.25, duration: 0.7, ease: outCubic })
+      .to(ring, { prop: "scale.y", from: 0.6, to: 1.5, start: 0.25, duration: 0.7, ease: outCubic });
+  }
 
   // --- Product frame (scale/alpha reveal) ---
   const frame = productFrame(side, frameR, images.product ?? null, cardColor, accent);
@@ -172,30 +175,33 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(frame, { prop: "scale.y", from: 0.82, to: 1, start: 0.2, duration: 0.8, ease: spring(0.5) });
 
   // --- "NEW" starburst badge at the top-right corner ---
-  const badgeR = side * 0.17;
-  const badge = new Container();
-  badge.position.set(cx + side / 2 - badgeR * 0.35, frameCy - side / 2 + badgeR * 0.35);
-  const burst = new Graphics().star(0, 0, 12, badgeR, badgeR * 0.8).fill(accent);
-  badge.addChild(burst);
-  badge.addChild(new Graphics().circle(0, 0, badgeR * 0.82).fill(accent));
-  const badgeLabel = makeText(fonts, { text: badgeText, role: "display", weight: 700, size: Math.round(badgeR * 0.5), color: onAccent, anchor: 0.5, letterSpacing: 1 });
-  badge.addChild(badgeLabel);
-  badge.scale.set(0);
-  root.addChild(badge);
-  timeline
-    .to(badge, { prop: "scale.x", from: 0, to: 1, start: 0.6, duration: 0.6, ease: spring(0.42) })
-    .to(badge, { prop: "scale.y", from: 0, to: 1, start: 0.6, duration: 0.6, ease: spring(0.42) })
-    // pulse beats
-    .to(badge, { prop: "scale.x", from: 1, to: 1.08, start: 1.7, duration: 0.24, ease: outQuad })
-    .to(badge, { prop: "scale.y", from: 1, to: 1.08, start: 1.7, duration: 0.24, ease: outQuad })
-    .to(badge, { prop: "scale.x", from: 1.08, to: 1, start: 1.94, duration: 0.3, ease: outQuad })
-    .to(badge, { prop: "scale.y", from: 1.08, to: 1, start: 1.94, duration: 0.3, ease: outQuad })
-    .to(badge, { prop: "scale.x", from: 1, to: 1.08, start: 3.0, duration: 0.24, ease: outQuad })
-    .to(badge, { prop: "scale.y", from: 1, to: 1.08, start: 3.0, duration: 0.24, ease: outQuad })
-    .to(badge, { prop: "scale.x", from: 1.08, to: 1, start: 3.24, duration: 0.3, ease: outQuad })
-    .to(badge, { prop: "scale.y", from: 1.08, to: 1, start: 3.24, duration: 0.3, ease: outQuad });
-  // Gentle continuous spin of the starburst rays (text stays upright).
-  timeline.to(burst, { prop: "rotation", from: 0, to: Math.PI * 0.5, start: 0.6, duration: DUR - 0.6, ease: outQuad });
+  const showBadge = values.badge !== false;
+  if (showBadge) {
+    const badgeR = side * 0.17;
+    const badge = new Container();
+    badge.position.set(cx + side / 2 - badgeR * 0.35, frameCy - side / 2 + badgeR * 0.35);
+    const burst = new Graphics().star(0, 0, 12, badgeR, badgeR * 0.8).fill(accent);
+    badge.addChild(burst);
+    badge.addChild(new Graphics().circle(0, 0, badgeR * 0.82).fill(accent));
+    const badgeLabel = makeText(fonts, { text: badgeText, role: "display", weight: 700, size: Math.round(badgeR * 0.5), color: onAccent, anchor: 0.5, letterSpacing: 1 });
+    badge.addChild(badgeLabel);
+    badge.scale.set(0);
+    root.addChild(badge);
+    timeline
+      .to(badge, { prop: "scale.x", from: 0, to: 1, start: 0.6, duration: 0.6, ease: spring(0.42) })
+      .to(badge, { prop: "scale.y", from: 0, to: 1, start: 0.6, duration: 0.6, ease: spring(0.42) })
+      // pulse beats
+      .to(badge, { prop: "scale.x", from: 1, to: 1.08, start: 1.7, duration: 0.24, ease: outQuad })
+      .to(badge, { prop: "scale.y", from: 1, to: 1.08, start: 1.7, duration: 0.24, ease: outQuad })
+      .to(badge, { prop: "scale.x", from: 1.08, to: 1, start: 1.94, duration: 0.3, ease: outQuad })
+      .to(badge, { prop: "scale.y", from: 1.08, to: 1, start: 1.94, duration: 0.3, ease: outQuad })
+      .to(badge, { prop: "scale.x", from: 1, to: 1.08, start: 3.0, duration: 0.24, ease: outQuad })
+      .to(badge, { prop: "scale.y", from: 1, to: 1.08, start: 3.0, duration: 0.24, ease: outQuad })
+      .to(badge, { prop: "scale.x", from: 1.08, to: 1, start: 3.24, duration: 0.3, ease: outQuad })
+      .to(badge, { prop: "scale.y", from: 1.08, to: 1, start: 3.24, duration: 0.3, ease: outQuad });
+    // Gentle continuous spin of the starburst rays (text stays upright).
+    timeline.to(burst, { prop: "rotation", from: 0, to: Math.PI * 0.5, start: 0.6, duration: DUR - 0.6, ease: outQuad });
+  }
 
   // --- Name ---
   const nameY = top + side + gap1;
@@ -243,6 +249,8 @@ export const newArrival: TemplateDefinition = {
     { key: "badgeText", type: "text", label: "Badge", default: "NEW", maxLength: 10 },
     { key: "name", type: "text", label: "Name", default: "Summer Collection", maxLength: 30, shrinkToFit: true },
     { key: "cta", type: "text", label: "Button", default: "Shop the drop", maxLength: 20 },
+    { key: "glow", type: "toggle", label: "Glow", default: true },
+    { key: "badge", type: "toggle", label: "Badge", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

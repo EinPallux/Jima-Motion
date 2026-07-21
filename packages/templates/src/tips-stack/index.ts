@@ -50,6 +50,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const title = str(values.title, "3 rules for better posts");
   const marker = str(values.marker, "check");
   const items = asItems(values.items, DEFAULT_ITEMS).slice(0, 5);
+  const showAccentBar = values.accentBar !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -68,12 +69,14 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(titleText, { prop: "alpha", from: 0, to: 1, start: 0.0, duration: 0.4, ease: outQuad })
     .to(titleText, { prop: "x", from: marginX - 20, to: marginX, start: 0.0, duration: 0.5, ease: outQuint });
 
-  const ruleW = titleSize * 2.4;
-  const rule = new Graphics().roundRect(0, 0, ruleW, Math.max(3, titleSize * 0.09), 3).fill(accent);
-  rule.position.set(marginX, titleY + titleSize * 1.3);
-  rule.scale.set(0, 1);
-  root.addChild(rule);
-  timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 0.3, duration: 0.4, ease: outQuint });
+  if (showAccentBar) {
+    const ruleW = titleSize * 2.4;
+    const rule = new Graphics().roundRect(0, 0, ruleW, Math.max(3, titleSize * 0.09), 3).fill(accent);
+    rule.position.set(marginX, titleY + titleSize * 1.3);
+    rule.scale.set(0, 1);
+    root.addChild(rule);
+    timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 0.3, duration: 0.4, ease: outQuint });
+  }
 
   // Rows.
   const rowH = (size.height * 0.58) / Math.max(items.length, 1);
@@ -132,6 +135,7 @@ export const tipsStack: TemplateDefinition = {
     { key: "title", type: "text", label: "Title", default: "3 rules for better posts", maxLength: 48 },
     { key: "items", type: "textlist", label: "Items", default: DEFAULT_ITEMS, minItems: 2, maxItems: 5, maxLength: 60 },
     { key: "marker", type: "select", label: "Marker", default: "check", options: [{ value: "check", label: "Check" }, { value: "number", label: "Number" }, { value: "arrow", label: "Arrow" }] },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

@@ -35,6 +35,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const handle = str(values.handle, "");
   const move = str(values.move, "zoom-in");
   const scrimAmt = num(values.scrim, 0.55);
+  const showAccentBar = values.accentBar !== false;
 
   const timeline = new JimaTimeline();
   const DUR = 6.0;
@@ -95,12 +96,14 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const captionSize = Math.round(size.width * (ctx.aspect === "16:9" ? 0.05 : 0.062));
   const marginX = size.width * 0.07;
 
-  const barW = size.width * 0.14;
-  const bar = new Graphics().roundRect(0, 0, barW, Math.max(4, captionSize * 0.12), 3).fill(accent);
-  bar.position.set(marginX, baseY - captionSize * 1.1);
-  bar.scale.set(0, 1);
-  root.addChild(bar);
-  timeline.to(bar, { prop: "scale.x", from: 0, to: 1, start: 0.6, duration: 0.4, ease: outExpo });
+  if (showAccentBar) {
+    const barW = size.width * 0.14;
+    const bar = new Graphics().roundRect(0, 0, barW, Math.max(4, captionSize * 0.12), 3).fill(accent);
+    bar.position.set(marginX, baseY - captionSize * 1.1);
+    bar.scale.set(0, 1);
+    root.addChild(bar);
+    timeline.to(bar, { prop: "scale.x", from: 0, to: 1, start: 0.6, duration: 0.4, ease: outExpo });
+  }
 
   const captionText = makeText(fonts, { text: caption, role: "display", weight: 700, size: captionSize, color: captionColor, anchor: { x: 0, y: 1 } });
   captionText.position.set(marginX, baseY);
@@ -138,6 +141,7 @@ export const kenBurns: TemplateDefinition = {
     { key: "handle", type: "text", label: "Handle", default: "@jimamotion", maxLength: 24, optional: true },
     { key: "move", type: "select", label: "Movement", default: "zoom-in", options: [{ value: "zoom-in", label: "Zoom in" }, { value: "zoom-out", label: "Zoom out" }, { value: "pan-left", label: "Pan ←" }, { value: "pan-right", label: "Pan →" }] },
     { key: "scrim", type: "slider", label: "Scrim", default: 0.55, min: 0, max: 1, step: 0.05 },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },
   ],
   build,

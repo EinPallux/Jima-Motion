@@ -62,6 +62,8 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const bg = str(values.background, pc("background", "#F4F1EC"));
   const textColor = str(values.textColor, pc("textColor", "#1E2530"));
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
+  const showMapDots = values.mapDots !== false;
+  const showRipples = values.ripples !== false;
 
   const w = size.width;
   const h = size.height;
@@ -74,19 +76,21 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const timeline = new JimaTimeline();
 
   // --- Faint dotted map backdrop (seeded jitter, deterministic) ---
-  const dots = new Graphics();
-  const spacing = minDim * 0.09;
-  const dotR = minDim * 0.006;
-  for (let y = spacing * 0.5; y < h; y += spacing) {
-    for (let x = spacing * 0.5; x < w; x += spacing) {
-      const jx = rng.range(-spacing * 0.18, spacing * 0.18);
-      const jy = rng.range(-spacing * 0.18, spacing * 0.18);
-      dots.circle(x + jx, y + jy, dotR * rng.range(0.6, 1.3)).fill(textColor);
+  if (showMapDots) {
+    const dots = new Graphics();
+    const spacing = minDim * 0.09;
+    const dotR = minDim * 0.006;
+    for (let y = spacing * 0.5; y < h; y += spacing) {
+      for (let x = spacing * 0.5; x < w; x += spacing) {
+        const jx = rng.range(-spacing * 0.18, spacing * 0.18);
+        const jy = rng.range(-spacing * 0.18, spacing * 0.18);
+        dots.circle(x + jx, y + jy, dotR * rng.range(0.6, 1.3)).fill(textColor);
+      }
     }
+    dots.alpha = 0;
+    root.addChild(dots);
+    timeline.to(dots, { prop: "alpha", from: 0, to: 0.06, start: 0, duration: 0.6, ease: outQuad });
   }
-  dots.alpha = 0;
-  root.addChild(dots);
-  timeline.to(dots, { prop: "alpha", from: 0, to: 0.06, start: 0, duration: 0.6, ease: outQuad });
 
   // --- Ripple rings (emitted on landing, driven purely by update) ---
   const rings: Graphics[] = [];
@@ -94,12 +98,14 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const ringW = Math.max(3, minDim * 0.01);
   const ringStarts = [1.05, 1.25, 1.45];
   const RLIFE = 1.0;
-  for (let i = 0; i < ringStarts.length; i++) {
-    const g = new Graphics().circle(0, 0, ringBaseR).stroke({ color: accent, width: ringW });
-    g.position.set(cx, landY);
-    g.visible = false;
-    root.addChild(g);
-    rings.push(g);
+  if (showRipples) {
+    for (let i = 0; i < ringStarts.length; i++) {
+      const g = new Graphics().circle(0, 0, ringBaseR).stroke({ color: accent, width: ringW });
+      g.position.set(cx, landY);
+      g.visible = false;
+      root.addChild(g);
+      rings.push(g);
+    }
   }
 
   // --- Pin (drops, bounces, squashes onto the spot) ---
@@ -175,6 +181,8 @@ export const locationPin: TemplateDefinition = {
   fields: [
     { key: "place", type: "text", label: "Place", default: "Jima HQ", maxLength: 28, shrinkToFit: true },
     { key: "subtitle", type: "text", label: "Subtitle", default: "48.1371° N, 11.5754° E", maxLength: 40, optional: true },
+    { key: "mapDots", type: "toggle", label: "Map dots", default: true },
+    { key: "ripples", type: "toggle", label: "Ripple rings", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

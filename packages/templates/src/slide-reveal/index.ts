@@ -43,6 +43,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const fontRole = (str(values.fontRole, "display") as FontRole) === "serif" ? "serif" : "display";
   const lines = asLines(values.lines, ["Design is", "how it", "moves."]).slice(0, 4);
   const attribution = str(values.attribution, "");
+  const showAccentBar = values.accentBar !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -57,14 +58,16 @@ function build(ctx: TemplateContext): BuiltTemplate {
   // Accent bar: wipes in, then thins to a rule above the block.
   const barW = maxWidth * 0.5;
   const barX = alignment === "left" ? marginX : marginX - barW / 2;
-  const bar = new Graphics().rect(0, 0, barW, Math.round(fontSize * 0.28)).fill(accent);
-  bar.position.set(barX, top - fontSize * 0.55);
-  bar.pivot.set(0, 0);
-  bar.scale.set(0, 1);
-  root.addChild(bar);
-  timeline
-    .to(bar, { prop: "scale.x", from: 0, to: 1, start: 0.0, duration: 0.4, ease: outExpo })
-    .to(bar, { prop: "scale.y", from: 1, to: 0.16, start: 0.42, duration: 0.24, ease: outQuad });
+  if (showAccentBar) {
+    const bar = new Graphics().rect(0, 0, barW, Math.round(fontSize * 0.28)).fill(accent);
+    bar.position.set(barX, top - fontSize * 0.55);
+    bar.pivot.set(0, 0);
+    bar.scale.set(0, 1);
+    root.addChild(bar);
+    timeline
+      .to(bar, { prop: "scale.x", from: 0, to: 1, start: 0.0, duration: 0.4, ease: outExpo })
+      .to(bar, { prop: "scale.y", from: 1, to: 0.16, start: 0.42, duration: 0.24, ease: outQuad });
+  }
 
   // Lines: each rises into view under a clip mask.
   const wordNodes: Text[] = [];
@@ -131,6 +134,7 @@ export const slideReveal: TemplateDefinition = {
     { key: "attribution", type: "text", label: "Attribution", default: "", maxLength: 40, optional: true },
     { key: "alignment", type: "select", label: "Alignment", default: "left", options: [{ value: "left", label: "Left" }, { value: "center", label: "Center" }] },
     { key: "fontRole", type: "select", label: "Font", default: "display", options: [{ value: "display", label: "Sans" }, { value: "serif", label: "Serif" }] },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

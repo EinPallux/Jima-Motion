@@ -68,6 +68,8 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const bg = str(values.background, pc("background", "#FFF3EE"));
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
   const onAcc = "#FFFFFF";
+  const showPerforation = values.perforation !== false;
+  const showShine = values.shine !== false;
 
   const w = size.width;
   const h = size.height;
@@ -85,21 +87,24 @@ function build(ctx: TemplateContext): BuiltTemplate {
   ticket.addChild(new Graphics().roundRect(-ticketW / 2, -ticketH / 2, ticketW, ticketH, minDim * 0.03).fill(accent));
 
   // Perforation + punched notches at the divider line.
-  const perfY = -ticketH * 0.05;
-  const perfPad = ticketW * 0.08;
-  const perfG = new Graphics();
-  dashedPath(perfG, [-ticketW / 2 + perfPad, perfY, ticketW / 2 - perfPad, perfY], {
-    dash: 10,
-    gap: 9,
-    width: Math.max(2, minDim * 0.006),
-    color: onAcc,
-    cap: "round",
-  });
-  perfG.alpha = 0;
-  ticket.addChild(perfG);
-  const notchR = ticketH * 0.085;
-  ticket.addChild(new Graphics().circle(-ticketW / 2, perfY, notchR).fill(bg));
-  ticket.addChild(new Graphics().circle(ticketW / 2, perfY, notchR).fill(bg));
+  let perfG: Graphics | null = null;
+  if (showPerforation) {
+    const perfY = -ticketH * 0.05;
+    const perfPad = ticketW * 0.08;
+    perfG = new Graphics();
+    dashedPath(perfG, [-ticketW / 2 + perfPad, perfY, ticketW / 2 - perfPad, perfY], {
+      dash: 10,
+      gap: 9,
+      width: Math.max(2, minDim * 0.006),
+      color: onAcc,
+      cap: "round",
+    });
+    perfG.alpha = 0;
+    ticket.addChild(perfG);
+    const notchR = ticketH * 0.085;
+    ticket.addChild(new Graphics().circle(-ticketW / 2, perfY, notchR).fill(bg));
+    ticket.addChild(new Graphics().circle(ticketW / 2, perfY, notchR).fill(bg));
+  }
 
   // Discount (top).
   const discRaw = str(values.discount, "20% OFF");
@@ -145,17 +150,19 @@ function build(ctx: TemplateContext): BuiltTemplate {
   }
 
   // Shine sweep (masked to the ticket, sweeps once).
-  const shineMask = new Graphics().roundRect(-ticketW / 2, -ticketH / 2, ticketW, ticketH, minDim * 0.03).fill(onAcc);
-  ticket.addChild(shineMask);
-  const shineW = ticketW * 0.16;
-  const shine = new Graphics()
-    .poly([-shineW / 2, -ticketH * 0.7, shineW / 2, -ticketH * 0.7, shineW / 2 - ticketH * 0.35, ticketH * 0.7, -shineW / 2 - ticketH * 0.35, ticketH * 0.7])
-    .fill({ color: "#FFFFFF", alpha: 0.22 });
-  shine.mask = shineMask;
-  const shineFrom = -ticketW / 2 - shineW * 2;
-  shine.x = shineFrom;
-  ticket.addChild(shine);
-  timeline.to(shine, { prop: "x", from: shineFrom, to: ticketW / 2 + shineW * 2, start: 1.9, duration: 0.7, ease: outQuad });
+  if (showShine) {
+    const shineMask = new Graphics().roundRect(-ticketW / 2, -ticketH / 2, ticketW, ticketH, minDim * 0.03).fill(onAcc);
+    ticket.addChild(shineMask);
+    const shineW = ticketW * 0.16;
+    const shine = new Graphics()
+      .poly([-shineW / 2, -ticketH * 0.7, shineW / 2, -ticketH * 0.7, shineW / 2 - ticketH * 0.35, ticketH * 0.7, -shineW / 2 - ticketH * 0.35, ticketH * 0.7])
+      .fill({ color: "#FFFFFF", alpha: 0.22 });
+    shine.mask = shineMask;
+    const shineFrom = -ticketW / 2 - shineW * 2;
+    shine.x = shineFrom;
+    ticket.addChild(shine);
+    timeline.to(shine, { prop: "x", from: shineFrom, to: ticketW / 2 + shineW * 2, start: 1.9, duration: 0.7, ease: outQuad });
+  }
 
   root.addChild(ticket);
   timeline
@@ -168,10 +175,12 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(disc, { prop: "alpha", from: 0, to: 1, start: 0.9, duration: 0.35, ease: outQuad })
     .to(disc, { prop: "scale.x", from: 0.6, to: 1, start: 0.9, duration: 0.5, ease: makeOutBack(2) })
     .to(disc, { prop: "scale.y", from: 0.6, to: 1, start: 0.9, duration: 0.5, ease: makeOutBack(2) })
-    .to(perfG, { prop: "alpha", from: 0, to: 1, start: 1.0, duration: 0.4, ease: outQuad })
     .to(codeBox, { prop: "alpha", from: 0, to: 1, start: 1.4, duration: 0.4, ease: outQuad })
     .to(codeBox, { prop: "scale.x", from: 0.8, to: 1, start: 1.4, duration: 0.5, ease: makeOutBack(1.8) })
     .to(codeBox, { prop: "scale.y", from: 0.8, to: 1, start: 1.4, duration: 0.5, ease: makeOutBack(1.8) });
+  if (perfG) {
+    timeline.to(perfG, { prop: "alpha", from: 0, to: 1, start: 1.0, duration: 0.4, ease: outQuad });
+  }
 
   // --- CTA pill (below the ticket) ---
   const ctaRaw = str(values.cta, "Copy code");
@@ -211,6 +220,8 @@ export const couponReveal: TemplateDefinition = {
     { key: "code", type: "text", label: "Code", default: "JIMA20", maxLength: 16 },
     { key: "detail", type: "text", label: "Fine print", default: "Min. spend $30 · ends Sunday", maxLength: 44, optional: true },
     { key: "cta", type: "text", label: "Button", default: "Copy code", maxLength: 20 },
+    { key: "perforation", type: "toggle", label: "Perforation", default: true },
+    { key: "shine", type: "toggle", label: "Shine sweep", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

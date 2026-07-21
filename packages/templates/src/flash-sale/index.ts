@@ -70,6 +70,9 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const bg = str(values.background, pc("background", "#101014"));
   const textColor = str(values.textColor, pc("textColor", "#FFFFFF"));
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
+  const showFlash = values.flash !== false;
+  const showBolts = values.bolts !== false;
+  const showUrgencyBar = values.urgencyBar !== false;
 
   const w = size.width;
   const h = size.height;
@@ -81,12 +84,14 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const timeline = new JimaTimeline();
 
   // --- Strike flash (behind content, spikes then clears) ---
-  const flash = new Graphics().rect(0, 0, w, h).fill(accent);
-  flash.alpha = 0;
-  root.addChild(flash);
-  timeline
-    .to(flash, { prop: "alpha", from: 0, to: 0.5, start: 0.28, duration: 0.1, ease: outQuad })
-    .to(flash, { prop: "alpha", from: 0.5, to: 0, start: 0.38, duration: 0.35, ease: outQuad });
+  if (showFlash) {
+    const flash = new Graphics().rect(0, 0, w, h).fill(accent);
+    flash.alpha = 0;
+    root.addChild(flash);
+    timeline
+      .to(flash, { prop: "alpha", from: 0, to: 0.5, start: 0.28, duration: 0.1, ease: outQuad })
+      .to(flash, { prop: "alpha", from: 0.5, to: 0, start: 0.38, duration: 0.35, ease: outQuad });
+  }
 
   // --- Headline (slams in) ---
   const headRaw = str(values.headline, "FLASH SALE").toUpperCase();
@@ -103,21 +108,23 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(head, { prop: "scale.y", from: 1.4, to: 1, start: 0.25, duration: 0.4, ease: outExpo });
 
   // --- Lightning bolts flanking the headline (zap in) ---
-  const boltSize = minDim * 0.12;
-  const boltGap = boltSize * 0.45;
-  const boltX = headW / 2 + boltGap + boltSize / 2;
-  [-1, 1].forEach((sgn, idx) => {
-    const bolt = makeIcon("bolt", boltSize, { color: accent });
-    bolt.position.set(cx + sgn * boltX, L.headY);
-    bolt.scale.set(0);
-    bolt.rotation = sgn * 35 * DEG;
-    root.addChild(bolt);
-    const st = 0.45 + idx * 0.06;
-    timeline
-      .to(bolt, { prop: "scale.x", from: 0, to: 1, start: st, duration: 0.3, ease: outExpo })
-      .to(bolt, { prop: "scale.y", from: 0, to: 1, start: st, duration: 0.3, ease: outExpo })
-      .to(bolt, { prop: "rotation", from: sgn * 35 * DEG, to: 0, start: st, duration: 0.35, ease: outExpo });
-  });
+  if (showBolts) {
+    const boltSize = minDim * 0.12;
+    const boltGap = boltSize * 0.45;
+    const boltX = headW / 2 + boltGap + boltSize / 2;
+    [-1, 1].forEach((sgn, idx) => {
+      const bolt = makeIcon("bolt", boltSize, { color: accent });
+      bolt.position.set(cx + sgn * boltX, L.headY);
+      bolt.scale.set(0);
+      bolt.rotation = sgn * 35 * DEG;
+      root.addChild(bolt);
+      const st = 0.45 + idx * 0.06;
+      timeline
+        .to(bolt, { prop: "scale.x", from: 0, to: 1, start: st, duration: 0.3, ease: outExpo })
+        .to(bolt, { prop: "scale.y", from: 0, to: 1, start: st, duration: 0.3, ease: outExpo })
+        .to(bolt, { prop: "rotation", from: sgn * 35 * DEG, to: 0, start: st, duration: 0.35, ease: outExpo });
+    });
+  }
 
   // --- Detail line ---
   const detailRaw = str(values.detail, "Everything 40% off — today only");
@@ -131,28 +138,30 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(det, { prop: "y", from: L.detailY + 16, to: L.detailY, start: 0.9, duration: 0.5, ease: outExpo });
 
   // --- Urgency bar (fill depletes like a countdown) ---
-  const barW = w * 0.66;
-  const barH = Math.max(10, minDim * 0.028);
-  const barX = cx - barW / 2;
-  const track = new Graphics().roundRect(0, 0, barW, barH, barH / 2).fill({ color: textColor, alpha: 0.16 });
-  track.position.set(barX, L.barY);
-  track.scale.set(0, 1);
-  root.addChild(track);
-  timeline.to(track, { prop: "scale.x", from: 0, to: 1, start: 1.3, duration: 0.4, ease: outExpo });
+  if (showUrgencyBar) {
+    const barW = w * 0.66;
+    const barH = Math.max(10, minDim * 0.028);
+    const barX = cx - barW / 2;
+    const track = new Graphics().roundRect(0, 0, barW, barH, barH / 2).fill({ color: textColor, alpha: 0.16 });
+    track.position.set(barX, L.barY);
+    track.scale.set(0, 1);
+    root.addChild(track);
+    timeline.to(track, { prop: "scale.x", from: 0, to: 1, start: 1.3, duration: 0.4, ease: outExpo });
 
-  const fill = new Graphics().roundRect(0, 0, barW, barH, barH / 2).fill(accent);
-  fill.position.set(barX, L.barY);
-  fill.scale.set(0, 1);
-  root.addChild(fill);
-  timeline
-    .to(fill, { prop: "scale.x", from: 0, to: 1, start: 1.4, duration: 0.3, ease: outExpo })
-    .to(fill, { prop: "scale.x", from: 1, to: 0.25, start: 1.75, duration: 2.0, ease: inQuad });
+    const fill = new Graphics().roundRect(0, 0, barW, barH, barH / 2).fill(accent);
+    fill.position.set(barX, L.barY);
+    fill.scale.set(0, 1);
+    root.addChild(fill);
+    timeline
+      .to(fill, { prop: "scale.x", from: 0, to: 1, start: 1.4, duration: 0.3, ease: outExpo })
+      .to(fill, { prop: "scale.x", from: 1, to: 0.25, start: 1.75, duration: 2.0, ease: inQuad });
 
-  const es = makeText(fonts, { text: "ENDS SOON", role: "body", weight: 700, size: Math.round(minDim * 0.026), color: accent, anchor: { x: 0, y: 1 }, letterSpacing: 2 });
-  es.position.set(barX, L.barY - barH * 0.6);
-  es.alpha = 0;
-  root.addChild(es);
-  timeline.to(es, { prop: "alpha", from: 0, to: 1, start: 1.4, duration: 0.4, ease: outQuad });
+    const es = makeText(fonts, { text: "ENDS SOON", role: "body", weight: 700, size: Math.round(minDim * 0.026), color: accent, anchor: { x: 0, y: 1 }, letterSpacing: 2 });
+    es.position.set(barX, L.barY - barH * 0.6);
+    es.alpha = 0;
+    root.addChild(es);
+    timeline.to(es, { prop: "alpha", from: 0, to: 1, start: 1.4, duration: 0.4, ease: outQuad });
+  }
 
   // --- CTA pill (springs in, pulses) ---
   const ctaRaw = str(values.cta, "Grab it now");
@@ -195,6 +204,9 @@ export const flashSale: TemplateDefinition = {
     { key: "headline", type: "text", label: "Headline", default: "FLASH SALE", maxLength: 20, shrinkToFit: true },
     { key: "detail", type: "text", label: "Detail", default: "Everything 40% off — today only", maxLength: 44, shrinkToFit: true },
     { key: "cta", type: "text", label: "Button", default: "Grab it now", maxLength: 20 },
+    { key: "flash", type: "toggle", label: "Screen flash", default: true },
+    { key: "bolts", type: "toggle", label: "Lightning bolts", default: true },
+    { key: "urgencyBar", type: "toggle", label: "Urgency bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

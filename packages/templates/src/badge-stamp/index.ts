@@ -69,6 +69,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const topLabel = str(values.topLabel, "");
   const bottomLabel = str(values.bottomLabel, "");
   const style = str(values.style, "burst") as Style;
+  const showRing = values.ring !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -82,7 +83,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   ring.position.set(cx, cy);
   ring.scale.set(0.7);
   ring.alpha = 0;
-  root.addChild(ring);
+  if (showRing) root.addChild(ring);
 
   // The badge (seal + text), stamped as one unit.
   const badge = new Container();
@@ -137,10 +138,12 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(badge, { prop: "rotation", from: -0.8 * DEG, to: 0, start: STAMP + 0.44, duration: 0.14, ease: outQuad });
 
   // Expanding impact ring.
-  timeline
-    .to(ring, { prop: "scale.x", from: 0.7, to: 1.9, start: STAMP, duration: 0.6, ease: outExpo })
-    .to(ring, { prop: "scale.y", from: 0.7, to: 1.9, start: STAMP, duration: 0.6, ease: outExpo })
-    .to(ring, { prop: "alpha", from: 0.9, to: 0, start: STAMP, duration: 0.6, ease: outQuad });
+  if (showRing) {
+    timeline
+      .to(ring, { prop: "scale.x", from: 0.7, to: 1.9, start: STAMP, duration: 0.6, ease: outExpo })
+      .to(ring, { prop: "scale.y", from: 0.7, to: 1.9, start: STAMP, duration: 0.6, ease: outExpo })
+      .to(ring, { prop: "alpha", from: 0.9, to: 0, start: STAMP, duration: 0.6, ease: outQuad });
+  }
 
   return { timeline, duration: 3.2 };
 }
@@ -170,6 +173,7 @@ export const badgeStamp: TemplateDefinition = {
         { value: "scalloped", label: "Scalloped" },
       ],
     },
+    { key: "ring", type: "toggle", label: "Impact ring", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

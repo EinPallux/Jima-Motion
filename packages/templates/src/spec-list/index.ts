@@ -249,6 +249,8 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(nameText, { prop: "y", from: nameY + 16, to: nameY, start: 0.7, duration: 0.6, ease: outExpo });
 
   // --- Spec rows ---
+  const showDivider = values.divider !== false;
+  const showAccentDot = values.accentDot !== false;
   specs.forEach((spec, i) => {
     const rowCy = specTop + i * rowH + rowH * 0.42;
     const row = new Container();
@@ -265,29 +267,33 @@ function build(ctx: TemplateContext): BuiltTemplate {
       valueText.position.set(colRight, 0);
       row.addChild(valueText);
     } else {
-      const dot = new Graphics().circle(0, 0, dotR).fill(accent);
-      dot.position.set(colLeft + dotR, 0);
-      dot.scale.set(0);
-      row.addChild(dot);
+      if (showAccentDot) {
+        const dot = new Graphics().circle(0, 0, dotR).fill(accent);
+        dot.position.set(colLeft + dotR, 0);
+        dot.scale.set(0);
+        row.addChild(dot);
+        timeline
+          .to(dot, { prop: "scale.x", from: 0, to: 1, start: start + 0.1, duration: 0.4, ease: makeOutBack(2) })
+          .to(dot, { prop: "scale.y", from: 0, to: 1, start: start + 0.1, duration: 0.4, ease: makeOutBack(2) });
+      }
       const labelText = makeText(fonts, { text: spec.label, role: "body", weight: 500, size: specSize, color: textColor, anchor: { x: 0, y: 0.5 } });
       labelText.position.set(colLeft + dotR * 2 + specSize * 0.5, 0);
       row.addChild(labelText);
-      timeline
-        .to(dot, { prop: "scale.x", from: 0, to: 1, start: start + 0.1, duration: 0.4, ease: makeOutBack(2) })
-        .to(dot, { prop: "scale.y", from: 0, to: 1, start: start + 0.1, duration: 0.4, ease: makeOutBack(2) });
     }
 
     // Thin divider under the row.
-    const divW = colRight - colLeft;
-    const divider = new Graphics().roundRect(0, 0, divW, Math.max(2, specSize * 0.05), 2).fill(dividerColor);
-    divider.position.set(colLeft, rowH * 0.42);
-    divider.scale.set(0, 1);
-    row.addChild(divider);
+    if (showDivider) {
+      const divW = colRight - colLeft;
+      const divider = new Graphics().roundRect(0, 0, divW, Math.max(2, specSize * 0.05), 2).fill(dividerColor);
+      divider.position.set(colLeft, rowH * 0.42);
+      divider.scale.set(0, 1);
+      row.addChild(divider);
+      timeline.to(divider, { prop: "scale.x", from: 0, to: 1, start: start + 0.05, duration: 0.5, ease: outExpo });
+    }
 
     timeline
       .to(row, { prop: "alpha", from: 0, to: 1, start, duration: 0.4, ease: outQuad })
-      .to(row, { prop: "x", from: 24, to: 0, start, duration: 0.55, ease: outQuint })
-      .to(divider, { prop: "scale.x", from: 0, to: 1, start: start + 0.05, duration: 0.5, ease: outExpo });
+      .to(row, { prop: "x", from: 24, to: 0, start, duration: 0.55, ease: outQuint });
   });
 
   return { timeline, duration: computeDuration(values) };
@@ -308,6 +314,8 @@ export const specList: TemplateDefinition = {
     { key: "product", type: "image", label: "Product image", default: "", optional: true, help: "Fills the frame; a clean product photo works best." },
     { key: "name", type: "text", label: "Name", default: "Model X", maxLength: 28, shrinkToFit: true },
     { key: "specs", type: "textlist", label: "Specs", default: DEFAULT_SPECS, minItems: 2, maxItems: 5, maxLength: 30, help: 'Use "Label | Value" for a two-column row, or plain text for a bullet.' },
+    { key: "divider", type: "toggle", label: "Divider line", default: true },
+    { key: "accentDot", type: "toggle", label: "Accent dot", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

@@ -45,6 +45,8 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const scrimColor = pc("scrim", "#0A0A0F");
   const title = str(values.title, "Introducing");
   const caption = str(values.caption, "Something new");
+  const showAccentBar = values.accentBar !== false;
+  const showAccentRule = values.accentRule !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -103,15 +105,17 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(imageHolder, { prop: "scale.y", from: 1.0, to: 1.07, start: 0.2, duration: DUR - 0.2, ease: linear });
 
   // Accent bar rides the leading edge, then sweeps off + fades.
-  const barW = Math.max(10, w * 0.012);
-  const bar = new Graphics().roundRect(-barW / 2, -imgH / 2, barW, imgH, barW / 2).fill(accent);
-  bar.position.set(mx, cy);
-  bar.alpha = 0;
-  root.addChild(bar);
-  timeline
-    .to(bar, { prop: "alpha", from: 0, to: 1, start: 0.2, duration: 0.15, ease: outQuad })
-    .to(bar, { prop: "x", from: mx, to: mx + imgW + barW, start: 0.2, duration: 0.9, ease: outExpo })
-    .to(bar, { prop: "alpha", from: 1, to: 0, start: 1.0, duration: 0.3, ease: outQuad });
+  if (showAccentBar) {
+    const barW = Math.max(10, w * 0.012);
+    const bar = new Graphics().roundRect(-barW / 2, -imgH / 2, barW, imgH, barW / 2).fill(accent);
+    bar.position.set(mx, cy);
+    bar.alpha = 0;
+    root.addChild(bar);
+    timeline
+      .to(bar, { prop: "alpha", from: 0, to: 1, start: 0.2, duration: 0.15, ease: outQuad })
+      .to(bar, { prop: "x", from: mx, to: mx + imgW + barW, start: 0.2, duration: 0.9, ease: outExpo })
+      .to(bar, { prop: "alpha", from: 1, to: 0, start: 1.0, duration: 0.3, ease: outQuad });
+  }
 
   // Bottom scrim (clipped to the rounded image), behind the caption.
   const scrimH = imgH * 0.42;
@@ -136,12 +140,14 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const titleBaseY = hasCaption ? blockBottom - capSize * 1.5 : blockBottom;
 
   // Accent rule above the title.
-  const ruleW = titleSize * 1.3;
-  const rule = new Graphics().roundRect(0, 0, ruleW, Math.max(4, titleSize * 0.1), 3).fill(accent);
-  rule.position.set(padX, titleBaseY - titleSize * 1.15);
-  rule.scale.set(0, 1);
-  root.addChild(rule);
-  timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 1.1, duration: 0.4, ease: outExpo });
+  if (showAccentRule) {
+    const ruleW = titleSize * 1.3;
+    const rule = new Graphics().roundRect(0, 0, ruleW, Math.max(4, titleSize * 0.1), 3).fill(accent);
+    rule.position.set(padX, titleBaseY - titleSize * 1.15);
+    rule.scale.set(0, 1);
+    root.addChild(rule);
+    timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 1.1, duration: 0.4, ease: outExpo });
+  }
 
   const titleText = fitText(
     fonts,
@@ -186,6 +192,8 @@ export const imageReveal: TemplateDefinition = {
     { key: "image", type: "image", label: "Image", default: "", optional: true, help: "Fills the frame; best with a landscape or portrait photo." },
     { key: "title", type: "text", label: "Title", default: "Introducing", maxLength: 36, shrinkToFit: true },
     { key: "caption", type: "text", label: "Caption", default: "Something new", maxLength: 48, optional: true },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
+    { key: "accentRule", type: "toggle", label: "Accent rule", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

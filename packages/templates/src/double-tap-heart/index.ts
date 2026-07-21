@@ -65,6 +65,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const textColor = pc("textColor", "#FFFFFF");
   const caption = str(values.caption, "");
   const likeInfo = parseLikes(str(values.likes, "2.3K"));
+  const showGlow = values.glow !== false;
 
   const DUR = 3.0;
   const cx = size.width / 2;
@@ -75,21 +76,23 @@ function build(ctx: TemplateContext): BuiltTemplate {
 
   // Soft gradient background (static → loop-safe).
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
-  const glowTex = radialGlowTexture();
-  const s1 = new Sprite(glowTex);
-  s1.anchor.set(0.5);
-  s1.tint = glow1;
-  s1.width = s1.height = maxDim * 1.1;
-  s1.alpha = 0.45;
-  s1.position.set(size.width * 0.3, size.height * 0.32);
-  root.addChild(s1);
-  const s2 = new Sprite(glowTex);
-  s2.anchor.set(0.5);
-  s2.tint = glow2;
-  s2.width = s2.height = maxDim * 1.0;
-  s2.alpha = 0.4;
-  s2.position.set(size.width * 0.72, size.height * 0.7);
-  root.addChild(s2);
+  if (showGlow) {
+    const glowTex = radialGlowTexture();
+    const s1 = new Sprite(glowTex);
+    s1.anchor.set(0.5);
+    s1.tint = glow1;
+    s1.width = s1.height = maxDim * 1.1;
+    s1.alpha = 0.45;
+    s1.position.set(size.width * 0.3, size.height * 0.32);
+    root.addChild(s1);
+    const s2 = new Sprite(glowTex);
+    s2.anchor.set(0.5);
+    s2.tint = glow2;
+    s2.width = s2.height = maxDim * 1.0;
+    s2.alpha = 0.4;
+    s2.position.set(size.width * 0.72, size.height * 0.7);
+    root.addChild(s2);
+  }
 
   // Big heart: pops in, gives a beat, fades out before the loop point.
   const heartSize = minDim * (ctx.aspect === "16:9" ? 0.34 : 0.42);
@@ -190,6 +193,7 @@ export const doubleTapHeart: TemplateDefinition = {
   fields: [
     { key: "caption", type: "text", label: "Caption", default: "You liked this", maxLength: 60, optional: true },
     { key: "likes", type: "text", label: "Likes", default: "2.3K", maxLength: 10, help: "Counts up. Use K/M for compact (2.3K)." },
+    { key: "glow", type: "toggle", label: "Glow", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },
   ],

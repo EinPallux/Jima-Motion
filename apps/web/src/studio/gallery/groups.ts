@@ -9,11 +9,13 @@ export interface TemplateGroup {
 
 export const GROUPS: TemplateGroup[] = [
   { id: "text", label: "Text & titles", blurb: "Kinetic type, headlines, quotes-as-titles", categories: ["statement", "announcement"] },
+  { id: "overlays", label: "Overlays & lower-thirds", blurb: "Name tags, callouts, subtitle bars — export transparent, drop on footage", categories: ["overlay"] },
   { id: "social", label: "Social", blurb: "Likes, follows, subscribes, Reels & platform UI", categories: ["social"] },
   { id: "product", label: "Product & ads", blurb: "Product reveals, offers, sales, CTAs", categories: ["product", "promo"] },
   { id: "showcase", label: "Showcase", blurb: "Galleries, features, device mockups, photos", categories: ["showcase", "photo", "tech"] },
   { id: "explain", label: "Explainers & data", blurb: "Steps, timelines, comparisons, stats", categories: ["educational", "comparison", "stat"] },
   { id: "brand", label: "Brand & quotes", blurb: "Logos, badges, end cards, testimonials", categories: ["brand", "testimonial"] },
+  { id: "openers", label: "Openers & backgrounds", blurb: "Channel intros, stingers & seamless background loops", categories: ["intro", "loop"] },
   { id: "events", label: "Events & travel", blurb: "Save-the-dates, locations, trips", categories: ["event", "travel"] },
 ];
 

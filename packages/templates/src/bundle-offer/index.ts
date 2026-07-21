@@ -115,6 +115,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const oldRaw = typeof values.oldPrice === "string" ? values.oldPrice : "$78";
   const oldPrice = oldRaw.trim();
   const cta = str(values.cta, "Get the bundle");
+  const showBadge = values.badge !== false;
 
   const oldN = parseTargetNumber(oldPrice);
   const newN = parseTargetNumber(price);
@@ -184,17 +185,19 @@ function build(ctx: TemplateContext): BuiltTemplate {
   }
 
   // --- "BUNDLE" badge (ink pill with a star) ---
-  const badgeY = H * cfg.badgeYF;
-  const badgeSize = Math.round(Math.min(W, H) * 0.032);
-  const badge = pill(fonts, "BUNDLE", badgeSize, textColor, bg, true);
-  badge.position.set(cx, badgeY);
-  badge.scale.set(0);
-  badge.rotation = -4 * DEG;
-  root.addChild(badge);
-  timeline
-    .to(badge, { prop: "scale.x", from: 0, to: 1, start: 0.2, duration: 0.6, ease: makeOutBack(1.8) })
-    .to(badge, { prop: "scale.y", from: 0, to: 1, start: 0.2, duration: 0.6, ease: makeOutBack(1.8) })
-    .to(badge, { prop: "rotation", from: -4 * DEG, to: 0, start: 0.2, duration: 0.6, ease: makeOutBack(1.8) });
+  if (showBadge) {
+    const badgeY = H * cfg.badgeYF;
+    const badgeSize = Math.round(Math.min(W, H) * 0.032);
+    const badge = pill(fonts, "BUNDLE", badgeSize, textColor, bg, true);
+    badge.position.set(cx, badgeY);
+    badge.scale.set(0);
+    badge.rotation = -4 * DEG;
+    root.addChild(badge);
+    timeline
+      .to(badge, { prop: "scale.x", from: 0, to: 1, start: 0.2, duration: 0.6, ease: makeOutBack(1.8) })
+      .to(badge, { prop: "scale.y", from: 0, to: 1, start: 0.2, duration: 0.6, ease: makeOutBack(1.8) })
+      .to(badge, { prop: "rotation", from: -4 * DEG, to: 0, start: 0.2, duration: 0.6, ease: makeOutBack(1.8) });
+  }
 
   // --- Bundle label ---
   const labelText = fitText(
@@ -288,6 +291,7 @@ export const bundleOffer: TemplateDefinition = {
     { key: "price", type: "text", label: "Total price", default: "$49", maxLength: 12 },
     { key: "oldPrice", type: "text", label: "Old price", default: "$78", maxLength: 12, optional: true },
     { key: "cta", type: "text", label: "Button", default: "Get the bundle", maxLength: 20 },
+    { key: "badge", type: "toggle", label: "Badge", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

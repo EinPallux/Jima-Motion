@@ -117,13 +117,16 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const authorStart = Math.min(3.0, 1.1 + nWords * 0.045 + 0.4);
 
   // Accent rule.
-  const ruleW = ql.fontSize * 1.4;
+  const showAccentBar = values.accentBar !== false;
   const ruleY = lastCy + ql.fontSize * 0.9;
-  const rule = new Graphics().roundRect(-ruleW / 2, 0, ruleW, Math.max(3, ql.fontSize * 0.06), 3).fill(accent);
-  rule.position.set(cx, ruleY);
-  rule.scale.set(0, 1);
-  root.addChild(rule);
-  timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: authorStart - 0.2, duration: 0.4, ease: outExpo });
+  if (showAccentBar) {
+    const ruleW = ql.fontSize * 1.4;
+    const rule = new Graphics().roundRect(-ruleW / 2, 0, ruleW, Math.max(3, ql.fontSize * 0.06), 3).fill(accent);
+    rule.position.set(cx, ruleY);
+    rule.scale.set(0, 1);
+    root.addChild(rule);
+    timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: authorStart - 0.2, duration: 0.4, ease: outExpo });
+  }
 
   // Author row: avatar (image or initial) + name + role, centered.
   const authorSize = Math.round(w * (ctx.aspect === "16:9" ? 0.03 : 0.04));
@@ -195,6 +198,7 @@ export const reviewStars: TemplateDefinition = {
     { key: "author", type: "text", label: "Author", default: "Sam Rivera", maxLength: 28 },
     { key: "role", type: "text", label: "Role", default: "Social lead", maxLength: 28, optional: true },
     { key: "avatar", type: "image", label: "Avatar", default: "", optional: true },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

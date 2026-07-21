@@ -57,6 +57,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const subColor = isDark ? "#AAB0B8" : "#606A72";
   const label = str(values.label, "Like this video");
   const target = parseTargetNumber(str(values.likes, "24000"));
+  const showSparkles = values.sparkles !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -162,15 +163,17 @@ function build(ctx: TemplateContext): BuiltTemplate {
 
   // Confetti burst of small accent dots on the like.
   const dots: { g: Graphics; vx: number; vy: number }[] = [];
-  for (let i = 0; i < 12; i++) {
-    const s = minDim * rng.range(0.01, 0.022);
-    const g = new Graphics().circle(0, 0, s).fill(rng.pick([accent, textColor]));
-    g.position.set(cx, cy);
-    g.visible = false;
-    root.addChild(g);
-    const a = (i / 12) * Math.PI * 2 + rng.range(-0.25, 0.25);
-    const speed = rng.range(0.45, 0.8) * minDim;
-    dots.push({ g, vx: Math.cos(a) * speed, vy: Math.sin(a) * speed });
+  if (showSparkles) {
+    for (let i = 0; i < 12; i++) {
+      const s = minDim * rng.range(0.01, 0.022);
+      const g = new Graphics().circle(0, 0, s).fill(rng.pick([accent, textColor]));
+      g.position.set(cx, cy);
+      g.visible = false;
+      root.addChild(g);
+      const a = (i / 12) * Math.PI * 2 + rng.range(-0.25, 0.25);
+      const speed = rng.range(0.45, 0.8) * minDim;
+      dots.push({ g, vx: Math.cos(a) * speed, vy: Math.sin(a) * speed });
+    }
   }
 
   const BURST = clickAt;
@@ -211,6 +214,7 @@ export const likeSpark: TemplateDefinition = {
   fields: [
     { key: "label", type: "text", label: "Label", default: "Like this video", maxLength: 30, shrinkToFit: true },
     { key: "likes", type: "text", label: "Likes", default: "24000", maxLength: 12, help: "Digits — counts up.", shrinkToFit: true },
+    { key: "sparkles", type: "toggle", label: "Sparkles", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

@@ -148,18 +148,21 @@ function build(ctx: TemplateContext): BuiltTemplate {
   }
 
   // --- A thin accent rule draws open beneath the block as a quiet finish ---
-  const ruleY = bottomCy + headSize * 0.55;
-  const ruleW = headSize * 1.6;
-  const ruleH = Math.max(2, Math.round(headSize * 0.05));
-  const rule = new Graphics().roundRect(-ruleW / 2, -ruleH / 2, ruleW, ruleH, ruleH / 2).fill(accent);
-  rule.position.set(cx, ruleY);
-  rule.scale.set(0, 1);
-  rule.alpha = 0;
-  root.addChild(rule);
-  const ruleStart = headStart + 0.55;
-  timeline
-    .to(rule, { prop: "alpha", from: 0, to: 1, start: ruleStart, duration: 0.5, ease: outCubic })
-    .to(rule, { prop: "scale.x", from: 0, to: 1, start: ruleStart, duration: 0.7, ease: outExpo });
+  const showAccentBar = values.accentBar !== false;
+  if (showAccentBar) {
+    const ruleY = bottomCy + headSize * 0.55;
+    const ruleW = headSize * 1.6;
+    const ruleH = Math.max(2, Math.round(headSize * 0.05));
+    const rule = new Graphics().roundRect(-ruleW / 2, -ruleH / 2, ruleW, ruleH, ruleH / 2).fill(accent);
+    rule.position.set(cx, ruleY);
+    rule.scale.set(0, 1);
+    rule.alpha = 0;
+    root.addChild(rule);
+    const ruleStart = headStart + 0.55;
+    timeline
+      .to(rule, { prop: "alpha", from: 0, to: 1, start: ruleStart, duration: 0.5, ease: outCubic })
+      .to(rule, { prop: "scale.x", from: 0, to: 1, start: ruleStart, duration: 0.7, ease: outExpo });
+  }
 
   return { timeline, duration: 3.4 };
 }
@@ -178,6 +181,7 @@ export const spacingExpand: TemplateDefinition = {
   fields: [
     { key: "kicker", type: "text", label: "Kicker", default: "INTRODUCING", maxLength: 28, optional: true },
     { key: "headline", type: "text", label: "Headline", default: "Room to breathe", maxLength: 44, shrinkToFit: true },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

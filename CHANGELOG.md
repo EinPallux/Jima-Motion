@@ -11,6 +11,48 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.7.0] — 2026-07-21 · +50 templates (95 → 145), new categories & editable decorations
+
+The biggest content drop yet: **50 new templates** across the whole library plus **three new
+categories**, and every existing template's decorative accents (the little orange bar, dots, badges…)
+are now **switchable on/off**.
+
+### Added — 50 new templates (library 95 → 145)
+- **Overlays & lower-thirds (new category `overlay`, 7):** `lower-third`, `name-tag`, `subtitle-bar`,
+  `cta-bar`, `topic-bug`, `stat-callout`, `speech-pop` — built for the fresh transparent-WebM export
+  (v1.6): drop them straight onto footage. Their plates use palette-only colors so they survive the
+  alpha bake even as the background blanks.
+- **Openers (new category `intro`, 6):** `channel-intro`, `countdown-intro`, `logo-lines`,
+  `neon-sign`, `clap-intro`, `intro-bars`.
+- **Background loops (new category `loop`, 6):** `gradient-flow`, `floating-shapes`, `bokeh-drift`,
+  `wave-lines`, `grid-pulse`, `confetti-loop` — seamless (frame at t=duration == t=0), driven by
+  periodic `update(t)` math seeded once so they stay deterministic.
+- **Text & titles (7):** `highlight-sweep`, `outline-fill`, `stamp-text`, `rotating-headline`,
+  `gradient-text`, `split-flap`, `underline-grow`.
+- **Social (6):** `story-poll`, `hashtag-pop`, `followers-count`, `swipe-up`, `mention-tag`,
+  `sticker-pop`.
+- **Product & promo (6):** `new-drop`, `feature-tags`, `discount-burst`, `price-slash`,
+  `limited-stock`, `shipping-badge`.
+- **Data & stats (5):** `progress-ring`, `bar-race`, `percent-fill`, `rating-bars`,
+  `milestone-counter`.
+- **Testimonial / brand / event (7):** `quote-cards`, `testimonial-slide`, `logo-grid-reveal`,
+  `thank-you`, `logo-reveal-mask`, `end-screen`, `event-lineup`.
+- Every new template: deterministic, all 4 aspects, ≥3 palettes, per-element color pickers, image→
+  placeholder degradation where relevant, German-length-safe, and decorative accents already
+  toggleable.
+
+### Added — editable decorations on existing templates
+- Purely decorative elements can now be **switched off** per template — the requested "deactivate the
+  small orange bar below the text," plus accent dots, badges/stamps, frames, glows, sparkles,
+  dividers and connector lines. ~57 of the 95 existing templates gained one or more `toggle` fields
+  (e.g. `kinetic-headline` → **Accent bar** + **Accent dot**). All default **on**, so existing looks
+  and golden frames are unchanged; flip one off for a cleaner cut.
+
+### Changed
+- Gallery gains two sections — **Overlays & lower-thirds** and **Openers & backgrounds** — mapping
+  the new `overlay` / `intro` / `loop` categories.
+- Golden suite now covers **145 templates** (145 determinism re-seek tests + 580 poster frames).
+
 ## [1.6.0] — 2026-07-21 · Transparent (alpha) WebM export
 
 Export any animation with a **transparent background** so it can be dropped straight onto footage in

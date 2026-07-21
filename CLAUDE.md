@@ -3,11 +3,15 @@
 Jima Motion is a **100 % free, no-account, browser-only motion-graphics tool for social media
 managers**: pick a template → type your text / drop images → export MP4/WebM/GIF, rendered
 entirely client-side. Brand = "Jima Motion"; the editor = "Jima Studio" ("the Studio").
-**Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 95,
-plus a v1.5 sound + editable-speed release and a v1.6 transparent-export release.**
-Workspace/CI/guardrails; deterministic motion engine + **95 templates** (12 launch + a 23-template
+**Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 145,
+plus a v1.5 sound + editable-speed release, a v1.6 transparent-export release, and a v1.7
++50-template / editable-decorations release.**
+Workspace/CI/guardrails; deterministic motion engine + **145 templates** (12 launch + a 23-template
 expansion + a 20-template smooth-text pack + a 20-template explainer/showcase/product/ad pack + a
-20-template showcase & product-presentation pack);
+20-template showcase & product-presentation pack + a 50-template pack adding overlays/lower-thirds,
+intros/openers, seamless background loops, and more text/social/product/stat/brand);
+three added categories — **overlay** (lower-thirds), **intro** (openers), **loop** (backgrounds);
+**per-template toggles to switch off decorative accents** (accent bar/dot, badges, frames, glows…);
 editable headline fonts (7 OFL families), a use-case-grouped gallery, and per-element color pickers;
 **optional procedural, motion-matched sound (ADR-012) — synthesized SFX auto-cued from each
 template's timeline beats, toggleable with 3 packs, baked into MP4/WebM exports; GIF silent**;

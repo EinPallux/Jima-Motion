@@ -98,6 +98,57 @@ import { logoWall } from "./logo-wall/index";
 import { countdownTimer } from "./countdown-timer/index";
 import { ctaEndcard } from "./cta-endcard/index";
 import { saleBanner } from "./sale-banner/index";
+// v1.7 pack — overlays/lower-thirds, intros, background loops, and more text/social/product/stat.
+import { barRace } from "./bar-race/index";
+import { bokehDrift } from "./bokeh-drift/index";
+import { channelIntro } from "./channel-intro/index";
+import { clapIntro } from "./clap-intro/index";
+import { confettiLoop } from "./confetti-loop/index";
+import { countdownIntro } from "./countdown-intro/index";
+import { ctaBar } from "./cta-bar/index";
+import { discountBurst } from "./discount-burst/index";
+import { eventLineup } from "./event-lineup/index";
+import { featureTags } from "./feature-tags/index";
+import { floatingShapes } from "./floating-shapes/index";
+import { followersCount } from "./followers-count/index";
+import { gradientFlow } from "./gradient-flow/index";
+import { gridPulse } from "./grid-pulse/index";
+import { hashtagPop } from "./hashtag-pop/index";
+import { highlightSweep } from "./highlight-sweep/index";
+import { limitedStock } from "./limited-stock/index";
+import { logoGridReveal } from "./logo-grid-reveal/index";
+import { logoLines } from "./logo-lines/index";
+import { lowerThird } from "./lower-third/index";
+import { mentionTag } from "./mention-tag/index";
+import { milestoneCounter } from "./milestone-counter/index";
+import { nameTag } from "./name-tag/index";
+import { neonSign } from "./neon-sign/index";
+import { newDrop } from "./new-drop/index";
+import { outlineFill } from "./outline-fill/index";
+import { percentFill } from "./percent-fill/index";
+import { priceSlash } from "./price-slash/index";
+import { progressRing } from "./progress-ring/index";
+import { quoteCards } from "./quote-cards/index";
+import { ratingBars } from "./rating-bars/index";
+import { shippingBadge } from "./shipping-badge/index";
+import { speechPop } from "./speech-pop/index";
+import { statCallout } from "./stat-callout/index";
+import { storyPoll } from "./story-poll/index";
+import { subtitleBar } from "./subtitle-bar/index";
+import { swipeUp } from "./swipe-up/index";
+import { testimonialSlide } from "./testimonial-slide/index";
+import { topicBug } from "./topic-bug/index";
+import { waveLines } from "./wave-lines/index";
+import { stampText } from "./stamp-text/index";
+import { rotatingHeadline } from "./rotating-headline/index";
+import { gradientText } from "./gradient-text/index";
+import { splitFlap } from "./split-flap/index";
+import { underlineGrow } from "./underline-grow/index";
+import { thankYou } from "./thank-you/index";
+import { logoRevealMask } from "./logo-reveal-mask/index";
+import { introBars } from "./intro-bars/index";
+import { stickerPop } from "./sticker-pop/index";
+import { endScreen } from "./end-screen/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -197,6 +248,64 @@ export const templates: TemplateDefinition[] = [
   sizeCompare,
   productReview,
   shopGrid,
+  // v1.7 pack — Overlays & lower-thirds
+  lowerThird,
+  nameTag,
+  subtitleBar,
+  ctaBar,
+  topicBug,
+  statCallout,
+  speechPop,
+  // Openers (intros)
+  channelIntro,
+  countdownIntro,
+  logoLines,
+  neonSign,
+  clapIntro,
+  introBars,
+  // Background loops
+  gradientFlow,
+  floatingShapes,
+  bokehDrift,
+  waveLines,
+  gridPulse,
+  confettiLoop,
+  // Text
+  highlightSweep,
+  outlineFill,
+  stampText,
+  rotatingHeadline,
+  gradientText,
+  splitFlap,
+  underlineGrow,
+  // Social
+  storyPoll,
+  hashtagPop,
+  followersCount,
+  swipeUp,
+  mentionTag,
+  stickerPop,
+  // Product & promo
+  discountBurst,
+  newDrop,
+  priceSlash,
+  featureTags,
+  limitedStock,
+  shippingBadge,
+  // Data & stats
+  progressRing,
+  barRace,
+  percentFill,
+  ratingBars,
+  milestoneCounter,
+  // Testimonial / brand / event
+  quoteCards,
+  logoGridReveal,
+  testimonialSlide,
+  eventLineup,
+  thankYou,
+  logoRevealMask,
+  endScreen,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {

@@ -56,6 +56,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const username = str(values.username, "@jima.studio");
   const label = str(values.label, "Follow for more");
   const initial = ((/[0-9a-z]/i.exec(username)?.[0]) ?? "?").toUpperCase();
+  const showSparkles = values.sparkles !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -146,15 +147,17 @@ function build(ctx: TemplateContext): BuiltTemplate {
 
   // Little hearts float up from the badge on the follow.
   const hearts: { g: Graphics; vx: number; vy: number }[] = [];
-  for (let i = 0; i < 10; i++) {
-    const hs = minDim * rng.range(0.03, 0.05);
-    const g = makeIcon("heart", hs, { color: rng.pick([accent, "#FF8FA3"]) });
-    g.position.set(cx, badgeCY);
-    g.visible = false;
-    root.addChild(g);
-    const ang = -Math.PI / 2 + rng.range(-0.6, 0.6);
-    const speed = rng.range(0.5, 0.9) * minDim;
-    hearts.push({ g, vx: Math.cos(ang) * speed, vy: Math.sin(ang) * speed });
+  if (showSparkles) {
+    for (let i = 0; i < 10; i++) {
+      const hs = minDim * rng.range(0.03, 0.05);
+      const g = makeIcon("heart", hs, { color: rng.pick([accent, "#FF8FA3"]) });
+      g.position.set(cx, badgeCY);
+      g.visible = false;
+      root.addChild(g);
+      const ang = -Math.PI / 2 + rng.range(-0.6, 0.6);
+      const speed = rng.range(0.5, 0.9) * minDim;
+      hearts.push({ g, vx: Math.cos(ang) * speed, vy: Math.sin(ang) * speed });
+    }
   }
 
   const BURST = tapAt + 0.02;
@@ -192,6 +195,7 @@ export const tiktokFollow: TemplateDefinition = {
   fields: [
     { key: "username", type: "text", label: "Username", default: "@jima.studio", maxLength: 24 },
     { key: "label", type: "text", label: "Label", default: "Follow for more", maxLength: 30, optional: true },
+    { key: "sparkles", type: "toggle", label: "Sparkles", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

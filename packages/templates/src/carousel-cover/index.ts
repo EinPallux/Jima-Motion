@@ -98,6 +98,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const dotOff = pc("dotOff", "#E3CDC2");
   const title = str(values.title, "5 tips inside →");
   const subtitle = str(values.subtitle, "Swipe to see them all");
+  const showAccentBar = values.accentBar !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -177,7 +178,9 @@ function build(ctx: TemplateContext): BuiltTemplate {
   titleTxt.position.set(0, yy);
   main.addChild(titleTxt);
   yy += titleH + gap1;
-  main.addChild(new Graphics().roundRect(-ruleW / 2, yy, ruleW, ruleH, ruleH / 2).fill(accent));
+  if (showAccentBar) {
+    main.addChild(new Graphics().roundRect(-ruleW / 2, yy, ruleW, ruleH, ruleH / 2).fill(accent));
+  }
   yy += ruleH;
   if (subTxt) {
     yy += gap2;
@@ -272,6 +275,7 @@ export const carouselCover: TemplateDefinition = {
     { key: "title", type: "text", label: "Title", default: "5 tips inside →", maxLength: 40, shrinkToFit: true },
     { key: "subtitle", type: "text", label: "Subtitle", default: "Swipe to see them all", maxLength: 40, optional: true },
     { key: "image", type: "image", label: "Cover image", default: "", optional: true },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Title", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

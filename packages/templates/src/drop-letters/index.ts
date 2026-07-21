@@ -33,6 +33,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const textColor = str(values.textColor, pc("textColor", "#101014"));
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
   const headline = str(values.headline, "Drop the beat");
+  const showAccentBar = values.accentBar !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -70,7 +71,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const lastIndex = boxes.length ? boxes[boxes.length - 1]!.index : 0;
 
   // A quiet accent baseline draws in once every glyph has landed.
-  if (boxes.length) {
+  if (boxes.length && showAccentBar) {
     const bottom = Math.max(...boxes.map((b) => b.cy)) + fontSize * 0.64;
     const left = Math.min(...boxes.map((b) => b.cx - b.width / 2));
     const right = Math.max(...boxes.map((b) => b.cx + b.width / 2));
@@ -102,6 +103,7 @@ export const dropLetters: TemplateDefinition = {
   palettes: PALETTES,
   fields: [
     { key: "headline", type: "text", label: "Headline", default: "Drop the beat", maxLength: 44, shrinkToFit: true },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

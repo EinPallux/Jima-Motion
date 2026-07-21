@@ -65,6 +65,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const muted = pc("muted", "#9A94A0");
   const beforeLabel = str(values.beforeLabel, "Before");
   const afterLabel = str(values.afterLabel, "After");
+  const showAccentDot = values.accentDot !== false;
 
   const w = size.width;
   const h = size.height;
@@ -138,15 +139,17 @@ function build(ctx: TemplateContext): BuiltTemplate {
     const t = makeText(fonts, { text, role: "display", weight: 700, size: chipFont, color: chipTextC, anchor: { x: 0, y: 0.5 }, letterSpacing: 1.5 });
     const dotR = chipFont * 0.26;
     const padX = chipFont * 0.8;
-    const gapD = chipFont * 0.45;
-    const innerW = dotR * 2 + gapD + t.width;
+    const gapD = showAccentDot ? chipFont * 0.45 : 0;
+    const innerW = (showAccentDot ? dotR * 2 : 0) + gapD + t.width;
     const pw = innerW + padX * 2;
     const ph = chipFont * 1.85;
     const c = new Container();
     c.addChild(new Graphics().roundRect(-pw / 2, -ph / 2 + ph * 0.08, pw, ph, ph / 2).fill({ color: 0x000000, alpha: 0.24 }));
     c.addChild(new Graphics().roundRect(-pw / 2, -ph / 2, pw, ph, ph / 2).fill(chipC));
-    c.addChild(new Graphics().circle(-innerW / 2 + dotR, 0, dotR).fill(dotColor));
-    t.position.set(-innerW / 2 + dotR * 2 + gapD, 0);
+    if (showAccentDot) {
+      c.addChild(new Graphics().circle(-innerW / 2 + dotR, 0, dotR).fill(dotColor));
+    }
+    t.position.set(showAccentDot ? -innerW / 2 + dotR * 2 + gapD : -innerW / 2, 0);
     c.addChild(t);
     return { node: c, width: pw };
   };
@@ -192,6 +195,7 @@ export const beforeAfterSlider: TemplateDefinition = {
     { key: "afterImage", type: "image", label: "After image", default: "", optional: true },
     { key: "beforeLabel", type: "text", label: "Before label", default: "Before", maxLength: 16 },
     { key: "afterLabel", type: "text", label: "After label", default: "After", maxLength: 16 },
+    { key: "accentDot", type: "toggle", label: "Accent dot", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

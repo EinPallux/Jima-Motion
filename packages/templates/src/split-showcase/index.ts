@@ -129,6 +129,8 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const kicker = str(values.kicker, "");
   const title = str(values.title, "Built for creators");
   const points = pointList(values);
+  const showAccentBar = values.accentBar !== false;
+  const showAccentDot = values.accentDot !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -187,21 +189,23 @@ function build(ctx: TemplateContext): BuiltTemplate {
   }
 
   // Accent seam.
-  const seamT = Math.max(4, Math.min(w, h) * 0.006);
-  if (horizontal) {
-    const seam = new Graphics().rect(0, -seamT / 2, w, seamT).fill(accent);
-    seam.scale.set(0, 1);
-    seam.pivot.set(w / 2, 0);
-    seam.position.set(w / 2, imgH);
-    root.addChild(seam);
-    timeline.to(seam, { prop: "scale.x", from: 0, to: 1, start: 0.7, duration: 0.5, ease: outExpo });
-  } else {
-    const seam = new Graphics().rect(-seamT / 2, 0, seamT, h).fill(accent);
-    seam.pivot.set(0, h / 2);
-    seam.position.set(imgW, h / 2);
-    seam.scale.set(1, 0);
-    root.addChild(seam);
-    timeline.to(seam, { prop: "scale.y", from: 0, to: 1, start: 0.7, duration: 0.5, ease: outExpo });
+  if (showAccentBar) {
+    const seamT = Math.max(4, Math.min(w, h) * 0.006);
+    if (horizontal) {
+      const seam = new Graphics().rect(0, -seamT / 2, w, seamT).fill(accent);
+      seam.scale.set(0, 1);
+      seam.pivot.set(w / 2, 0);
+      seam.position.set(w / 2, imgH);
+      root.addChild(seam);
+      timeline.to(seam, { prop: "scale.x", from: 0, to: 1, start: 0.7, duration: 0.5, ease: outExpo });
+    } else {
+      const seam = new Graphics().rect(-seamT / 2, 0, seamT, h).fill(accent);
+      seam.pivot.set(0, h / 2);
+      seam.position.set(imgW, h / 2);
+      seam.scale.set(1, 0);
+      root.addChild(seam);
+      timeline.to(seam, { prop: "scale.y", from: 0, to: 1, start: 0.7, duration: 0.5, ease: outExpo });
+    }
   }
 
   // Panel content.
@@ -248,10 +252,16 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const pSize = Math.round(w * (horizontal ? 0.038 : 0.028));
   points.forEach((point, i) => {
     const rowY = pointsTop + rowGap * (i + 0.5);
-    const dot = new Graphics().circle(0, 0, dotR).fill(accent);
-    dot.position.set(contentX + dotR, rowY);
-    dot.scale.set(0);
-    root.addChild(dot);
+    const start = 1.2 + i * 0.35;
+    if (showAccentDot) {
+      const dot = new Graphics().circle(0, 0, dotR).fill(accent);
+      dot.position.set(contentX + dotR, rowY);
+      dot.scale.set(0);
+      root.addChild(dot);
+      timeline
+        .to(dot, { prop: "scale.x", from: 0, to: 1, start, duration: 0.4, ease: makeOutBack(2.2) })
+        .to(dot, { prop: "scale.y", from: 0, to: 1, start, duration: 0.4, ease: makeOutBack(2.2) });
+    }
     const pText = fitText(
       fonts,
       { text: point, role: "body", weight: 600, size: pSize, color: textColor, anchor: { x: 0, y: 0.5 } },
@@ -260,10 +270,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
     pText.position.set(contentX + dotR * 3.4, rowY);
     pText.alpha = 0;
     root.addChild(pText);
-    const start = 1.2 + i * 0.35;
     timeline
-      .to(dot, { prop: "scale.x", from: 0, to: 1, start, duration: 0.4, ease: makeOutBack(2.2) })
-      .to(dot, { prop: "scale.y", from: 0, to: 1, start, duration: 0.4, ease: makeOutBack(2.2) })
       .to(pText, { prop: "alpha", from: 0, to: 1, start: start + 0.05, duration: 0.4, ease: outQuad })
       .to(pText, { prop: "x", from: contentX + dotR * 3.4 - 16, to: contentX + dotR * 3.4, start: start + 0.05, duration: 0.5, ease: outQuint });
   });
@@ -287,6 +294,8 @@ export const splitShowcase: TemplateDefinition = {
     { key: "kicker", type: "text", label: "Kicker", default: "SHOWCASE", maxLength: 20, optional: true },
     { key: "title", type: "text", label: "Title", default: "Built for creators", maxLength: 40, shrinkToFit: true },
     { key: "points", type: "textlist", label: "Points", default: DEFAULT_POINTS, minItems: 2, maxItems: 3, maxLength: 30 },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
+    { key: "accentDot", type: "toggle", label: "Accent dot", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

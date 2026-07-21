@@ -173,12 +173,15 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(priceGroup, { prop: "scale.y", from: 1.14, to: 1, start: 0.8, duration: 0.5, ease: outExpo });
 
   // --- Divider ---
-  const divider = new Graphics().roundRect(0, 0, Wc - pad * 2, Math.max(2, Wc * 0.004), 2).fill(dividerColor);
-  divider.pivot.set(0, 0);
-  divider.position.set(pad, dividerY);
-  divider.scale.set(0, 1);
-  card.addChild(divider);
-  timeline.to(divider, { prop: "scale.x", from: 0, to: 1, start: 1.0, duration: 0.4, ease: outExpo });
+  const showDivider = values.divider !== false;
+  if (showDivider) {
+    const divider = new Graphics().roundRect(0, 0, Wc - pad * 2, Math.max(2, Wc * 0.004), 2).fill(dividerColor);
+    divider.pivot.set(0, 0);
+    divider.position.set(pad, dividerY);
+    divider.scale.set(0, 1);
+    card.addChild(divider);
+    timeline.to(divider, { prop: "scale.x", from: 0, to: 1, start: 1.0, duration: 0.4, ease: outExpo });
+  }
 
   // --- Feature rows ---
   const rowLeft = pad * 1.05;
@@ -266,6 +269,7 @@ export const priceCard: TemplateDefinition = {
     { key: "features", type: "textlist", label: "Features", default: DEFAULT_FEATURES, minItems: 2, maxItems: 5, maxLength: 28 },
     { key: "cta", type: "text", label: "Button", default: "Get started", maxLength: 20 },
     { key: "badge", type: "text", label: "Badge", default: "FREE", maxLength: 12, optional: true },
+    { key: "divider", type: "toggle", label: "Divider line", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

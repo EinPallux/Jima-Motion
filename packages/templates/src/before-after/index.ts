@@ -155,7 +155,8 @@ function build(ctx: TemplateContext): BuiltTemplate {
   }
 
   // Center divider (side-by-side only) sits in the gap.
-  if (sideBySide) {
+  const showDivider = values.divider !== false;
+  if (sideBySide && showDivider) {
     const divTh = Math.max(2, minDim * 0.004);
     const div = new Graphics().roundRect(-divTh / 2, beforeY, divTh, ph, divTh / 2).fill({ color: textColor, alpha: 0.14 });
     div.position.set(w / 2, 0);
@@ -232,6 +233,7 @@ export const beforeAfter: TemplateDefinition = {
     { key: "afterLabel", type: "text", label: "After label", default: "After", maxLength: 20 },
     { key: "beforeImage", type: "image", label: "Before image", default: "", optional: true },
     { key: "afterImage", type: "image", label: "After image", default: "", optional: true },
+    { key: "divider", type: "toggle", label: "Divider line", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

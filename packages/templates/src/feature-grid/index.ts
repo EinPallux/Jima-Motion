@@ -139,12 +139,17 @@ function makeCard(
   cardBg: string,
   borderC: string,
   fonts: TemplateContext["fonts"],
+  showFrame: boolean,
 ): Container {
   const { w, h, horizontal } = cell;
   const r = Math.min(w, h) * 0.12;
   const card = new Container();
   card.addChild(new Graphics().roundRect(-w / 2, -h / 2 + h * 0.05, w, h, r).fill({ color: 0x000000, alpha: 0.08 }));
-  card.addChild(new Graphics().roundRect(-w / 2, -h / 2, w, h, r).fill(cardBg).stroke({ color: borderC, width: Math.max(1, w * 0.006), alpha: 0.35 }));
+  const cardBase = new Graphics().roundRect(-w / 2, -h / 2, w, h, r).fill(cardBg);
+  if (showFrame) {
+    cardBase.stroke({ color: borderC, width: Math.max(1, w * 0.006), alpha: 0.35 });
+  }
+  card.addChild(cardBase);
 
   if (horizontal) {
     const side = Math.min(h * 0.52, w * 0.24);
@@ -216,10 +221,11 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const timeline = new JimaTimeline();
 
   const cells = layout(ctx.aspect, size, cfg, features.length);
+  const showFrame = values.frame !== false;
   features.forEach((feat, i) => {
     const cell = cells[i];
     if (!cell) return;
-    const card = makeCard(feat, cell, accent, textColor, muted, cardBg, textColor, fonts);
+    const card = makeCard(feat, cell, accent, textColor, muted, cardBg, textColor, fonts, showFrame);
     card.position.set(cell.cx, cell.cy + cell.h * 0.1);
     card.scale.set(0);
     card.alpha = 0;
@@ -264,6 +270,7 @@ export const featureGrid: TemplateDefinition = {
   fields: [
     { key: "title", type: "text", label: "Title", default: "Why you'll love it", maxLength: 40, shrinkToFit: true },
     { key: "features", type: "textlist", label: "Features", default: DEFAULT_FEATURES, minItems: 2, maxItems: 4, maxLength: 44, help: "One per line as \"icon | title | blurb\" (icon optional)." },
+    { key: "frame", type: "toggle", label: "Frame", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

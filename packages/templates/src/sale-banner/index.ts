@@ -69,6 +69,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const textColor = str(values.textColor, pc("textColor", "#FFFFFF"));
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
   const onAccent = pc("onAccent", "#101014");
+  const showAccentBar = values.accentBar !== false;
 
   const w = size.width;
   const h = size.height;
@@ -135,13 +136,15 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(disc, { prop: "scale.y", from: 1.35, to: 1, start: 0.35, duration: 0.5, ease: outExpo });
 
   // Accent slash under the discount (energy, not behind glyphs).
-  const slashW = Math.min(w * 0.5, disc.width * 0.9);
-  const slash = new Graphics().roundRect(-slashW / 2, -minDim * 0.012, slashW, minDim * 0.024, minDim * 0.012).fill(accent);
-  slash.rotation = -3 * DEG;
-  slash.position.set(cx, L.discY + discSize * 0.62);
-  slash.scale.set(0, 1);
-  root.addChild(slash);
-  timeline.to(slash, { prop: "scale.x", from: 0, to: 1, start: 0.7, duration: 0.4, ease: outExpo });
+  if (showAccentBar) {
+    const slashW = Math.min(w * 0.5, disc.width * 0.9);
+    const slash = new Graphics().roundRect(-slashW / 2, -minDim * 0.012, slashW, minDim * 0.024, minDim * 0.012).fill(accent);
+    slash.rotation = -3 * DEG;
+    slash.position.set(cx, L.discY + discSize * 0.62);
+    slash.scale.set(0, 1);
+    root.addChild(slash);
+    timeline.to(slash, { prop: "scale.x", from: 0, to: 1, start: 0.7, duration: 0.4, ease: outExpo });
+  }
 
   // --- Headline / detail line ---
   const headRaw = str(values.headline, "Everything must go");
@@ -191,6 +194,7 @@ export const saleBanner: TemplateDefinition = {
     { key: "discount", type: "text", label: "Discount", default: "30% OFF", maxLength: 14, shrinkToFit: true },
     { key: "headline", type: "text", label: "Headline", default: "Everything must go", maxLength: 40, shrinkToFit: true },
     { key: "cta", type: "text", label: "Button", default: "Shop the sale", maxLength: 20 },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

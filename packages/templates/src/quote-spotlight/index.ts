@@ -41,6 +41,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const quote = str(values.quote, "Jima made our launch posts look like we hired a motion studio.");
   const author = str(values.author, "Sam Rivera");
   const role = str(values.role, "");
+  const showAccentBar = values.accentBar !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -88,12 +89,14 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const attributionY = lastCy + fontSize * 1.4;
 
   // Accent rule.
-  const ruleW = fontSize * 1.4;
-  const rule = new Graphics().roundRect(0, 0, ruleW, Math.max(3, fontSize * 0.06), 3).fill(accent);
-  rule.position.set(cx - ruleW / 2, attributionY - fontSize * 0.5);
-  rule.scale.set(0, 1);
-  root.addChild(rule);
-  timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 2.6, duration: 0.4, ease: outExpo });
+  if (showAccentBar) {
+    const ruleW = fontSize * 1.4;
+    const rule = new Graphics().roundRect(0, 0, ruleW, Math.max(3, fontSize * 0.06), 3).fill(accent);
+    rule.position.set(cx - ruleW / 2, attributionY - fontSize * 0.5);
+    rule.scale.set(0, 1);
+    root.addChild(rule);
+    timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 2.6, duration: 0.4, ease: outExpo });
+  }
 
   // Optional avatar (circle-cropped), centered above the author.
   const avatarTex = images.avatar ?? null;
@@ -154,6 +157,7 @@ export const quoteSpotlight: TemplateDefinition = {
     { key: "role", type: "text", label: "Role", default: "Head of Social, Northwind", maxLength: 40, optional: true },
     { key: "avatar", type: "image", label: "Avatar", default: "", optional: true },
     { key: "fontRole", type: "select", label: "Font", default: "serif", options: [{ value: "serif", label: "Serif" }, { value: "display", label: "Sans" }] },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

@@ -160,6 +160,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const detail = str(values.detail, "Leak-proof cap");
   const price = str(values.price, "$29");
   const cta = str(values.cta, "Buy now");
+  const showConnector = values.connector !== false;
 
   const W = size.width;
   const H = size.height;
@@ -281,9 +282,11 @@ function build(ctx: TemplateContext): BuiltTemplate {
   }
 
   // --- Leader line (drawn under the loupe + pill) ---
-  const leader = makeLeader(detailCx, detailCy, lensX, lensY, Math.max(3, minDim * 0.006), accent);
-  root.addChild(leader);
-  timeline.to(leader, { prop: "scale.x", from: 0, to: 1, start: 1.55, duration: 0.4, ease: outExpo });
+  const leader = showConnector ? makeLeader(detailCx, detailCy, lensX, lensY, Math.max(3, minDim * 0.006), accent) : null;
+  if (leader) {
+    root.addChild(leader);
+    timeline.to(leader, { prop: "scale.x", from: 0, to: 1, start: 1.55, duration: 0.4, ease: outExpo });
+  }
 
   // --- Magnifier loupe ---
   const loupe = makeLoupe(tex, cardCx - lensX, cardCy - lensY, cover, lensR, accent, cardColor, onAccent);
@@ -314,8 +317,10 @@ function build(ctx: TemplateContext): BuiltTemplate {
   pill.alpha = 0;
   root.addChild(pill);
   // Re-point the leader at the actual pill center now that its width is known.
-  leader.position.set(pillCx, detailCy);
-  leader.rotation = Math.atan2(lensY - detailCy, lensX - pillCx);
+  if (leader) {
+    leader.position.set(pillCx, detailCy);
+    leader.rotation = Math.atan2(lensY - detailCy, lensX - pillCx);
+  }
   timeline
     .to(pill, { prop: "alpha", from: 0, to: 1, start: 1.85, duration: 0.4, ease: outQuad })
     .to(pill, { prop: "scale.x", from: 0.9, to: 1, start: 1.85, duration: 0.5, ease: makeOutBack(1.6) })
@@ -369,6 +374,7 @@ export const productDetail: TemplateDefinition = {
     { key: "detail", type: "text", label: "Detail", default: "Leak-proof cap", maxLength: 32 },
     { key: "price", type: "text", label: "Price", default: "$29", maxLength: 12, optional: true },
     { key: "cta", type: "text", label: "Button", default: "Buy now", maxLength: 18 },
+    { key: "connector", type: "toggle", label: "Connector line", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

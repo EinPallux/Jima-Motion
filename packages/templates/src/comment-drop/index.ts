@@ -102,6 +102,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const textColor = str(values.textColor, pc("textColor", "#101014"));
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
   const bubbleColor = pc("bubble", "#FFFFFF");
+  const showLikeHeart = values.likeHeart !== false;
   const list = items(values);
   const N = list.length;
 
@@ -169,7 +170,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
     const heart = makeIcon("heart", msgSize0 * 0.8, { color: accent });
     heart.position.set(bubbleLeft + bubbleW - padX * 0.7, bubbleH - padY * 0.7);
     heart.scale.set(0);
-    c.addChild(heart);
+    if (showLikeHeart) c.addChild(heart);
 
     c.position.set(marginX, bottomAnchorY - bubbleH);
     c.alpha = 0;
@@ -195,9 +196,11 @@ function build(ctx: TemplateContext): BuiltTemplate {
       .to(c, { prop: "y", from: restTop + 70 * k, to: restTop, start: Ti, duration: 0.6, ease: spring(0.5) });
 
     const heart = hearts[i]!;
-    timeline
-      .to(heart, { prop: "scale.x", from: 0, to: 1, start: Ti + 0.28, duration: 0.45, ease: makeOutBack(2) })
-      .to(heart, { prop: "scale.y", from: 0, to: 1, start: Ti + 0.28, duration: 0.45, ease: makeOutBack(2) });
+    if (showLikeHeart) {
+      timeline
+        .to(heart, { prop: "scale.x", from: 0, to: 1, start: Ti + 0.28, duration: 0.45, ease: makeOutBack(2) })
+        .to(heart, { prop: "scale.y", from: 0, to: 1, start: Ti + 0.28, duration: 0.45, ease: makeOutBack(2) });
+    }
 
     // Push up as each later comment lands.
     for (let p = i + 1; p < N; p++) {
@@ -222,6 +225,7 @@ export const commentDrop: TemplateDefinition = {
   palettes: PALETTES,
   fields: [
     { key: "comments", type: "textlist", label: "Comments", default: DEFAULT_COMMENTS, minItems: 2, maxItems: 4, maxLength: 60 },
+    { key: "likeHeart", type: "toggle", label: "Like heart", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

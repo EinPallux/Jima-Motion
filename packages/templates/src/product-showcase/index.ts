@@ -77,14 +77,17 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const timeline = new JimaTimeline();
 
   // Soft radial spotlight behind the product.
-  const spot = new Sprite(radialGlowTexture());
-  spot.anchor.set(0.5);
-  spot.tint = accent;
-  spot.width = spot.height = Math.max(boxW, boxH) * 2.3;
-  spot.position.set(cx, prodY);
-  spot.alpha = 0;
-  root.addChild(spot);
-  timeline.to(spot, { prop: "alpha", from: 0, to: 0.16, start: 0.1, duration: 0.8, ease: outQuad });
+  const showGlow = values.glow !== false;
+  if (showGlow) {
+    const spot = new Sprite(radialGlowTexture());
+    spot.anchor.set(0.5);
+    spot.tint = accent;
+    spot.width = spot.height = Math.max(boxW, boxH) * 2.3;
+    spot.position.set(cx, prodY);
+    spot.alpha = 0;
+    root.addChild(spot);
+    timeline.to(spot, { prop: "alpha", from: 0, to: 0.16, start: 0.1, duration: 0.8, ease: outQuad });
+  }
 
   // Pedestal (wide soft plinth) + reactive contact shadow.
   const pedestal = new Graphics().ellipse(0, 0, boxW * 0.62, boxH * 0.06).fill({ color: 0x000000, alpha: 0.05 });
@@ -218,6 +221,7 @@ export const productShowcase: TemplateDefinition = {
     { key: "name", type: "text", label: "Name", default: "The New One", maxLength: 30, shrinkToFit: true },
     { key: "tagline", type: "text", label: "Tagline", default: "Designed to move", maxLength: 44, optional: true },
     { key: "price", type: "text", label: "Price", default: "$49", maxLength: 12, optional: true },
+    { key: "glow", type: "toggle", label: "Glow", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

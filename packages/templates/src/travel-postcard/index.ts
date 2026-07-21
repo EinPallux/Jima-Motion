@@ -84,6 +84,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const bg = str(values.background, pc("background", "#EAF4FF"));
   const textColor = str(values.textColor, pc("textColor", "#0B2447"));
   const accent = str(values.accent, pc("accent", "#2E7DF6"));
+  const showStamp = values.stamp !== false;
 
   const w = size.width;
   const h = size.height;
@@ -95,23 +96,25 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const timeline = new JimaTimeline();
 
   // --- Postmark stamp (corner) ---
-  const stampR = minDim * 0.072;
-  const stamp = new Container();
-  stamp.position.set(w * 0.8, L.stampY);
-  stamp.addChild(new Graphics().star(0, 0, 16, stampR, stampR * 0.86).fill(accent));
-  stamp.addChild(new Graphics().circle(0, 0, stampR * 0.72).fill(bg));
-  const st1 = makeText(fonts, { text: "AIR", role: "display", weight: 700, size: Math.round(stampR * 0.42), color: accent, anchor: 0.5 });
-  st1.position.set(0, -stampR * 0.22);
-  const st2 = makeText(fonts, { text: "MAIL", role: "display", weight: 700, size: Math.round(stampR * 0.34), color: accent, anchor: 0.5 });
-  st2.position.set(0, stampR * 0.26);
-  stamp.addChild(st1);
-  stamp.addChild(st2);
-  stamp.scale.set(0);
-  stamp.rotation = -14 * DEG;
-  root.addChild(stamp);
-  timeline
-    .to(stamp, { prop: "scale.x", from: 0, to: 1, start: 0.5, duration: 0.7, ease: spring(0.5) })
-    .to(stamp, { prop: "scale.y", from: 0, to: 1, start: 0.5, duration: 0.7, ease: spring(0.5) });
+  if (showStamp) {
+    const stampR = minDim * 0.072;
+    const stamp = new Container();
+    stamp.position.set(w * 0.8, L.stampY);
+    stamp.addChild(new Graphics().star(0, 0, 16, stampR, stampR * 0.86).fill(accent));
+    stamp.addChild(new Graphics().circle(0, 0, stampR * 0.72).fill(bg));
+    const st1 = makeText(fonts, { text: "AIR", role: "display", weight: 700, size: Math.round(stampR * 0.42), color: accent, anchor: 0.5 });
+    st1.position.set(0, -stampR * 0.22);
+    const st2 = makeText(fonts, { text: "MAIL", role: "display", weight: 700, size: Math.round(stampR * 0.34), color: accent, anchor: 0.5 });
+    st2.position.set(0, stampR * 0.26);
+    stamp.addChild(st1);
+    stamp.addChild(st2);
+    stamp.scale.set(0);
+    stamp.rotation = -14 * DEG;
+    root.addChild(stamp);
+    timeline
+      .to(stamp, { prop: "scale.x", from: 0, to: 1, start: 0.5, duration: 0.7, ease: spring(0.5) })
+      .to(stamp, { prop: "scale.y", from: 0, to: 1, start: 0.5, duration: 0.7, ease: spring(0.5) });
+  }
 
   // --- Destination ---
   const destRaw = str(values.destination, "Barcelona");
@@ -249,6 +252,7 @@ export const travelPostcard: TemplateDefinition = {
     { key: "fromCode", type: "text", label: "From", default: "NYC", maxLength: 4 },
     { key: "toCode", type: "text", label: "To", default: "BCN", maxLength: 4 },
     { key: "dates", type: "text", label: "Dates", default: "JUN 12 – JUN 20", maxLength: 24 },
+    { key: "stamp", type: "toggle", label: "Postmark stamp", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

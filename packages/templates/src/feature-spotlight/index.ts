@@ -90,6 +90,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const kicker = str(values.kicker, "");
   const title = str(values.title, "Lightning-fast exports");
   const description = str(values.description, "Renders on your device in seconds — no upload, no wait.");
+  const showGlow = values.glow !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -128,14 +129,16 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const textX = textCX;
 
   // Soft accent glow behind the icon.
-  const glow = new Sprite(radialGlowTexture());
-  glow.anchor.set(0.5);
-  glow.tint = accent;
-  glow.width = glow.height = discR * 4;
-  glow.position.set(discX, discY);
-  glow.alpha = 0;
-  root.addChild(glow);
-  timeline.to(glow, { prop: "alpha", from: 0, to: 0.22, start: 0.1, duration: 0.8, ease: outQuad });
+  if (showGlow) {
+    const glow = new Sprite(radialGlowTexture());
+    glow.anchor.set(0.5);
+    glow.tint = accent;
+    glow.width = glow.height = discR * 4;
+    glow.position.set(discX, discY);
+    glow.alpha = 0;
+    root.addChild(glow);
+    timeline.to(glow, { prop: "alpha", from: 0, to: 0.22, start: 0.1, duration: 0.8, ease: outQuad });
+  }
 
   // Icon disc (accent) → icon glyph.
   const disc = new Container();
@@ -217,6 +220,7 @@ export const featureSpotlight: TemplateDefinition = {
     { key: "kicker", type: "text", label: "Kicker", default: "FEATURE", maxLength: 20, optional: true },
     { key: "title", type: "text", label: "Title", default: "Lightning-fast exports", maxLength: 40, shrinkToFit: true },
     { key: "description", type: "text", label: "Description", default: "Renders on your device in seconds — no upload, no wait.", maxLength: 90, shrinkToFit: true },
+    { key: "glow", type: "toggle", label: "Glow", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

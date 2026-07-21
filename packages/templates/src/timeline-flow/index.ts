@@ -76,6 +76,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const title = str(values.title, "Our roadmap");
   const milestones = resolveMilestones(values);
   const n = milestones.length;
+  const showConnector = values.connector !== false;
 
   const w = size.width;
   const h = size.height;
@@ -134,13 +135,15 @@ function build(ctx: TemplateContext): BuiltTemplate {
       const dotStart = 1.05 + i * PER_MILESTONE;
 
       // Stem.
-      const stem = new Graphics();
-      if (side < 0) stem.roundRect(-baseTh * 0.35, -stemLen, baseTh * 0.7, stemLen, baseTh * 0.35).fill({ color: accent, alpha: 0.7 });
-      else stem.roundRect(-baseTh * 0.35, 0, baseTh * 0.7, stemLen, baseTh * 0.35).fill({ color: accent, alpha: 0.7 });
-      stem.position.set(x, y);
-      stem.scale.set(1, 0);
-      root.addChild(stem);
-      timeline.to(stem, { prop: "scale.y", from: 0, to: 1, start: dotStart + 0.1, duration: 0.3, ease: outExpo });
+      if (showConnector) {
+        const stem = new Graphics();
+        if (side < 0) stem.roundRect(-baseTh * 0.35, -stemLen, baseTh * 0.7, stemLen, baseTh * 0.35).fill({ color: accent, alpha: 0.7 });
+        else stem.roundRect(-baseTh * 0.35, 0, baseTh * 0.7, stemLen, baseTh * 0.35).fill({ color: accent, alpha: 0.7 });
+        stem.position.set(x, y);
+        stem.scale.set(1, 0);
+        root.addChild(stem);
+        timeline.to(stem, { prop: "scale.y", from: 0, to: 1, start: dotStart + 0.1, duration: 0.3, ease: outExpo });
+      }
 
       // Text block (pill + label), centered on x.
       const label = fitText(
@@ -203,12 +206,14 @@ function build(ctx: TemplateContext): BuiltTemplate {
       const dotStart = 1.05 + i * PER_MILESTONE;
 
       // Stem (horizontal, dot → label block).
-      const stemLen = labelX - (x + Rdot) - minDim * 0.012;
-      const stem = new Graphics().roundRect(0, -baseTh * 0.35, stemLen, baseTh * 0.7, baseTh * 0.35).fill({ color: accent, alpha: 0.7 });
-      stem.position.set(x + Rdot, y);
-      stem.scale.set(0, 1);
-      root.addChild(stem);
-      timeline.to(stem, { prop: "scale.x", from: 0, to: 1, start: dotStart + 0.1, duration: 0.3, ease: outExpo });
+      if (showConnector) {
+        const stemLen = labelX - (x + Rdot) - minDim * 0.012;
+        const stem = new Graphics().roundRect(0, -baseTh * 0.35, stemLen, baseTh * 0.7, baseTh * 0.35).fill({ color: accent, alpha: 0.7 });
+        stem.position.set(x + Rdot, y);
+        stem.scale.set(0, 1);
+        root.addChild(stem);
+        timeline.to(stem, { prop: "scale.x", from: 0, to: 1, start: dotStart + 0.1, duration: 0.3, ease: outExpo });
+      }
 
       const label = fitText(
         fonts,
@@ -280,6 +285,7 @@ export const timelineFlow: TemplateDefinition = {
   fields: [
     { key: "title", type: "text", label: "Title", default: "Our roadmap", maxLength: 40, shrinkToFit: true },
     { key: "milestones", type: "textlist", label: "Milestones", default: DEFAULT_MILESTONES, minItems: 2, maxItems: 4, maxLength: 32, help: "Use \"date | label\", e.g. \"Q1 | Launch\"." },
+    { key: "connector", type: "toggle", label: "Connector line", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

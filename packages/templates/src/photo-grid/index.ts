@@ -103,6 +103,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const chipC = pc("chip", "#17131B");
   const chipTextC = pc("chipText", "#FFFFFF");
   const title = str(values.title, "Our work");
+  const showAccentDot = values.accentDot !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -161,15 +162,17 @@ function build(ctx: TemplateContext): BuiltTemplate {
     );
     const dotR = chipFont * 0.28;
     const padX = chipFont * 0.9;
-    const gapDot = chipFont * 0.5;
-    const innerW = dotR * 2 + gapDot + label.width;
+    const gapDot = showAccentDot ? chipFont * 0.5 : 0;
+    const innerW = (showAccentDot ? dotR * 2 : 0) + gapDot + label.width;
     const pillW = innerW + padX * 2;
     const pillH = chipFont * 1.95;
     const chip = new Container();
     chip.addChild(new Graphics().roundRect(-pillW / 2, -pillH / 2 + pillH * 0.08, pillW, pillH, pillH / 2).fill({ color: 0x000000, alpha: 0.16 }));
     chip.addChild(new Graphics().roundRect(-pillW / 2, -pillH / 2, pillW, pillH, pillH / 2).fill(chipC));
-    chip.addChild(new Graphics().circle(-innerW / 2 + dotR, 0, dotR).fill(accent));
-    label.position.set(-innerW / 2 + dotR * 2 + gapDot, 0);
+    if (showAccentDot) {
+      chip.addChild(new Graphics().circle(-innerW / 2 + dotR, 0, dotR).fill(accent));
+    }
+    label.position.set(showAccentDot ? -innerW / 2 + dotR * 2 + gapDot : -innerW / 2, 0);
     chip.addChild(label);
     const chipCy = cy0 + cH - pillH * 0.7;
     chip.position.set(w / 2, chipCy);
@@ -203,6 +206,7 @@ export const photoGrid: TemplateDefinition = {
     { key: "image4", type: "image", label: "Image 4", default: "", optional: true },
     { key: "image5", type: "image", label: "Image 5", default: "", optional: true, help: "Shown on wide (16:9) and tall (9:16) layouts." },
     { key: "image6", type: "image", label: "Image 6", default: "", optional: true, help: "Shown on wide (16:9) and tall (9:16) layouts." },
+    { key: "accentDot", type: "toggle", label: "Accent dot", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

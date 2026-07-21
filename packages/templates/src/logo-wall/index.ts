@@ -95,12 +95,15 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(heading, { prop: "alpha", from: 0, to: 1, start: 0, duration: 0.4, ease: outQuad })
     .to(heading, { prop: "y", from: headY - 14, to: headY, start: 0, duration: 0.5, ease: outExpo });
 
-  const ruleW = headSize * 2.2;
-  const rule = new Graphics().roundRect(-ruleW / 2, -1.5, ruleW, Math.max(3, headSize * 0.08), 2).fill(accent);
-  rule.position.set(cx, headY + headSize * 0.9);
-  rule.scale.set(0, 1);
-  root.addChild(rule);
-  timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 0.25, duration: 0.4, ease: outExpo });
+  const showAccentBar = values.accentBar !== false;
+  if (showAccentBar) {
+    const ruleW = headSize * 2.2;
+    const rule = new Graphics().roundRect(-ruleW / 2, -1.5, ruleW, Math.max(3, headSize * 0.08), 2).fill(accent);
+    rule.position.set(cx, headY + headSize * 0.9);
+    rule.scale.set(0, 1);
+    root.addChild(rule);
+    timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 0.25, duration: 0.4, ease: outExpo });
+  }
 
   // --- Chip grid ---
   const cols = colsFor(aspect, n);
@@ -190,6 +193,7 @@ export const logoWall: TemplateDefinition = {
   fields: [
     { key: "heading", type: "text", label: "Heading", default: "Trusted by teams at", maxLength: 40, shrinkToFit: true },
     { key: "names", type: "textlist", label: "Client names", default: DEFAULT_NAMES, minItems: 3, maxItems: 8, maxLength: 18 },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

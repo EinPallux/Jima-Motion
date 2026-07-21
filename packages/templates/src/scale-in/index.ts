@@ -51,6 +51,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
   const headline = str(values.headline, "Make it big");
   const subline = str(values.subline, "");
+  const showAccentBar = values.accentBar !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -116,15 +117,17 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const right = Math.max(...boxes.map((b) => b.cx + b.width / 2));
   const cxMid = (left + right) / 2;
   const lineW = Math.min(right - left, size.width * 0.18);
-  const underline = new Graphics().roundRect(-lineW / 2, 0, lineW, Math.max(3, fontSize * 0.055), 2).fill(accent);
-  underline.position.set(cxMid, bottom);
-  underline.alpha = 0;
-  underline.scale.set(0.35, 1);
-  content.addChild(underline);
   const ulStart = Math.max(1.3, 0.3 + boxes.length * 0.05 + 0.4);
-  timeline
-    .to(underline, { prop: "alpha", from: 0, to: 1, start: ulStart, duration: 0.5, ease: outCubic })
-    .to(underline, { prop: "scale.x", from: 0.35, to: 1, start: ulStart, duration: 0.7, ease: outExpo });
+  if (showAccentBar) {
+    const underline = new Graphics().roundRect(-lineW / 2, 0, lineW, Math.max(3, fontSize * 0.055), 2).fill(accent);
+    underline.position.set(cxMid, bottom);
+    underline.alpha = 0;
+    underline.scale.set(0.35, 1);
+    content.addChild(underline);
+    timeline
+      .to(underline, { prop: "alpha", from: 0, to: 1, start: ulStart, duration: 0.5, ease: outCubic })
+      .to(underline, { prop: "scale.x", from: 0.35, to: 1, start: ulStart, duration: 0.7, ease: outExpo });
+  }
 
   let end = ulStart + 0.7;
   if (subline.length > 0) {
@@ -164,6 +167,7 @@ export const scaleIn: TemplateDefinition = {
   fields: [
     { key: "headline", type: "text", label: "Headline", default: "Make it big", maxLength: 40, shrinkToFit: true },
     { key: "subline", type: "text", label: "Subline", default: "Bold and smooth", maxLength: 60, optional: true },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

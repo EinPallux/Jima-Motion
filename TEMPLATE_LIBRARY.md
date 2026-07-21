@@ -500,3 +500,23 @@ degradation, per-element color fields.
 | T93 | Size Compare | `size-compare` | product | 1:1 | Drafting-style H×W×D dimension guides |
 | T94 | Product Review | `product-review` | product | 4:5 | Product + star rating + customer quote |
 | T95 | Shop Grid | `shop-grid` | product | 4:5 | A shop collection grid with prices + CTA |
+
+## 11. Overlays / openers / loops / more — 50 templates (2026-07-21)
+
+Library 95 → **145**, plus three new categories — **overlay** (lower-thirds/callouts, built to be
+exported transparent), **intro** (openers/stingers), **loop** (seamless backgrounds) — and a
+codebase-wide editability pass: purely decorative elements (accent bars/dots, badges, frames, glows,
+sparkles, dividers, connectors) now have per-template on/off `toggle` fields, all defaulting on.
+Same contract; deterministic (loops use periodic `update(t)` seeded once so `frame(duration)==frame(0)`),
+all 4 aspects, ≥3 palettes, per-element colors, German-length-safe, 4.5:1 end-frame contrast.
+
+| Category | Templates (`id`) |
+|---|---|
+| Overlays / lower-thirds (`overlay`) | `lower-third`, `name-tag`, `subtitle-bar`, `cta-bar`, `topic-bug`, `stat-callout`, `speech-pop` |
+| Openers (`intro`) | `channel-intro`, `countdown-intro`, `logo-lines`, `neon-sign`, `clap-intro`, `intro-bars` |
+| Background loops (`loop`) | `gradient-flow`, `floating-shapes`, `bokeh-drift`, `wave-lines`, `grid-pulse`, `confetti-loop` |
+| Text & titles (`statement`) | `highlight-sweep`, `outline-fill`, `stamp-text`, `rotating-headline`, `gradient-text`, `split-flap`, `underline-grow` |
+| Social (`social`) | `story-poll`, `hashtag-pop`, `followers-count`, `swipe-up`, `mention-tag`, `sticker-pop` |
+| Product & promo (`product`/`promo`) | `new-drop`, `feature-tags`, `discount-burst`, `price-slash`, `limited-stock`, `shipping-badge` |
+| Data & stats (`stat`) | `progress-ring`, `bar-race`, `percent-fill`, `rating-bars`, `milestone-counter` |
+| Testimonial / brand / event | `quote-cards`, `testimonial-slide`, `logo-grid-reveal`, `thank-you`, `logo-reveal-mask`, `end-screen`, `event-lineup` |

@@ -83,14 +83,17 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(titleText, { prop: "alpha", from: 0, to: 1, start: 0.0, duration: 0.4, ease: outQuad })
     .to(titleText, { prop: "y", from: titleY - 16, to: titleY, start: 0.0, duration: 0.55, ease: outExpo });
 
-  const ruleW = minDim * 0.13;
-  const ruleTh = Math.max(3, minDim * 0.01);
-  const rule = new Graphics().roundRect(0, 0, ruleW, ruleTh, ruleTh / 2).fill(accent);
-  rule.pivot.set(ruleW / 2, ruleTh / 2);
-  rule.position.set(w / 2, titleY + titleSize * 0.92);
-  rule.scale.set(0, 1);
-  root.addChild(rule);
-  timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 0.3, duration: 0.4, ease: outExpo });
+  const showAccentBar = values.accentBar !== false;
+  if (showAccentBar) {
+    const ruleW = minDim * 0.13;
+    const ruleTh = Math.max(3, minDim * 0.01);
+    const rule = new Graphics().roundRect(0, 0, ruleW, ruleTh, ruleTh / 2).fill(accent);
+    rule.pivot.set(ruleW / 2, ruleTh / 2);
+    rule.position.set(w / 2, titleY + titleSize * 0.92);
+    rule.scale.set(0, 1);
+    root.addChild(rule);
+    timeline.to(rule, { prop: "scale.x", from: 0, to: 1, start: 0.3, duration: 0.4, ease: outExpo });
+  }
 
   // --- Per-step geometry ---
   const cxs: number[] = [];
@@ -131,52 +134,55 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const stepStart = (i: number): number => 0.8 + i * PER_STEP;
   const connTh = Math.max(3, minDim * 0.009);
   const chS = R * 0.32;
+  const showConnector = values.connector !== false;
 
   // --- Connectors (drawn behind circles) ---
-  for (let i = 0; i < n - 1; i++) {
-    const x0 = cxs[i]!;
-    const y0 = cys[i]!;
-    const x1 = cxs[i + 1]!;
-    const y1 = cys[i + 1]!;
-    const connStart = stepStart(i) + 0.34;
+  if (showConnector) {
+    for (let i = 0; i < n - 1; i++) {
+      const x0 = cxs[i]!;
+      const y0 = cys[i]!;
+      const x1 = cxs[i + 1]!;
+      const y1 = cys[i + 1]!;
+      const connStart = stepStart(i) + 0.34;
 
-    const line = new Graphics();
-    if (horizontal) {
-      const len = x1 - x0 - 2 * R;
-      line.roundRect(0, -connTh / 2, len, connTh, connTh / 2).fill({ color: accent, alpha: 0.5 });
-      line.position.set(x0 + R, y0);
-    } else {
-      const len = y1 - y0 - 2 * R;
-      line.roundRect(-connTh / 2, 0, connTh, len, connTh / 2).fill({ color: accent, alpha: 0.5 });
-      line.position.set(x0, y0 + R);
-    }
-    line.scale.set(horizontal ? 0 : 1, horizontal ? 1 : 0);
-    root.addChild(line);
-    timeline.to(line, {
-      prop: horizontal ? "scale.x" : "scale.y",
-      from: 0,
-      to: 1,
-      start: connStart,
-      duration: 0.34,
-      ease: outExpo,
-    });
+      const line = new Graphics();
+      if (horizontal) {
+        const len = x1 - x0 - 2 * R;
+        line.roundRect(0, -connTh / 2, len, connTh, connTh / 2).fill({ color: accent, alpha: 0.5 });
+        line.position.set(x0 + R, y0);
+      } else {
+        const len = y1 - y0 - 2 * R;
+        line.roundRect(-connTh / 2, 0, connTh, len, connTh / 2).fill({ color: accent, alpha: 0.5 });
+        line.position.set(x0, y0 + R);
+      }
+      line.scale.set(horizontal ? 0 : 1, horizontal ? 1 : 0);
+      root.addChild(line);
+      timeline.to(line, {
+        prop: horizontal ? "scale.x" : "scale.y",
+        from: 0,
+        to: 1,
+        start: connStart,
+        duration: 0.34,
+        ease: outExpo,
+      });
 
-    // Chevron arrowhead near the next step.
-    const chev = new Graphics();
-    if (horizontal) {
-      chev
-        .poly([-chS, -chS, 0, 0, -chS, chS], false)
-        .stroke({ color: accent, width: Math.max(2, connTh * 0.9), cap: "round", join: "round" });
-      chev.position.set(x1 - R, y0);
-    } else {
-      chev
-        .poly([-chS, -chS, 0, 0, chS, -chS], false)
-        .stroke({ color: accent, width: Math.max(2, connTh * 0.9), cap: "round", join: "round" });
-      chev.position.set(x0, y1 - R);
+      // Chevron arrowhead near the next step.
+      const chev = new Graphics();
+      if (horizontal) {
+        chev
+          .poly([-chS, -chS, 0, 0, -chS, chS], false)
+          .stroke({ color: accent, width: Math.max(2, connTh * 0.9), cap: "round", join: "round" });
+        chev.position.set(x1 - R, y0);
+      } else {
+        chev
+          .poly([-chS, -chS, 0, 0, chS, -chS], false)
+          .stroke({ color: accent, width: Math.max(2, connTh * 0.9), cap: "round", join: "round" });
+        chev.position.set(x0, y1 - R);
+      }
+      chev.alpha = 0;
+      root.addChild(chev);
+      timeline.to(chev, { prop: "alpha", from: 0, to: 1, start: connStart + 0.22, duration: 0.2, ease: outQuad });
     }
-    chev.alpha = 0;
-    root.addChild(chev);
-    timeline.to(chev, { prop: "alpha", from: 0, to: 1, start: connStart + 0.22, duration: 0.2, ease: outQuad });
   }
 
   // --- Step circles + numbers + labels ---
@@ -246,6 +252,8 @@ export const stepFlow: TemplateDefinition = {
   fields: [
     { key: "title", type: "text", label: "Title", default: "How it works", maxLength: 40, shrinkToFit: true },
     { key: "steps", type: "textlist", label: "Steps", default: DEFAULT_STEPS, minItems: 2, maxItems: 4, maxLength: 28 },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
+    { key: "connector", type: "toggle", label: "Connector line", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

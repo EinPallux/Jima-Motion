@@ -53,6 +53,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
   const headline = str(values.headline, "Think different. Move different.");
   const subline = str(values.subline, "");
+  const showAccentBar = values.accentBar !== false;
 
   const L = aspectLayout(ctx.aspect);
   const cx = size.width / 2;
@@ -116,15 +117,17 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const headlineLanded = wordStart + Math.max(0, n - 1) * stagger + 0.5;
 
   // --- Thin accent divider draws from centre after the headline lands ---
-  const divW = fontSize * 2.4;
-  const divH = Math.max(2, Math.round(size.width * 0.0016));
   const dividerY = blockBottom + fontSize * 0.62;
-  const divider = new Graphics().roundRect(-divW / 2, -divH / 2, divW, divH, divH / 2).fill(accent);
-  divider.position.set(cx, dividerY);
-  divider.scale.x = 0;
-  root.addChild(divider);
   const divStart = Math.max(1.7, headlineLanded + 0.2);
-  timeline.to(divider, { prop: "scale.x", from: 0, to: 1, start: divStart, duration: 0.6, ease: outExpo });
+  if (showAccentBar) {
+    const divW = fontSize * 2.4;
+    const divH = Math.max(2, Math.round(size.width * 0.0016));
+    const divider = new Graphics().roundRect(-divW / 2, -divH / 2, divW, divH, divH / 2).fill(accent);
+    divider.position.set(cx, dividerY);
+    divider.scale.x = 0;
+    root.addChild(divider);
+    timeline.to(divider, { prop: "scale.x", from: 0, to: 1, start: divStart, duration: 0.6, ease: outExpo });
+  }
 
   // --- Muted subline fades up last, lots of air ---
   if (subline.length > 0) {
@@ -164,6 +167,7 @@ export const keynoteReveal: TemplateDefinition = {
   fields: [
     { key: "headline", type: "text", label: "Headline", default: "Think different. Move different.", maxLength: 60, shrinkToFit: true },
     { key: "subline", type: "text", label: "Subline", default: "Motion for everyone.", maxLength: 80, optional: true },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

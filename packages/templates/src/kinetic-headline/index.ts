@@ -80,6 +80,8 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const headline = str(values.headline, "Say it with motion.");
   const subline = str(values.subline, "");
   const style = str(values.style, "pop");
+  const showAccentBar = values.accentBar !== false;
+  const showAccentDot = values.accentDot !== false;
 
   const fontSize = Math.round(size.width * L.fontFrac);
   const lineHeight = Math.round(fontSize * 1.06);
@@ -152,30 +154,34 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const ulY = Math.max(...lastLineBoxes.map((b) => b.cy)) + fontSize * 0.62;
 
   // --- Accent underline (sweep + breathe) ---
-  const ulWidth = ulX1 - ulX0;
-  const ulHeight = Math.max(4, Math.round(fontSize * 0.09));
-  const underline = new Graphics().roundRect(0, 0, ulWidth, ulHeight, ulHeight / 2).fill(accent);
-  underline.position.set(ulX0, ulY);
-  underline.scale.set(0, 1);
-  underline.label = "underline";
-  content.addChild(underline);
-  timeline
-    .to(underline, { prop: "scale.x", from: 0, to: 1, start: 2.0, duration: 0.4, ease: outExpo })
-    .to(underline, { prop: "scale.x", from: 1, to: 1.02, start: 3.0, duration: 0.5, ease: outQuad })
-    .to(underline, { prop: "scale.x", from: 1.02, to: 1, start: 3.5, duration: 0.5, ease: outQuad });
+  if (showAccentBar) {
+    const ulWidth = ulX1 - ulX0;
+    const ulHeight = Math.max(4, Math.round(fontSize * 0.09));
+    const underline = new Graphics().roundRect(0, 0, ulWidth, ulHeight, ulHeight / 2).fill(accent);
+    underline.position.set(ulX0, ulY);
+    underline.scale.set(0, 1);
+    underline.label = "underline";
+    content.addChild(underline);
+    timeline
+      .to(underline, { prop: "scale.x", from: 0, to: 1, start: 2.0, duration: 0.4, ease: outExpo })
+      .to(underline, { prop: "scale.x", from: 1, to: 1.02, start: 3.0, duration: 0.5, ease: outQuad })
+      .to(underline, { prop: "scale.x", from: 1.02, to: 1, start: 3.5, duration: 0.5, ease: outQuad });
+  }
 
   // --- Accent dot (drops in top-left of the block) ---
-  const dotR = Math.max(6, Math.round(fontSize * 0.16));
-  const dotX = L.align === "left" ? left + dotR : left - dotR * 1.4;
-  const dotY = topY - dotR * 0.4;
-  const dot = new Graphics().circle(0, 0, dotR).fill(accent);
-  dot.position.set(dotX, dotY);
-  dot.label = "dot";
-  content.addChild(dot);
-  dot.alpha = 0;
-  timeline
-    .to(dot, { prop: "alpha", from: 0, to: 1, start: 0.05, duration: 0.25, ease: outQuad })
-    .to(dot, { prop: "y", from: dotY - 60, to: dotY, start: 0.05, duration: 0.4, ease: makeOutBack(2) });
+  if (showAccentDot) {
+    const dotR = Math.max(6, Math.round(fontSize * 0.16));
+    const dotX = L.align === "left" ? left + dotR : left - dotR * 1.4;
+    const dotY = topY - dotR * 0.4;
+    const dot = new Graphics().circle(0, 0, dotR).fill(accent);
+    dot.position.set(dotX, dotY);
+    dot.label = "dot";
+    content.addChild(dot);
+    dot.alpha = 0;
+    timeline
+      .to(dot, { prop: "alpha", from: 0, to: 1, start: 0.05, duration: 0.25, ease: outQuad })
+      .to(dot, { prop: "y", from: dotY - 60, to: dotY, start: 0.05, duration: 0.4, ease: makeOutBack(2) });
+  }
 
   // --- Subline (fades up) ---
   if (subline.length > 0) {
@@ -231,6 +237,8 @@ export const kineticHeadline: TemplateDefinition = {
         { value: "slam", label: "Slam" },
       ],
     },
+    { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
+    { key: "accentDot", type: "toggle", label: "Accent dot", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

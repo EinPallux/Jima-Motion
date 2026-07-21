@@ -78,6 +78,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const title = str(values.title, "");
   const features = asList(values.features, DEFAULT_FEATURES).slice(0, 4);
   const n = features.length;
+  const showConnector = values.connector !== false;
 
   const w = size.width;
   const h = size.height;
@@ -167,14 +168,16 @@ function build(ctx: TemplateContext): BuiltTemplate {
     const start = 1.0 + i * PER_FEATURE;
 
     // Leader line (draws out from the dot).
-    const leaderLen = right ? railRX - dotX : dotX - railLX;
-    const leader = new Graphics();
-    if (right) leader.roundRect(0, -leaderTh / 2, leaderLen, leaderTh, leaderTh / 2).fill(accent);
-    else leader.roundRect(-leaderLen, -leaderTh / 2, leaderLen, leaderTh, leaderTh / 2).fill(accent);
-    leader.position.set(dotX, dotY);
-    leader.scale.set(0, 1);
-    root.addChild(leader);
-    timeline.to(leader, { prop: "scale.x", from: 0, to: 1, start: start + 0.15, duration: 0.35, ease: outExpo });
+    if (showConnector) {
+      const leaderLen = right ? railRX - dotX : dotX - railLX;
+      const leader = new Graphics();
+      if (right) leader.roundRect(0, -leaderTh / 2, leaderLen, leaderTh, leaderTh / 2).fill(accent);
+      else leader.roundRect(-leaderLen, -leaderTh / 2, leaderLen, leaderTh, leaderTh / 2).fill(accent);
+      leader.position.set(dotX, dotY);
+      leader.scale.set(0, 1);
+      root.addChild(leader);
+      timeline.to(leader, { prop: "scale.x", from: 0, to: 1, start: start + 0.15, duration: 0.35, ease: outExpo });
+    }
 
     // Label at the leader end.
     const labelX = right ? railRX + gap : railLX - gap;
@@ -222,6 +225,7 @@ export const featureCallouts: TemplateDefinition = {
     { key: "title", type: "text", label: "Title", default: "Meet the features", maxLength: 40, shrinkToFit: true, optional: true },
     { key: "product", type: "image", label: "Product image", default: "", optional: true, help: "Transparent PNG or a product photo." },
     { key: "features", type: "textlist", label: "Features", default: DEFAULT_FEATURES, minItems: 2, maxItems: 4, maxLength: 24 },
+    { key: "connector", type: "toggle", label: "Connector line", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

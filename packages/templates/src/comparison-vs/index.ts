@@ -136,13 +136,16 @@ function build(ctx: TemplateContext): BuiltTemplate {
     .to(titleText, { prop: "x", from: marginX - 16, to: marginX, start: 0.0, duration: 0.55, ease: outExpo });
 
   // --- Column divider (behind the VS badge) ---
-  const divTh = Math.max(2, minDim * 0.004);
-  const divTop = headerY + titleSize * 0.6;
-  const div = new Graphics().roundRect(-divTh / 2, divTop, divTh, rowsBot - divTop, divTh / 2).fill({ color: textColor, alpha: 0.1 });
-  div.position.set(boundaryX, 0);
-  div.alpha = 0;
-  root.addChild(div);
-  timeline.to(div, { prop: "alpha", from: 0, to: 1, start: 0.5, duration: 0.5, ease: outQuad });
+  const showDivider = values.divider !== false;
+  if (showDivider) {
+    const divTh = Math.max(2, minDim * 0.004);
+    const divTop = headerY + titleSize * 0.6;
+    const div = new Graphics().roundRect(-divTh / 2, divTop, divTh, rowsBot - divTop, divTh / 2).fill({ color: textColor, alpha: 0.1 });
+    div.position.set(boundaryX, 0);
+    div.alpha = 0;
+    root.addChild(div);
+    timeline.to(div, { prop: "alpha", from: 0, to: 1, start: 0.5, duration: 0.5, ease: outQuad });
+  }
 
   // --- Column headers ---
   const headFont = Math.round(minDim * 0.038);
@@ -199,17 +202,20 @@ function build(ctx: TemplateContext): BuiltTemplate {
     return c;
   };
 
+  const showRowTrack = values.rowTrack !== false;
   rows.forEach((rowData, i) => {
     const cy = rowCY(i);
     const start = 1.2 + i * PER_ROW;
 
     // Faint row track for a table feel.
-    const track = new Graphics()
-      .roundRect(marginX, cy - rowH * 0.42, totalInner, rowH * 0.84, rowH * 0.16)
-      .fill({ color: textColor, alpha: 0.05 });
-    track.alpha = 0;
-    root.addChild(track);
-    timeline.to(track, { prop: "alpha", from: 0, to: 1, start: start - 0.1, duration: 0.4, ease: outQuad });
+    if (showRowTrack) {
+      const track = new Graphics()
+        .roundRect(marginX, cy - rowH * 0.42, totalInner, rowH * 0.84, rowH * 0.16)
+        .fill({ color: textColor, alpha: 0.05 });
+      track.alpha = 0;
+      root.addChild(track);
+      timeline.to(track, { prop: "alpha", from: 0, to: 1, start: start - 0.1, duration: 0.4, ease: outQuad });
+    }
 
     const feature = fitText(
       fonts,
@@ -252,6 +258,8 @@ export const comparisonVs: TemplateDefinition = {
     { key: "optionA", type: "text", label: "Option A", default: "Jima", maxLength: 16 },
     { key: "optionB", type: "text", label: "Option B", default: "The others", maxLength: 16 },
     { key: "rows", type: "textlist", label: "Rows", default: DEFAULT_ROWS, minItems: 2, maxItems: 4, maxLength: 28, help: "A feature per row. Optionally \"feature | yes | no\" to set each column." },
+    { key: "divider", type: "toggle", label: "Divider line", default: true },
+    { key: "rowTrack", type: "toggle", label: "Row background", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

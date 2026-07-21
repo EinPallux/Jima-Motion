@@ -106,6 +106,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const textColor = str(values.textColor, pc("textColor", "#101014"));
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
   const labelColor = pc("labelColor", "#5B5B68");
+  const showDivider = values.divider !== false;
 
   const w = size.width;
   const h = size.height;
@@ -178,7 +179,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
       }
 
       // Divider above each row after the first.
-      if (i > 0) {
+      if (i > 0 && showDivider) {
         const divW = w * 0.4;
         const divY = bandTop + rowH * i;
         const div = new Graphics().roundRect(-divW / 2, -1.5, divW, 3, 1.5).fill(accent);
@@ -225,7 +226,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
       }
 
       // Divider before each column after the first.
-      if (i > 0) {
+      if (i > 0 && showDivider) {
         const divH = (bandBottom - bandTop) * 0.42;
         const divX = originX + colW * i;
         const div = new Graphics().roundRect(-1.5, -divH / 2, 3, divH, 1.5).fill(accent);
@@ -260,6 +261,7 @@ export const threeStats: TemplateDefinition = {
   fields: [
     { key: "title", type: "text", label: "Title", default: "By the numbers", maxLength: 40, optional: true, shrinkToFit: true },
     { key: "stats", type: "textlist", label: "Stats (value | label)", default: DEFAULT_STATS, minItems: 2, maxItems: 3, maxLength: 28 },
+    { key: "divider", type: "toggle", label: "Divider line", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },
