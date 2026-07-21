@@ -18,6 +18,16 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 - Phase 5 — Landing page: Three.js/WebGL hero, light-mode brand site
 - Phase 6 — Hardening & launch: QA matrix, performance budgets, SEO, release
 
+## [0.1.1] — 2026-07-21 · Owner decisions folded in
+
+### Changed
+- Re-scoped as a **personal project** (owner + friends/family) — SEO, marketing, launch assets
+  and trademark checks removed from all docs; new **ADR-011** records the decision
+- Stack: Astro + React island → **Vite 7 + React 19 SPA** (ADR-003 amended — SEO descoped)
+- Hosting: Cloudflare Pages → **Vercel** via Git integration (ADR-008 amended)
+- Confirmed by owner: Ember brand palette, English-only UI, no custom domain for now; work mode =
+  Phases 0–2 autonomous (on explicit go-ahead), then pause for visual review
+
 ## [0.1.0] — 2026-07-21 · Planning drop
 
 ### Added

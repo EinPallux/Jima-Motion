@@ -43,6 +43,10 @@ That is why "100 % free, forever, no catch" is an economic fact, not a promo.
 
 ## 3. Audience
 
+**Deployment reality (owner decision, ADR-011):** Jima Motion is a personal project — the real
+users are the owner plus friends and family. The personas below remain the *design lens* (build it
+as a true Jitter/Ccleaf-class competitor), not a go-to-market target.
+
 **Primary persona — "Maya", solo social media manager (SMB/agency).**
 Runs 3–6 brand accounts. Needs 5–15 animated posts/stories a week. Has Canva muscle-memory, no
 After Effects skills, no motion budget. Success = a post that looks custom-made, delivered in
@@ -122,7 +126,7 @@ long-form footage (CapCut/Premiere serve them).
 6. **Export** as MP4 (or WebM) video or GIF → file downloads. Done.
 
 ### In scope (v1)
-- Landing page: WebGL hero, live template showcase, how-it-works, features, FAQ, SEO pages.
+- Landing page: WebGL hero, live template showcase, how-it-works, features, FAQ.
 - Jima Studio: template gallery, form-based editor, live canvas preview with play/pause/scrub,
   aspect switching, palette presets, speed control.
 - 12 templates across the categories social managers actually post (announcement, promo, product,
@@ -144,33 +148,30 @@ long-form footage (CapCut/Premiere serve them).
 - Template marketplace / user-submitted templates (post-v1 candidate).
 - Transparent-alpha exports (post-v1 candidate; Ccleaf's premium moat — ours would be free WebM alpha).
 
-## 8. Success metrics (v1 launch + 90 days)
+## 8. Success criteria (v1)
 
-| Metric | Target | How measured (privacy-safe) |
+| Criterion | Target | How checked (no analytics — ADR-009) |
 |---|---|---|
-| Time from landing → downloaded export (new user) | < 60 s median | manual QA protocol + anonymous aggregate timing event (no content data) |
-| Export success rate on supported browsers | > 95 % | anonymous success/failure counter |
+| Time from landing → downloaded export (first-time user) | < 60 s median | manual QA protocol |
+| Export success on supported browsers | > 95 % of attempts | QA matrix runs |
 | Preview frame rate on reference laptop | 60 fps sustained | perf CI + manual QA |
-| Templates at launch | ≥ 10 shipped (12 spec'd) | repo |
-| Lighthouse (landing, mobile) | ≥ 90 perf / ≥ 95 SEO & a11y | CI |
-| Organic: ranking page for 3+ "free animated post maker"-class queries | top 20 in 90 days | Search Console |
-| Qualitative: unprompted "wait, it's actually free?" reactions at launch | present | Product Hunt / socials |
+| Templates at v1 | ≥ 10 shipped (12 spec'd) | repo |
+| Lighthouse (landing, mobile) | ≥ 90 perf / ≥ 95 a11y | CI |
+| The real test | a friend/family member makes and downloads a post unaided | observed session |
 
-Analytics, if any, are cookie-less and content-blind (page views + export success counts only);
-`TECHNICAL_ARCHITECTURE.md` fixes the choice. No user content is ever measured.
+There are no analytics of any kind (ADR-009); every check above is manual or CI. No user content
+is ever measured — nothing exists that could measure it.
 
 ## 9. Sustainability (the "what's the catch" answer)
 
 Static hosting + client-side rendering ≈ near-zero marginal cost per user. No render farm, no
 storage, no auth infrastructure. The FAQ answers this honestly: *"It's free because it costs us
-almost nothing to run — your device does the rendering. No catch, no data harvesting."* Optional
-future support (donations, a paid template-pack storefront that never gates the core) is parked in
-`ROADMAP.md` § Post-v1 and must never violate Principle 1.
+almost nothing to run — your device does the rendering. No catch, no data harvesting."* With the
+personal-scope decision (ADR-011) there is nothing to sustain beyond a free Vercel project;
+monetization of any kind stays a non-topic (Principle 1).
 
 ## 10. Open questions / risks (tracked in ROADMAP risk register)
 
-- **Name check:** "Jima" trademark/domain availability needs a manual legal/domain pass before
-  public launch (out of engineering scope; flagged to owner).
 - **Browser floor:** H.264-in-WebCodecs coverage varies; WebM/GIF fallbacks and honest messaging
   are specified in `TECHNICAL_ARCHITECTURE.md`.
 - **"Free forever" trust:** the promise must appear with the reason (client-side rendering) or it

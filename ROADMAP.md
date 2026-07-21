@@ -17,12 +17,13 @@ MP4/WebM/GIF export up to 1080p. No accounts, no watermark, no collaboration, no
 **Goal:** a deployed, empty-but-real skeleton with all guardrails wired.
 
 Deliverables:
-- pnpm workspace per `TECHNICAL_ARCHITECTURE.md` § 5 (`apps/site`, `packages/engine`,
-  `packages/templates`, `tests`); Astro 5 + React 19 island + Tailwind 4 + TS strict.
+- pnpm workspace per `TECHNICAL_ARCHITECTURE.md` § 5 (`apps/web`, `packages/engine`,
+  `packages/templates`, `tests`); Vite 7 + React 19 + React Router + Tailwind 4 + TS strict.
 - Design tokens from `DESIGN_ARCHITECTURE.md` § 2–4 as the Tailwind theme; fonts self-hosted with
   license files; `color-scheme: light`.
-- CI (`typecheck · lint · unit · build · size-limit`) + Cloudflare Pages deploy (prod + PR
-  previews); license-checker gate (policy § 3.1); ESLint rule banning `Date.now`/`Math.random`/
+- CI (`typecheck · lint · unit · build · size-limit`) on GitHub Actions + Vercel Git-integration
+  deploy (prod + PR previews — owner connects the repo in the Vercel dashboard once);
+  license-checker gate (policy § 3.1); ESLint rule banning `Date.now`/`Math.random`/
   GSAP imports in `engine`/`templates`.
 - Placeholder landing ("coming soon" with wordmark) + empty Studio route shell.
 
@@ -81,7 +82,7 @@ Deliverables:
 
 Acceptance: with T01 only — a first-time user goes gallery → edit → export MP4 in < 60 s (scripted
 usability run); full flow completable keyboard-only; axe checks pass; state survives reload;
-Studio island ≤ 350 kB gz initial (engine chunk lazy).
+Studio route chunk ≤ 250 kB gz (engine chunk lazy).
 
 ## Phase 4 — Template library ⏳ *(~2 weeks)*
 
@@ -107,29 +108,30 @@ Deliverables:
 - All sections per `DESIGN_ARCHITECTURE.md` § 6: Three.js/R3F hero (shader gradient + floating
   shapes, pointer parallax, reduced-motion/no-WebGL static fallback), live template rail (shared
   renderer + CI posters), how-it-works vignettes, why-free comparison, feature grid, gallery
-  teaser, FAQ (JSON-LD), footer.
-- SEO/meta complete (titles, OG images engine-rendered, sitemap, `WebApplication` schema),
-  privacy page, 404.
+  teaser, FAQ, footer.
+- Meta polish (title, engine-rendered OG image so shared links look good in chats), privacy
+  page, 404. No SEO work (ADR-011).
 
-Acceptance: budgets green (landing ≤ 90 kB gz initial JS, hero chunk ≤ 180 kB gz lazy, LCP ≤ 2.5 s
-mid-tier mobile); Lighthouse ≥ 90/95/95/95; hero holds 60 fps desktop / ≥ 30 fps mid-tier mobile
+Acceptance: budgets green (landing route ≤ 220 kB gz initial JS, hero chunk ≤ 180 kB gz lazy,
+LCP ≤ 2.5 s mid-tier mobile); Lighthouse perf ≥ 90 and a11y/best-practices ≥ 95 (SEO score
+untracked — ADR-011); hero holds 60 fps desktop / ≥ 30 fps mid-tier mobile
 and idles when off-screen; reduced-motion audit passes; every animation on the page is
 engine-rendered or CSS (no video files, no Lottie).
 
-## Phase 6 — Hardening & launch ⏳ *(~1 week)*
+## Phase 6 — Hardening & release ⏳ *(~0.5–1 week)*
 
-**Goal:** ship v1.0 publicly and survive the traffic spike (static hosting makes that easy).
+**Goal:** ship v1.0 rock-solid to its real audience — the owner, friends and family (ADR-011).
 
 Deliverables:
 - Full manual QA matrix (Tier A/B/C browsers × the flows in `TECHNICAL_ARCHITECTURE.md` § 15),
   fix pass; error-state copy review; final a11y sweep.
-- Launch assets: README public polish, Product Hunt gallery (made with Jima), AlternativeTo /
-  tool-directory listings, `humans.txt`; pre-launch owner checklist: **domain + "Jima" trademark
-  sanity check** (flagged in `PRODUCT_BRIEF.md` § 10 — owner action).
+- Release polish: README final pass, a short "how to use" note to send along with the link,
+  production URL confirmed on Vercel (custom domain optional later — none for now, ADR-011).
 - Tag `v1.0.0`, `CHANGELOG.md` release entry.
 
-Acceptance: zero P0/P1 open; QA matrix signed off; launch posts live; success metrics
-instrumentation-free plan from `PRODUCT_BRIEF.md` § 8 reviewed (manual protocol documented).
+Acceptance: zero P0/P1 open; QA matrix signed off; `v1.0.0` tagged with CHANGELOG entry; the
+production link works logged-out on a friend's device (the "real test" from
+`PRODUCT_BRIEF.md` § 8).
 
 ---
 
@@ -143,15 +145,15 @@ instrumentation-free plan from `PRODUCT_BRIEF.md` § 8 reviewed (manual protocol
 | **M3** Full editing loop | Phase 3 done | ~5.5 weeks |
 | **M4** 12 templates | Phase 4 done | ~7.5 weeks |
 | **M5** Landing live | Phase 5 done | ~9 weeks |
-| **M6 = v1.0 launch** | Phase 6 done | ~10 weeks |
+| **M6 = v1.0 private release** | Phase 6 done | ~9.5 weeks |
 
 ## Post-v1 backlog (ordered; each item must re-pass the free/no-account principles)
 
-1. **Template cadence:** monthly named drops (seasonal/holiday, meme/trend formats, poll/engagement
-   frames, lower thirds, hiring posts, audiogram-look) — the retention + news engine
-   (`COMPETITOR_RESEARCH.md` § 4.3 gaps).
-2. **Programmatic SEO pages:** one indexable instantly-usable page per template × platform
-   (`/templates/instagram-story/countdown` …) — the VEED/Kapwing-proven funnel.
+1. **More templates, whenever the mood strikes:** themed drops (seasonal/holiday, meme/trend
+   formats, poll/engagement frames, lower thirds, hiring posts, audiogram-look) — category gaps
+   listed in `COMPETITOR_RESEARCH.md` § 4.3.
+2. ~~Programmatic SEO pages~~ — **descoped by ADR-011** (personal deployment); revisit only if
+   the project ever goes public.
 3. **Share links:** project state URL-encoded (lz-string) — share/remix with zero backend.
 4. **Brand kit presets:** saved colors/fonts/logo in localStorage + shareable preset codes
    (Ccleaf-validated), still no accounts.
@@ -176,9 +178,7 @@ rendering, AI credits, dark mode.
 | GSAP (or other banned dep) sneaks in via copy-paste | M×H | ESLint import ban + license-checker CI gate (Phase 0) |
 | Golden-frame flake across GPUs/browsers | M×M | per-browser goldens, tolerance windows, fixed seeds, CI-pinned browser versions |
 | Scope creep toward accounts/collab/AI | M×H | Principles in `PRODUCT_BRIEF.md` § 6 + non-goals list; PRs violating them are rejected by policy (`CLAUDE.md`) |
-| "Jima" name/trademark/domain conflict | M×H | Owner-action check before Phase 6 launch (flagged; engineering proceeds risk-free — rename cost is contained by token/wordmark isolation) |
 | Template quality below "looks expensive" bar | M×H | Panel review acceptance in Phase 4; defaults-only test; better 10 great than 12 mediocre (P1 slip valve) |
-| SEO cold start (no distribution) | H×M | Launch checklist (PH, directories), pSEO backlog #2, template-drop cadence #1 |
 | Single-maintainer bus factor | M×M | This doc set + CLAUDE.md keep the project resumable by anyone (including future AI sessions) |
 
 ## Status board

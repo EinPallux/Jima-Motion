@@ -130,14 +130,14 @@ Studio. Copy strings live in § 9.
    watermark · MP4 + GIF (+ WebM) · Private by design · Every aspect ratio (1:1, 4:5, 9:16, 16:9).
 7. **Template gallery teaser:** filterable grid (category chips) of all 12, poster + hover-play,
    each card → Studio deep link. CTA: "Open the full gallery in the Studio".
-8. **FAQ** (accordion, JSON-LD FAQ schema; questions in § 9.3).
-9. **Footer** (porcelain): logo + one-liner, sitemap links (Templates, Studio, FAQ, Privacy,
+8. **FAQ** (accordion; questions in § 9.3).
+9. **Footer** (porcelain): logo + one-liner, footer links (Templates, Studio, FAQ, Privacy,
    Changelog, GitHub), line: "Made with the Jima engine — every animation on this page is a Jima
    template." + "Your work stays in your browser. [Clear saved data]".
 
-**SEO/meta:** `<title>Jima Motion — Free animated post maker. No account, no watermark.</title>`;
-OG image 1200×630 = engine-rendered T01 frame; JSON-LD `WebApplication` with `price: 0`;
-sitemap + per-template SEO pages post-v1 (`ROADMAP.md`).
+**Meta:** `<title>Jima Motion — Free animated post maker. No account, no watermark.</title>`;
+OG image 1200×630 = engine-rendered T01 frame, so links shared in chats with friends look great.
+No SEO work — no sitemap, JSON-LD, or programmatic pages (ADR-011, personal deployment).
 
 ## 7. Jima Studio UX specification (route `/studio`)
 
@@ -236,7 +236,7 @@ sitemap + per-template SEO pages post-v1 (`ROADMAP.md`).
   your device instead — instant previews, no upload, no queue, no server bill. There's nothing to
   charge you for, so we don't. No account, no watermark, no 'Pro' button hiding anywhere."
 
-### 9.3 FAQ (schema-marked)
+### 9.3 FAQ
 1. *Is it really 100 % free? What's the catch?* — Yes, and there isn't one… (renders-on-your-device
    explanation; no account, no watermark, no upsell).
 2. *Do I need an account?* — No. There's no login to create — the Studio just opens.
@@ -266,7 +266,7 @@ sitemap + per-template SEO pages post-v1 (`ROADMAP.md`).
 ## 10. Asset production checklist (Phase 5 exit)
 
 - Logo SVG (wordmark, spark, lockup) + favicon set (32/180/512, `.ico`) + maskable icon.
-- OG images: home + per-template (1200×630), all engine-rendered in CI.
+- OG image: home (1200×630), engine-rendered in CI (per-template versions optional).
 - Template posters ×12 ×4 aspects (engine-rendered in CI — never hand-exported).
 - Hero shader ramp swatches; 404 page (spark looking around — engine-rendered, reduced-motion
   static); `humans.txt` credit line; per-font OFL license files shipped in `public/fonts/`.

@@ -17,7 +17,7 @@ Product constraints (from `PRODUCT_BRIEF.md`) that drive every technical choice:
 | User content never leaves the device | No uploads. No content telemetry. Fonts/assets self-hosted. |
 | Landing → export < 60 s | Instant editor load (code-split), no render queue, faster-than-realtime export where hardware allows. |
 | Deterministic templates, golden-frame testable | Pure `f(t)` rendering, seeded randomness, fixed frame grid. |
-| Light-mode-only, SEO-strong marketing site | Prerendered static HTML for all marketing routes. |
+| Personal deployment — owner + friends/family, no SEO/marketing (ADR-011) | Simplest modern app stack; the landing is part of the product experience, not an acquisition channel. |
 | Must run for years unattended | Boring, maintained, permissively-licensed dependencies. |
 
 ## 2. System overview
@@ -26,8 +26,8 @@ There is exactly one deployable artifact: a **static site**. No servers, no func
 
 ```mermaid
 flowchart LR
-  subgraph Static site (Cloudflare Pages)
-    L[Landing pages\nAstro, prerendered HTML] --> S[/studio\nReact island (client-only)/]
+  subgraph Static site (Vercel)
+    L[Landing route\nReact, lazy chunks] --> S[/studio route\nReact editor/]
   end
   S --> E[Engine\nPixiJS v8 scene + Jima Timeline]
   E --> P[Preview player\nrAF, 60fps]
@@ -42,7 +42,7 @@ flowchart LR
 
 | Layer | Decision | Why | Rejected |
 |---|---|---|---|
-| Site framework | **Astro 5** (static output) with a **React 19 island** for the Studio | Zero-JS prerendered landing (SEO + speed); the Studio is one `client:only` island; Vite underneath (workers/wasm/code-split DX); scales to programmatic template SEO pages via content collections | Next.js static export (carries App-Router constraints for zero server benefit — defensible 2nd choice); pure Vite SPA (landing SEO needs bolt-on prerender) |
+| Site framework | **Vite 7 + React 19 SPA** (React Router, static build) | The product is an app and SEO is explicitly a non-goal (ADR-011) — so the simplest modern stack wins: one mental model, first-class workers/wasm/code-split DX, instant HMR; landing and Studio are lazy route chunks | Astro islands (its zero-JS-landing advantage is moot without SEO; adds a second mental model); Next.js static export (server abstractions for zero benefit here) |
 | UI runtime | **React 19 + TypeScript (strict)** | R3F v9 requires React 19; team/AI familiarity; typed template SDK | Svelte/Solid (ecosystem fit with R3F/tooling) |
 | Styling | **Tailwind CSS 4** + design tokens (`DESIGN_ARCHITECTURE.md`) | Speed, consistency, light-mode enforcement via tokens | CSS modules only |
 | State | **Zustand** | Tiny, MIT, no boilerplate; single store for editor state | Redux (weight), Context-only (perf) |
@@ -55,9 +55,9 @@ flowchart LR
 | Landing hero 3D | **three r185 + @react-three/fiber 9 + drei 10** | React-19-native R3F line; shader-gradient hero; lazy island | Raw WebGL (slower to build), heavy postprocessing (banned for budget) |
 | Landing micro-motion | CSS transitions/keyframes first; **`motion` (motion.dev, MIT)** where springs/scroll-orchestration is needed | Small, MIT, no license risk | GSAP on the marketing site (legally fine, but one animation stack fewer to audit) |
 | Fonts | Self-hosted **OFL static-instance woff2** | Canvas rasterization needs local faces; OFL permits embedding in exports; static instances because canvas `font` can't express variable axes | Google Fonts CDN (privacy + COEP hazards), variable fonts on canvas (spec gap) |
-| Hosting | **Cloudflare Pages** | Free bandwidth, global CDN, `_headers` support (keeps ffmpeg-mt/COOP+COEP option open — GitHub Pages cannot set headers), preview deploys | GitHub Pages (no headers), Netlify (fine; 2nd choice), Vercel (fine; server features unused) |
+| Hosting | **Vercel** (owner decision) | Zero-config Git deploys of the static build, per-PR preview URLs, headers via `vercel.json` (keeps the ffmpeg-mt/COOP+COEP option open) | GitHub Pages (no headers), Cloudflare Pages/Netlify (equally capable — owner uses Vercel) |
 | CI | **GitHub Actions** | typecheck/lint/test/golden-frames/Lighthouse budgets + Pages deploy | — |
-| Analytics | **None at launch.** Optional later: Cloudflare Web Analytics (cookieless, content-blind), page-views only | Privacy is a headline feature; never measure content | Any cookie/user-level tracking (banned) |
+| Analytics | **None.** | Privacy is a headline feature, and a personal deployment needs no metrics anyway | Any tracking (banned) |
 | Package manager | **pnpm** workspaces | Monorepo (§ 5) | npm/yarn |
 
 ### 3.1 Verified dependency snapshot (2026-07; re-pin at scaffold)
@@ -69,7 +69,7 @@ flowchart LR
 | `mediabunny` | 1.50.x | **MPL-2.0** | File-level copyleft only — safe to bundle; do not modify its files without publishing those files |
 | `gifenc` | 1.0.3 | MIT | Frozen but stable; wrap behind our own interface |
 | `@ffmpeg/ffmpeg` + `@ffmpeg/core` | 0.12.x | MIT | Lazy chunk, never in initial bundle |
-| `astro`, `react`, `tailwindcss`, `zustand`, `typescript`, `vitest`, `playwright` | latest at scaffold | MIT/Apache | — |
+| `vite`, `react`, `react-router`, `tailwindcss`, `zustand`, `typescript`, `vitest`, `playwright` | latest at scaffold | MIT/Apache | — |
 
 **License policy:** runtime deps must be MIT / Apache-2.0 / BSD / ISC / MPL-2.0; fonts OFL-1.1 (or
 Apache-2.0). **Banned:** GPL/AGPL/SSPL runtime deps (Etro is GPL-3.0 — reference only), Remotion
@@ -101,10 +101,10 @@ openvideodev/DesignCombo → reference only, no code reuse).
 ```
 jima-motion/
 ├─ apps/
-│  └─ site/                    # Astro app — the ONLY deployable
-│     ├─ src/pages/            # / (landing), /templates, /faq, /studio, /legal…
-│     ├─ src/components/       # Astro + React landing components (hero, rails, FAQ…)
-│     ├─ src/studio/           # React island: gallery, editor, inspector, export UI
+│  └─ web/                     # Vite + React SPA — the ONLY deployable
+│     ├─ src/routes/           # / (landing), /studio — lazy route chunks
+│     ├─ src/landing/          # hero, template rail, sections, FAQ
+│     ├─ src/studio/           # gallery, editor, inspector, export UI
 │     ├─ src/styles/           # Tailwind config, tokens (from DESIGN_ARCHITECTURE.md)
 │     └─ public/fonts/         # OFL woff2 static instances (+ LICENSE files per family)
 ├─ packages/
@@ -118,11 +118,11 @@ jima-motion/
 │  └─ templates/               # @jima/templates — one module per template + registry
 │     └─ src/kinetic-headline/ …(×12, per TEMPLATE_LIBRARY.md)
 ├─ tests/                      # Playwright: golden frames, export smoke, a11y, budgets
-└─ .github/workflows/          # ci.yml, deploy.yml
+└─ .github/workflows/          # ci.yml (deploys happen via Vercel Git integration)
 ```
 
-Boundary rules: `engine` never imports React or Astro; `templates` import only `engine`'s SDK
-surface; `apps/site` is the only place React lives. This keeps the engine runnable headless in
+Boundary rules: `engine` never imports React; `templates` import only `engine`'s SDK
+surface; `apps/web` is the only place React lives. This keeps the engine runnable headless in
 Playwright for golden tests and build-time poster generation.
 
 ## 6. The motion engine
@@ -264,8 +264,8 @@ yield to UI every N frames → progress = frame/total, cancelable
 ### 8.5 ffmpeg.wasm fallback (lazy)
 - Only loaded on user request when native MP4 is unavailable (Tier B/C): single-thread core
   (~31 MB, no COOP/COEP needed), explicit UI warning about download size + speed (a 10 s 1080p
-  encode may take ~30 s–2 min). Input: raw RGBA frames or re-encode of a recorded WebM. Cloudflare
-  `_headers` keeps the multithread option available later without re-platforming.
+  encode may take ~30 s–2 min). Input: raw RGBA frames or re-encode of a recorded WebM. Vercel
+  `vercel.json` headers keep the multithread option available later without re-platforming.
 
 ### 8.6 Export determinism tests
 - Golden: export 1 s @ 12 fps of two templates in CI (Chromium), demux with Mediabunny, assert
@@ -274,7 +274,7 @@ yield to UI every N frames → progress = frame/total, cancelable
 
 ## 9. Studio application (React island)
 
-- **Routes:** `/studio` (gallery) and `/studio?t=<id>` (editor) — one island, state-driven views;
+- **Routes:** `/studio` (gallery) and `/studio?t=<id>` (editor) — one lazy route chunk, state-driven views;
   template links from landing deep-link with the template preselected.
 - **Store (Zustand):** `{ templateId, values, aspect, speed, playback: {t, playing, loop},
   capability, exportJob, history }`. History = bounded undo/redo stack of value patches (50 steps).
@@ -290,9 +290,9 @@ yield to UI every N frames → progress = frame/total, cancelable
 
 ## 10. Landing page tech
 
-- Astro static pages; zero client JS except: (1) the hero island, (2) the live template rail, (3)
-  tiny nav/scroll niceties (CSS-first).
-- **Hero island** (`client:visible`, lazy): R3F Canvas — a fullscreen plane with a custom
+- The landing is the SPA's index route, kept lean: hero and template rail load as lazy chunks
+  after first paint; everything else is CSS-first.
+- **Hero chunk** (lazy, mounted when scrolled into view): R3F Canvas — a fullscreen plane with a custom
   gradient-noise `ShaderMaterial` (fbm/simplex in-fragment, brand pastel ramp — zero textures) +
   5–8 floating soft shapes (drei `Float`); pointer parallax; `dpr={[1, 1.5]}`;
   `frameloop="demand"`-style idling when off-screen/plateaued; **no postprocessing**.
@@ -302,20 +302,20 @@ yield to UI every N frames → progress = frame/total, cancelable
 - **Live template rail:** the marquee of template previews is rendered by `@jima/engine` itself
   (the site demos the product) — one shared renderer paints visible cards; off-screen cards show
   build-time-generated poster images (generated by the same engine in CI — dogfooding).
-- Meta: `color-scheme: light only`; full OG/Twitter cards; JSON-LD (`WebApplication`, price 0);
-  sitemap; per-template SEO pages are post-v1 (`ROADMAP.md`).
+- Meta: `color-scheme: light only`; title + OG card (engine-rendered) so links look good when
+  shared in chats with friends. No SEO work — no sitemap, JSON-LD, or programmatic pages (ADR-011).
 
 ## 11. Performance budgets (CI-enforced once code exists)
 
 | Surface | Budget |
 |---|---|
-| Landing initial JS (excl. lazy hero) | ≤ 90 kB gz |
+| Landing route initial JS (React runtime + landing UI, excl. lazy hero) | ≤ 220 kB gz |
 | Hero chunk (three+R3F+shader, lazy) | ≤ 180 kB gz |
-| Studio island initial (React+UI+store) | ≤ 350 kB gz |
+| Studio route chunk (UI + store; React shared, engine lazy) | ≤ 250 kB gz |
 | Engine+templates chunk (lazy with Studio) | ≤ 250 kB gz |
 | ffmpeg.wasm | never in any initial bundle; on-demand only |
 | Landing LCP (mid-tier mobile, 4G) | ≤ 2.5 s; CLS < 0.1 |
-| Lighthouse (landing, mobile) | ≥ 90 perf, ≥ 95 SEO/a11y/best-practices |
+| Lighthouse (landing, mobile) | ≥ 90 perf, ≥ 95 a11y/best-practices (SEO score not tracked — ADR-011) |
 | Preview | 60 fps @ preview res on 2020 mid-range laptop (reference: M1 Air / Ryzen 4500U) |
 | Export speed | ≥ realtime for 1080p30 on reference hardware (Tier A) |
 | Editor first interaction (template open → editable) | ≤ 2 s on reference hardware, warm cache |
@@ -327,8 +327,8 @@ yield to UI every N frames → progress = frame/total, cancelable
   origins at all. All fonts/scripts/styles self-hosted.
 - localStorage/IndexedDB only, documented in a plain-language privacy page ("your work is stored
   in your browser; we never see it — there is nothing to see it with").
-- Analytics: none at launch (ADR-009). If ever added: Cloudflare Web Analytics (cookieless,
-  aggregate page views), stated on the privacy page.
+- Analytics: none (ADR-009) — and the personal scope (ADR-011) makes even aggregate counters
+  pointless. The privacy page states it plainly.
 - Supply chain: pinned versions + lockfile, Dependabot, `pnpm audit` in CI; license-checker CI
   gate enforcing § 3.1 policy.
 
@@ -350,9 +350,9 @@ intentional template change as a P1 bug.
 
 - `ci.yml`: typecheck → lint (ESLint + banned-API rule for § 6.1) → unit → build → golden frames →
   export smoke → size-limit → Lighthouse (on built preview).
-- `deploy.yml`: Cloudflare Pages — production on `main`, preview URL per PR. `_headers`: long-cache
-  immutable assets; COOP/COEP intentionally **off** in v1 (single-thread wasm only), toggling it is
-  a one-line change if ffmpeg-mt is ever needed.
+- Deploys: **Vercel Git integration** — production on `main`, preview URL per PR; no deploy
+  workflow needed. `vercel.json`: long-cache immutable assets; COOP/COEP intentionally **off** in
+  v1 (single-thread wasm only), toggling headers is a one-line change if ffmpeg-mt is ever needed.
 - Release = tag + `CHANGELOG.md` entry (Keep a Changelog discipline per `CLAUDE.md`).
 
 ## 15. Failure modes & handling (design-level)
@@ -375,9 +375,10 @@ intentional template change as a P1 bug.
   Custom `JimaTimeline` instead; also avoided on the marketing site to keep one audited stack.
 - **ADR-002 — Mediabunny over mp4-muxer/webm-muxer.** Both older libs are officially deprecated by
   their author in favor of Mediabunny (MPL-2.0, active, Remotion itself migrated to it).
-- **ADR-003 — Astro + React island over Next.js static export.** Zero-JS landing with islands;
-  Studio is client-only anyway; Vite DX for wasm/workers; Next `output:'export'` remains the
-  documented fallback if team preference changes (all constraints checked).
+- **ADR-003 (amended 2026-07-21) — Vite + React SPA.** Originally Astro + React island, chosen
+  for its zero-JS SEO landing; superseded when the owner descoped SEO entirely (ADR-011). With
+  SEO moot, the simplest modern app stack wins: Vite 7 + React 19 + React Router, static build.
+  Astro/Next remain documented alternatives if the scope ever changes.
 - **ADR-004 — Pixi v8 on WebGL for render/export; WebGPU deferred.** Deterministic sync readback
   and cross-device consistency beat WebGPU gains today; revisit post-v1 for preview only.
 - **ADR-005 — Main-thread export loop in v1.** Worker font loading is uneven outside Chromium;
@@ -387,8 +388,14 @@ intentional template change as a P1 bug.
   hardest cross-browser surface (AudioEncoder gaps). Post-v1 candidate.
 - **ADR-007 — Custom deterministic timeline.** Export must seek exactly; tween evaluator is small;
   removes third-party license/maintenance risk from the core.
-- **ADR-008 — Cloudflare Pages static hosting.** Free bandwidth, `_headers`, preview deploys;
-  no lock-in (any static host works).
+- **ADR-008 (amended 2026-07-21) — Vercel static hosting.** Owner decision; zero-config Git
+  deploys + per-PR previews; headers via `vercel.json`; `*.vercel.app` URL until a custom domain
+  exists. No lock-in (any static host works).
 - **ADR-009 — No analytics at launch; user content never measured, ever.**
 - **ADR-010 — OFL static-instance fonts, self-hosted.** Canvas can't drive variable axes; OFL
   permits rasterizing into user exports; per-family LICENSE files ship in `public/fonts/`.
+- **ADR-011 — Personal-scope deployment (2026-07-21, owner decision).** Jima Motion is built to
+  the quality bar of a real Jitter/Ccleaf competitor but deployed privately for the owner plus
+  friends/family. Consequences: SEO, marketing/launch assets, trademark checks and discovery work
+  are out of scope; English-only UI; no custom domain (Vercel URL). Product quality bars —
+  a11y, performance, determinism, the free/no-account principles — are unchanged.

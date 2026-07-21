@@ -11,6 +11,9 @@ there is nothing to meter.
 
 > **Status: planning.** The product is fully specified; implementation starts with Phase 0 of the
 > [roadmap](ROADMAP.md). No code exists in this repository yet.
+>
+> **Scope:** a personal project — built to the quality bar of a real Jitter/Ccleaf competitor,
+> but deployed privately on Vercel for the owner, friends and family. No public launch, no SEO.
 
 ## Why it exists
 
@@ -34,7 +37,7 @@ leaves the device · fast is a feature · light-mode, bold, animated ([Three.js 
 |---|---|
 | [PRODUCT_BRIEF.md](PRODUCT_BRIEF.md) | Vision, audience, positioning, scope & non-goals |
 | [COMPETITOR_RESEARCH.md](COMPETITOR_RESEARCH.md) | Deep research: Jitter, Ccleaf, the wider market, SEO gaps |
-| [TECHNICAL_ARCHITECTURE.md](TECHNICAL_ARCHITECTURE.md) | Stack & ADRs: Astro + React island, PixiJS v8 engine, WebCodecs + Mediabunny export, budgets |
+| [TECHNICAL_ARCHITECTURE.md](TECHNICAL_ARCHITECTURE.md) | Stack & ADRs: Vite + React SPA, PixiJS v8 engine, WebCodecs + Mediabunny export, budgets |
 | [DESIGN_ARCHITECTURE.md](DESIGN_ARCHITECTURE.md) | Brand system, tokens, landing & Studio UX specs, copy deck |
 | [TEMPLATE_LIBRARY.md](TEMPLATE_LIBRARY.md) | The 12 launch templates, spec'd storyboard-level |
 | [ROADMAP.md](ROADMAP.md) | Phases 0–6 with acceptance criteria, risks, status |
@@ -43,6 +46,6 @@ leaves the device · fast is a feature · light-mode, bold, animated ([Three.js 
 
 ## License
 
-Code license: TBD by the project owner before public launch (planning docs © the project).
+Code license: TBD by the project owner (private personal project).
 Bundled fonts will be OFL-1.1; dependency license policy is defined in
 [TECHNICAL_ARCHITECTURE.md](TECHNICAL_ARCHITECTURE.md) § 3.1.

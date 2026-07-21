@@ -5,6 +5,9 @@ managers**: pick a template → type your text / drop images → export MP4/WebM
 entirely client-side. Brand = "Jima Motion"; the editor = "Jima Studio" ("the Studio").
 **Current state: docs-only planning is complete; no code exists yet. Start with Phase 0 in
 `ROADMAP.md`.**
+**Scope (ADR-011):** built to the quality bar of a real Jitter/Ccleaf competitor, but deployed
+privately for the owner + friends/family on Vercel — no SEO, marketing, or launch work anywhere;
+English-only UI.
 
 ## Document map (read before building anything)
 
@@ -42,10 +45,10 @@ If you must deviate, add/amend an ADR in the same PR and note it in `CHANGELOG.m
   dual-licensed references (openvideodev/DesignCombo — read, don't paste).
 - Allowed licenses: MIT / Apache-2.0 / BSD / ISC / MPL-2.0; fonts OFL-1.1. CI license-checker
   enforces this.
-- Core stack (verified 2026-07, re-pin at scaffold): Astro 5 + React 19 island (Studio),
+- Core stack (verified 2026-07, re-pin at scaffold): Vite 7 + React 19 SPA (React Router),
   Tailwind 4, TypeScript strict, Zustand, **PixiJS v8 (WebGL)** + custom `JimaTimeline`,
   **WebCodecs + Mediabunny** (MP4/WebM), **gifenc** worker (GIF), lazy ffmpeg.wasm fallback,
-  three + @react-three/fiber 9 + drei 10 (landing hero only), pnpm workspace, Cloudflare Pages.
+  three + @react-three/fiber 9 + drei 10 (landing hero only), pnpm workspace, Vercel (static).
 
 ## Workflow
 
