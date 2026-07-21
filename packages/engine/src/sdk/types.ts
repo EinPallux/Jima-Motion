@@ -20,7 +20,8 @@ export type TemplateCategory =
   | "educational"
   | "comparison"
   | "social"
-  | "travel";
+  | "travel"
+  | "showcase";
 
 export type FieldType =
   | "text"

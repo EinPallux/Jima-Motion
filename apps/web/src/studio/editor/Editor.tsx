@@ -22,6 +22,7 @@ export function Editor({
   const aspect = useStudio((s) => s.aspect);
   const values = useStudio((s) => s.values);
   const paletteId = useStudio((s) => s.paletteId);
+  const font = useStudio((s) => s.font);
   const speed = useStudio((s) => s.speed);
   const loop = useStudio((s) => s.loop);
   const openTemplate = useStudio((s) => s.openTemplate);
@@ -31,7 +32,7 @@ export function Editor({
   const caps = useCapabilities();
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const preview = usePreview(containerRef, { def, aspect, values, paletteId, speed, loop, reducedMotion: reduced });
+  const preview = usePreview(containerRef, { def, aspect, values, paletteId, font, speed, loop, reducedMotion: reduced });
   const [exportOpen, setExportOpen] = useState(false);
 
   useEffect(() => {

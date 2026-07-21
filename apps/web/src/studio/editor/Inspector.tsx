@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { TemplateDefinition, TemplateField } from "@jima/engine";
+import { FONT_CHOICES, type TemplateDefinition, type TemplateField } from "@jima/engine";
 import { useStudio } from "../state/store";
 import { Field } from "../components/Field";
 
@@ -98,8 +98,32 @@ function StyleTab({
 }) {
   const paletteId = useStudio((s) => s.paletteId);
   const setPalette = useStudio((s) => s.setPalette);
+  const font = useStudio((s) => s.font);
+  const setFont = useStudio((s) => s.setFont);
+  const currentFont = font ?? "default";
   return (
     <div className="flex flex-col gap-6">
+      <div>
+        <p className="mb-2 text-sm font-medium text-ink">Font</p>
+        <div className="grid grid-cols-2 gap-2">
+          {FONT_CHOICES.map((f) => {
+            const active = f.id === currentFont;
+            return (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => setFont(f.id === "default" ? undefined : f.id)}
+                aria-pressed={active}
+                className={`truncate rounded-[12px] border px-3 py-2.5 text-left text-[15px] transition-colors ${active ? "border-ember-text bg-ember-tint text-ink" : "border-mist text-ink hover:border-slate"}`}
+                style={{ fontFamily: `"${f.family}"` }}
+                title={f.label}
+              >
+                {f.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
       <div>
         <p className="mb-2 text-sm font-medium text-ink">Palette</p>
         <div className="grid grid-cols-2 gap-2">
@@ -125,7 +149,11 @@ function StyleTab({
           })}
         </div>
       </div>
-      <FieldGroup fields={colors} values={values} onChange={onChange} def={def} emptyHint="No color options." />
+      <div>
+        <p className="mb-1 text-sm font-medium text-ink">Colors</p>
+        <p className="mb-3 text-xs text-slate">Pick any color for the background, text and objects — palettes above are just quick presets.</p>
+        <FieldGroup fields={colors} values={values} onChange={onChange} def={def} emptyHint="This template has no color options." />
+      </div>
     </div>
   );
 }

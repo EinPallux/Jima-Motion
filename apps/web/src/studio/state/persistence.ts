@@ -19,6 +19,7 @@ export interface PersistedProject {
   templateId: string;
   aspect: Aspect;
   paletteId?: string;
+  font?: string;
   values: Values;
   speed: number;
   loop: boolean;

@@ -16,6 +16,7 @@ const CATEGORY_LABEL: Record<string, string> = {
   comparison: "Compare",
   social: "Social",
   travel: "Travel",
+  showcase: "Showcase",
 };
 
 export function TemplateCard({ def, onOpen }: { def: TemplateDefinition; onOpen: (def: TemplateDefinition) => void }) {

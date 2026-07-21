@@ -101,3 +101,47 @@ export function createDefaultFontRegistry(): FontRegistry {
     .register("serif", { family: "Fraunces", weights: [500, 600] })
     .register("mono", { family: "JetBrains Mono", weights: [400, 700] });
 }
+
+/** A user-selectable headline font. `family` must match the loaded @font-face. */
+export interface FontChoice {
+  id: string;
+  label: string;
+  family: string;
+  kind: "sans" | "serif" | "mono";
+}
+
+/**
+ * The headline fonts offered in the Studio's font picker. All OFL-1.1 and loaded
+ * (weights 400–700) by the app + render harness, so a swap never renders a
+ * fallback. `id` "default" keeps the template's built-in display font.
+ */
+export const FONT_CHOICES: FontChoice[] = [
+  { id: "default", label: "Space Grotesk", family: "Space Grotesk", kind: "sans" },
+  { id: "archivo", label: "Archivo", family: "Archivo", kind: "sans" },
+  { id: "sora", label: "Sora", family: "Sora", kind: "sans" },
+  { id: "poppins", label: "Poppins", family: "Poppins", kind: "sans" },
+  { id: "outfit", label: "Outfit", family: "Outfit", kind: "sans" },
+  { id: "fraunces", label: "Fraunces", family: "Fraunces", kind: "serif" },
+  { id: "jetbrains", label: "JetBrains Mono", family: "JetBrains Mono", kind: "mono" },
+];
+
+export function fontChoice(id: string | undefined): FontChoice | undefined {
+  return id ? FONT_CHOICES.find((f) => f.id === id) : undefined;
+}
+
+// Weights loaded for a swapped headline family so any template weight resolves.
+const HEADLINE_WEIGHTS = [400, 500, 600, 700];
+
+/**
+ * A registry with the "display" (headline) role optionally swapped to a chosen
+ * font. Body/serif/mono keep their defaults. Used by the Studio + export so a
+ * project's headline font follows the whole template.
+ */
+export function createFontRegistry(opts?: { headline?: string | undefined }): FontRegistry {
+  const reg = createDefaultFontRegistry();
+  const h = fontChoice(opts?.headline);
+  if (h && h.id !== "default") {
+    reg.register("display", { family: h.family, weights: HEADLINE_WEIGHTS });
+  }
+  return reg;
+}

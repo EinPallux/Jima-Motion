@@ -2,11 +2,18 @@ import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { templates } from "@jima/templates";
 import { PosterThumb } from "../studio/components/PosterThumb";
+import { GROUPS, groupOf } from "../studio/gallery/groups";
+
+const TEASER_LIMIT = 12;
 
 export function GalleryTeaser() {
-  const [category, setCategory] = useState("all");
-  const categories = useMemo(() => ["all", ...new Set(templates.map((t) => t.category))], []);
-  const shown = category === "all" ? templates : templates.filter((t) => t.category === category);
+  const [group, setGroup] = useState("all");
+  const activeGroups = useMemo(() => {
+    const present = new Set(templates.map((t) => groupOf(t.category).id));
+    return GROUPS.filter((g) => present.has(g.id));
+  }, []);
+  const filtered = group === "all" ? templates : templates.filter((t) => groupOf(t.category).id === group);
+  const shown = filtered.slice(0, TEASER_LIMIT);
 
   return (
     <section id="templates" className="mx-auto max-w-6xl px-6 py-20">
@@ -18,17 +25,17 @@ export function GalleryTeaser() {
       </div>
 
       <div className="mt-6 flex flex-wrap gap-2">
-        {categories.map((c) => {
-          const active = c === category;
+        {[{ id: "all", label: "All" }, ...activeGroups].map((g) => {
+          const active = g.id === group;
           return (
             <button
-              key={c}
+              key={g.id}
               type="button"
-              onClick={() => setCategory(c)}
+              onClick={() => setGroup(g.id)}
               aria-pressed={active}
-              className={`rounded-full px-3 py-1.5 text-sm font-medium capitalize transition-colors ${active ? "bg-ink text-paper" : "bg-porcelain text-ink/70 hover:text-ink"}`}
+              className={`rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${active ? "bg-ink text-paper" : "bg-porcelain text-slate hover:text-ink"}`}
             >
-              {c}
+              {g.label}
             </button>
           );
         })}

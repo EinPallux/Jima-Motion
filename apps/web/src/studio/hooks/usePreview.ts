@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import {
+  createFontRegistry,
   isImageRef,
   PreviewPlayer,
   TemplateRunner,
@@ -28,6 +29,7 @@ interface Params {
   aspect: Aspect;
   values: Values;
   paletteId: string | undefined;
+  font: string | undefined;
   speed: number;
   loop: boolean;
   reducedMotion: boolean;
@@ -72,6 +74,7 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
         aspect: params.aspect,
         values: engineValues(params.values),
         ...(params.paletteId ? { paletteId: params.paletteId } : {}),
+        fonts: createFontRegistry({ headline: params.font }),
         resolution: 1,
       });
       if (disposed) {
@@ -126,7 +129,7 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
       setState({ t: 0, duration: 0, playing: false, ready: false });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.def, params.aspect, imagesKey]);
+  }, [params.def, params.aspect, imagesKey, params.font]);
 
   // Rebuild scene on value/palette changes (debounced, in place).
   useEffect(() => {

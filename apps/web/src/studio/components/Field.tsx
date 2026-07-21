@@ -21,7 +21,7 @@ export function Field({ field, value, onChange, blobKeyPrefix }: FieldProps) {
       <div className="flex items-baseline justify-between gap-2">
         <label htmlFor={id} className={labelCls}>
           {field.label}
-          {field.optional ? <span className="ml-1 font-normal text-slate">(optional)</span> : null}
+          {field.optional && field.type !== "color" ? <span className="ml-1 font-normal text-slate">(optional)</span> : null}
         </label>
         {field.type === "text" || field.type === "textarea" ? (
           <CharCount value={value} max={field.maxLength} />

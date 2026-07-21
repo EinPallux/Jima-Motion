@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  createFontRegistry,
   exportTemplate,
   type Capabilities,
   type ExportFormat,
@@ -27,6 +28,7 @@ export function ExportModal({
   const aspect = useStudio((s) => s.aspect);
   const values = useStudio((s) => s.values);
   const paletteId = useStudio((s) => s.paletteId);
+  const font = useStudio((s) => s.font);
 
   const [phase, setPhase] = useState<Phase>("configure");
   const [format, setFormat] = useState<ExportFormat>("webm");
@@ -69,7 +71,7 @@ export function ExportModal({
     try {
       const res = await exportTemplate({
         def,
-        runner: { aspect, values: engineValues(values), ...(paletteId ? { paletteId } : {}) },
+        runner: { aspect, values: engineValues(values), ...(paletteId ? { paletteId } : {}), fonts: createFontRegistry({ headline: font }) },
         profile,
         signal: controller.signal,
         onProgress: setProgress,

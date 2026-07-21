@@ -4,18 +4,11 @@
 //
 // Fonts are imported here (as @font-face CSS) so the engine's document.fonts.load
 // finds the faces; the runner then guarantees they're ready before first paint.
-import "@fontsource/space-grotesk/500.css";
-import "@fontsource/space-grotesk/700.css";
-import "@fontsource/inter/400.css";
-import "@fontsource/inter/500.css";
-import "@fontsource/inter/600.css";
-import "@fontsource/fraunces/500.css";
-import "@fontsource/fraunces/600.css";
-import "@fontsource/jetbrains-mono/400.css";
-import "@fontsource/jetbrains-mono/700.css";
+import "../src/fonts";
 
 import {
   TemplateRunner,
+  createFontRegistry,
   exportTemplate,
   detectCapabilities,
   ExportCancelledError,
@@ -87,6 +80,7 @@ async function main(): Promise<void> {
   const t = Number(param("t", "0"));
   const res = Number(param("res", "0.5")) || 0.5;
   const paletteId = param("palette") || undefined;
+  const fontId = param("font") || undefined;
   const seed = Number(param("seed", "6682")) || 6682;
 
   let values: Values | undefined;
@@ -106,6 +100,7 @@ async function main(): Promise<void> {
     aspect,
     ...(paletteId ? { paletteId } : {}),
     ...(values ? { values } : {}),
+    ...(fontId ? { fonts: createFontRegistry({ headline: fontId }) } : {}),
     seed,
   };
 

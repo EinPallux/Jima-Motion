@@ -13,6 +13,8 @@ export interface EditableState {
   values: Values;
   speed: number;
   loop: boolean;
+  /** Headline font id (FONT_CHOICES); undefined = template default. */
+  font: string | undefined;
 }
 
 interface StudioStore extends EditableState {
@@ -26,6 +28,7 @@ interface StudioStore extends EditableState {
   setValue: (key: string, value: unknown) => void;
   setAspect: (aspect: Aspect) => void;
   setPalette: (paletteId: string | undefined) => void;
+  setFont: (font: string | undefined) => void;
   setSpeed: (speed: number) => void;
   setLoop: (loop: boolean) => void;
   reset: () => void;
@@ -60,6 +63,7 @@ function snapshot(s: EditableState): EditableState {
     values: { ...s.values },
     speed: s.speed,
     loop: s.loop,
+    font: s.font,
   };
 }
 
@@ -70,6 +74,7 @@ export const useStudio = create<StudioStore>((set, get) => ({
   values: {},
   speed: 1,
   loop: false,
+  font: undefined,
   def: null,
   past: [],
   future: [],
@@ -87,6 +92,7 @@ export const useStudio = create<StudioStore>((set, get) => ({
       values,
       speed: initial?.speed ?? 1,
       loop: initial?.loop ?? def.loopable,
+      font: initial?.font ?? undefined,
       past: [],
       future: [],
       lastEditKey: null,
@@ -123,6 +129,12 @@ export const useStudio = create<StudioStore>((set, get) => ({
       values: { ...s.values, ...paletteColorValues(s.def, paletteId) },
       lastEditKey: null,
     });
+  },
+
+  setFont: (font) => {
+    const s = get();
+    if (font === s.font) return;
+    set({ past: [...s.past, snapshot(s)].slice(-HISTORY_LIMIT), future: [], font, lastEditKey: null });
   },
 
   setSpeed: (speed) => {
