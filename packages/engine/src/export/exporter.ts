@@ -1,6 +1,6 @@
 import { TemplateRunner, type RunnerConfig } from "../runtime/runner";
 import { sizeOf } from "../layout/aspect";
-import type { TemplateDefinition } from "../sdk/types";
+import { TRANSPARENT_BG, type TemplateDefinition } from "../sdk/types";
 import { cuesFromTimeline, renderCuesToBuffer, type SoundPack } from "../audio/index";
 import { detectCapabilities } from "./capabilities";
 import { exportVideo } from "./video";
@@ -17,6 +17,8 @@ export interface ExportRequest {
   /** Bake the motion-matched sound track into MP4/WebM (GIF stays silent). */
   sound?: boolean;
   soundPack?: SoundPack;
+  /** Export a transparent background (alpha). WebM only — ignored otherwise. */
+  transparent?: boolean;
   signal?: AbortSignal;
   onProgress?: (p: ExportProgress) => void;
 }
@@ -48,7 +50,20 @@ export async function exportTemplate(req: ExportRequest): Promise<ExportResult> 
 
   onProgress?.({ phase: "prepare", frame: 0, totalFrames: 0, ratio: 0 });
 
-  const runner = await TemplateRunner.create(def, { ...req.runner, resolution });
+  // Transparent output is only meaningful for alpha-capable video (WebM/VP9).
+  const transparent = req.transparent === true && profile.format === "webm";
+  const runnerReq: RunnerConfig = transparent
+    ? {
+        ...req.runner,
+        resolution,
+        transparent: true,
+        // Blank the template's full-frame background rect so the alpha clear
+        // shows through, without disturbing the user's chosen palette/colors.
+        values: { ...req.runner.values, background: TRANSPARENT_BG },
+      }
+    : { ...req.runner, resolution };
+
+  const runner = await TemplateRunner.create(def, runnerReq);
   try {
     const fps = profile.fps;
     // Speed compresses (>1) or stretches (<1) the output: fewer/more frames,
@@ -96,6 +111,7 @@ export async function exportTemplate(req: ExportRequest): Promise<ExportResult> 
         totalFrames,
         speed,
         ...(audio ? { audio, audioCodec } : {}),
+        ...(transparent ? { alpha: true } : {}),
         ...(signal ? { signal } : {}),
         ...(onProgress ? { onProgress } : {}),
       });

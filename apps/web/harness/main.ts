@@ -11,7 +11,9 @@ import {
   createFontRegistry,
   exportTemplate,
   detectCapabilities,
+  readCanvasRGBA,
   ExportCancelledError,
+  TRANSPARENT_BG,
   type Aspect,
   type Capabilities,
   type ExportProfile,
@@ -35,15 +37,18 @@ interface ProbeOut {
   packetCount: number;
   duration: number;
   audioPacketCount: number;
+  transparent: boolean;
 }
 interface HarnessApi {
   ready: boolean;
   renderAt: (t: number) => void;
   duration: number;
   canvas: HTMLCanvasElement;
-  export: (profile: ExportProfile, speed?: number, sound?: boolean) => Promise<ExportOut>;
+  export: (profile: ExportProfile, speed?: number, sound?: boolean, transparent?: boolean) => Promise<ExportOut>;
   exportExpectCancel: (profile: ExportProfile) => Promise<string>;
   probe: (base64: string) => Promise<ProbeOut | null>;
+  /** Min alpha (0–255) across the four canvas corners at the current frame. */
+  cornerAlpha: () => number;
   caps: () => Promise<Capabilities>;
 }
 
@@ -97,11 +102,19 @@ async function main(): Promise<void> {
   const def = getTemplate(templateId);
   if (!def) throw new Error(`Unknown template "${templateId}"`);
 
+  // transparent=1 renders the live canvas with alpha (bg rect blanked), so the
+  // per-template alpha sweep can read corner transparency straight off the canvas.
+  const transparentParam = param("transparent") === "1";
+  const effectiveValues: Values | undefined = transparentParam
+    ? { ...(values ?? {}), background: TRANSPARENT_BG }
+    : values;
+
   const runnerConfig = {
     aspect,
     ...(paletteId ? { paletteId } : {}),
-    ...(values ? { values } : {}),
+    ...(effectiveValues ? { values: effectiveValues } : {}),
     ...(fontId ? { fonts: createFontRegistry({ headline: fontId }) } : {}),
+    ...(transparentParam ? { transparent: true } : {}),
     seed,
   };
 
@@ -117,8 +130,8 @@ async function main(): Promise<void> {
     renderAt: (time) => runner.renderAt(time),
     duration: runner.duration,
     canvas: runner.canvas,
-    export: async (profile, speed, sound) => {
-      const result = await exportTemplate({ def, runner: runnerConfig, profile, ...(speed ? { speed } : {}), ...(sound ? { sound: true } : {}) });
+    export: async (profile, speed, sound, transparent) => {
+      const result = await exportTemplate({ def, runner: runnerConfig, profile, ...(speed ? { speed } : {}), ...(sound ? { sound: true } : {}), ...(transparent ? { transparent: true } : {}) });
       return {
         base64: toBase64(result.bytes),
         byteLength: result.bytes.byteLength,
@@ -149,13 +162,25 @@ async function main(): Promise<void> {
       const duration = await input.computeDuration();
       const audioTrack = await input.getPrimaryAudioTrack();
       const audioStats = audioTrack ? await audioTrack.computePacketStats() : null;
+      const transparent = await track.canBeTransparent();
       return {
         width: track.displayWidth,
         height: track.displayHeight,
         packetCount: stats.packetCount,
         duration,
         audioPacketCount: audioStats ? audioStats.packetCount : 0,
+        transparent,
       };
+    },
+    cornerAlpha: () => {
+      const { rgba, width, height } = readCanvasRGBA(runner.canvas);
+      const alphaAt = (x: number, y: number) => rgba[(y * width + x) * 4 + 3] ?? 255;
+      return Math.min(
+        alphaAt(0, 0),
+        alphaAt(width - 1, 0),
+        alphaAt(0, height - 1),
+        alphaAt(width - 1, height - 1),
+      );
     },
     caps: () => detectCapabilities(),
   };

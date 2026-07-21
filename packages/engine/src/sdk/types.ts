@@ -70,6 +70,15 @@ export interface Palette {
 
 export type Values = Record<string, unknown>;
 
+/**
+ * Sentinel background value meaning "no fill" — a fully-transparent RGBA hex.
+ * Templates resolve their backdrop as `str(values.background, palette.background)`
+ * and `.fill()` it; filling with this makes the full-frame background rect
+ * invisible, so a renderer cleared with alpha 0 shows through. Used for
+ * transparent (alpha) WebM exports; harmless elsewhere.
+ */
+export const TRANSPARENT_BG = "#00000000";
+
 // Everything a template's build() needs. Provided by the runtime per
 // (template, aspect, values). Pure inputs only — no globals, no wall-clock.
 export interface TemplateContext {

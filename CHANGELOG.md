@@ -11,6 +11,32 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.6.0] — 2026-07-21 · Transparent (alpha) WebM export
+
+Export any animation with a **transparent background** so it can be dropped straight onto footage in
+a video editor — no green-screen keying.
+
+### Added — Transparent background (ADR-013)
+- **"Transparent background" toggle** in the Export dialog. When on, the export is a **WebM with a
+  real alpha channel** (VP9, alpha kept as packet side data); the Studio blanks the template's
+  full-frame background so only the animation's foreground carries through. The result preview sits
+  on a checkerboard so the transparency is visible.
+- **Fully client-side**, no new deps: the export runner clears the canvas with alpha 0
+  (`RunnerConfig.transparent`), a shared `TRANSPARENT_BG` sentinel blanks the background rect across
+  the library (91/95 templates have a solid background that goes fully transparent; the other 4 are
+  full-bleed photo/panel designs with nothing to knock out), and Mediabunny marks the WebM track
+  transparent from the first alpha packet.
+- **Honest format guidance in the UI:** transparency needs an alpha-capable codec, so the toggle
+  snaps the format to WebM (MP4/H.264 and GIF can't carry smooth alpha). The note also flags that
+  **Premiere Pro may import WebM alpha as opaque** — it works in After Effects, DaVinci Resolve,
+  CapCut, OBS and the web.
+
+### Changed
+- `Capabilities` and the export/harness paths thread a `transparent` flag; export-smoke now asserts
+  a transparent WebM is a real alpha track (`canBeTransparent()`), an opaque one is not, and a
+  transparent render blanks the background (corner alpha 0). Golden frames unaffected (transparency
+  is export-only).
+
 ## [1.5.0] — 2026-07-21 · Motion-matched sound + editable speed/length
 
 Two owner-requested capabilities across all 95 templates: **fitting sound effects you can toggle**,

@@ -115,6 +115,37 @@ test.describe("sound track", () => {
   });
 });
 
+test.describe("transparent (alpha) export", () => {
+  test("a transparent render blanks the background — corner alpha is 0", async ({ page }) => {
+    await page.goto("/harness.html?template=kinetic-headline&aspect=1:1&res=0.25&transparent=1&t=0");
+    await page.waitForFunction(() => window.__jimaHarnessReady === true, undefined, { timeout: 20000 });
+    const alpha = await page.evaluate(() => window.__jima!.cornerAlpha());
+    expect(alpha).toBeLessThan(8); // fully transparent corners
+  });
+
+  test("transparent WebM is a real VP9-alpha track with the exact frame count", async ({ page }) => {
+    await loadHarness(page);
+    const out = await page.evaluate(
+      (p) => window.__jima!.export(p, 1, false, true),
+      { format: "webm", fps: FPS, resolution: 0.25 } as ExportProfile,
+    );
+    expect(out.format).toBe("webm");
+    expect(out.frames).toBe(EXPECTED_FRAMES);
+
+    const probe = await page.evaluate((b64) => window.__jima!.probe(b64), out.base64);
+    expect(probe).not.toBeNull();
+    expect(probe!.packetCount).toBe(EXPECTED_FRAMES);
+    expect(probe!.transparent).toBe(true); // the WebM track carries alpha
+  });
+
+  test("a normal (opaque) WebM is not marked transparent", async ({ page }) => {
+    await loadHarness(page);
+    const out = await runExport(page, { format: "webm", fps: FPS, resolution: 0.25 });
+    const probe = await page.evaluate((b64) => window.__jima!.probe(b64), out.base64);
+    expect(probe!.transparent).toBe(false);
+  });
+});
+
 test.describe("cancellation", () => {
   test("an aborted signal rejects with ExportCancelledError and leaks nothing", async ({ page }) => {
     await loadHarness(page);

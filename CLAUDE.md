@@ -4,7 +4,7 @@ Jima Motion is a **100 % free, no-account, browser-only motion-graphics tool for
 managers**: pick a template → type your text / drop images → export MP4/WebM/GIF, rendered
 entirely client-side. Brand = "Jima Motion"; the editor = "Jima Studio" ("the Studio").
 **Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 95,
-plus a v1.5 sound + editable-speed release.**
+plus a v1.5 sound + editable-speed release and a v1.6 transparent-export release.**
 Workspace/CI/guardrails; deterministic motion engine + **95 templates** (12 launch + a 23-template
 expansion + a 20-template smooth-text pack + a 20-template explainer/showcase/product/ad pack + a
 20-template showcase & product-presentation pack);
@@ -12,6 +12,7 @@ editable headline fonts (7 OFL families), a use-case-grouped gallery, and per-el
 **optional procedural, motion-matched sound (ADR-012) — synthesized SFX auto-cued from each
 template's timeline beats, toggleable with 3 packs, baked into MP4/WebM exports; GIF silent**;
 **editable animation speed/length (0.25×–3×) that the export honours**;
+**optional transparent (alpha) WebM export (ADR-013) for overlaying animations onto footage**;
 client-side MP4/WebM/GIF export; the full Jima Studio UI;
 the bold animated Three.js/WebGL landing page (3D "motion tile" hero); and Phase 6 hardening
 (axe-core a11y sweep with zero serious/critical violations, engine-rendered OG image, German

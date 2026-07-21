@@ -233,8 +233,8 @@ device" test. Chromium (incl. headless SwiftShader WebGL) is fully covered here.
 3. **Share links:** project state URL-encoded (lz-string) — share/remix with zero backend.
 4. **Brand kit presets:** saved colors/fonts/logo in localStorage + shareable preset codes
    (Ccleaf-validated), still no accounts.
-5. **Transparent WebM (alpha) exports + sticker/overlay template pack** — attacks Ccleaf's premium
-   moat with a free answer.
+5. **Transparent WebM (alpha) exports** — ✅ shipped v1.6 (ADR-013). Still open: a dedicated
+   sticker/overlay template pack, and a PNG-sequence export for Premiere-grade universal alpha.
 6. **Worker + OffscreenCanvas export migration** (ADR-005 revisit); WebGPU preview evaluation.
 7. ~~**Optional sound:** per-template SFX/music toggle~~ — ✅ shipped v1.5 (ADR-012): procedural,
    motion-matched SFX auto-cued from timeline beats, toggle + 3 packs, baked into MP4/WebM.
@@ -271,5 +271,6 @@ rendering, AI credits, dark mode.
 | Phase 6 Launch | ✅ 2026-07-21 — **v1.0.0** |
 | Post-v1 template expansions | ✅ 2026-07-21 — **v1.1–v1.4**, library 12 → 95 |
 | Sound + editable speed/length | ✅ 2026-07-21 — **v1.5** (ADR-012) |
+| Transparent (alpha) WebM export | ✅ 2026-07-21 — **v1.6** (ADR-013) |
 
 *(Update this table + CHANGELOG.md at every phase transition.)*

@@ -35,6 +35,7 @@ export function ExportModal({
 
   const [phase, setPhase] = useState<Phase>("configure");
   const [format, setFormat] = useState<ExportFormat>("webm");
+  const [transparent, setTransparent] = useState(false);
   const [videoQuality, setVideoQuality] = useState<"1080" | "720">("1080");
   const [fps, setFps] = useState(30);
   const [gifSize, setGifSize] = useState<"480" | "720">("480");
@@ -62,6 +63,17 @@ export function ExportModal({
     gif: true,
   };
 
+  // Transparency needs an alpha-capable codec — only WebM/VP9 qualifies here.
+  // Picking MP4/GIF clears it; enabling it snaps the format to WebM.
+  function chooseFormat(f: ExportFormat) {
+    setFormat(f);
+    if (f !== "webm") setTransparent(false);
+  }
+  function toggleTransparent(on: boolean) {
+    setTransparent(on);
+    if (on) setFormat("webm");
+  }
+
   async function run() {
     const controller = new AbortController();
     abortRef.current = controller;
@@ -79,6 +91,7 @@ export function ExportModal({
         speed,
         sound,
         soundPack,
+        transparent: transparent && format === "webm",
         signal: controller.signal,
         onProgress: setProgress,
       });
@@ -123,7 +136,7 @@ export function ExportModal({
           {phase === "configure" && (
             <Configure
               format={format}
-              setFormat={setFormat}
+              setFormat={chooseFormat}
               available={available}
               caps={caps}
               videoQuality={videoQuality}
@@ -134,12 +147,14 @@ export function ExportModal({
               setGifSize={setGifSize}
               aspect={aspect}
               sound={sound}
+              transparent={transparent}
+              onTransparentChange={toggleTransparent}
               onExport={run}
             />
           )}
           {phase === "rendering" && <Rendering progress={progress} onCancel={() => abortRef.current?.abort()} />}
           {phase === "done" && result && (
-            <Done result={result} url={resultUrlRef.current} onAnother={() => setPhase("configure")} onClose={onClose} />
+            <Done result={result} url={resultUrlRef.current} transparent={transparent && result.format === "webm"} onAnother={() => setPhase("configure")} onClose={onClose} />
           )}
           {phase === "error" && (
             <ErrorState message={error} onRetry={() => setPhase("configure")} onGif={() => { setFormat("gif"); setPhase("configure"); }} />
@@ -169,9 +184,11 @@ function Configure(props: {
   setGifSize: (s: "480" | "720") => void;
   aspect: string;
   sound: boolean;
+  transparent: boolean;
+  onTransparentChange: (on: boolean) => void;
   onExport: () => void;
 }) {
-  const { format, setFormat, available, caps, sound } = props;
+  const { format, setFormat, available, caps, sound, transparent, onTransparentChange } = props;
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-3 gap-2">
@@ -204,6 +221,27 @@ function Configure(props: {
           <Segment label="Frame rate" value={String(props.fps)} options={[["30", "30 fps"], ["60", "60 fps"]]} onChange={(v) => props.setFps(Number(v))} />
         </>
       )}
+
+      <div>
+        <label className="flex items-center justify-between">
+          <span className="text-sm font-medium text-ink">Transparent background</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={transparent}
+            aria-label="Transparent background"
+            onClick={() => onTransparentChange(!transparent)}
+            className={`relative h-6 w-11 rounded-full transition-colors ${transparent ? "bg-ember" : "bg-mist"}`}
+          >
+            <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow-sm transition-transform ${transparent ? "translate-x-5" : "translate-x-0.5"}`} />
+          </button>
+        </label>
+        <p className="mt-1 text-xs text-slate">
+          {transparent
+            ? "Exports a WebM with an alpha channel — drop it over any footage. Works in After Effects, DaVinci Resolve, CapCut & the web. Premiere Pro may show it opaque."
+            : "Off = solid background. Turn on to export the animation with no background (WebM only)."}
+        </p>
+      </div>
 
       <p className="text-xs text-slate">
         {props.aspect} · everything renders on your device — nothing is uploaded.
@@ -274,10 +312,20 @@ function Rendering({ progress, onCancel }: { progress: ExportProgress | null; on
   );
 }
 
-function Done({ result, url, onAnother, onClose }: { result: ExportResult; url: string | null; onAnother: () => void; onClose: () => void }) {
+function Done({ result, url, transparent, onAnother, onClose }: { result: ExportResult; url: string | null; transparent: boolean; onAnother: () => void; onClose: () => void }) {
+  // A checkerboard behind a transparent export makes its alpha visible.
+  const checker = transparent
+    ? {
+        backgroundImage:
+          "linear-gradient(45deg,#c8c8d0 25%,transparent 25%),linear-gradient(-45deg,#c8c8d0 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#c8c8d0 75%),linear-gradient(-45deg,transparent 75%,#c8c8d0 75%)",
+        backgroundSize: "16px 16px",
+        backgroundPosition: "0 0,0 8px,8px -8px,-8px 0",
+        backgroundColor: "#ffffff",
+      }
+    : undefined;
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-center overflow-hidden rounded-[16px] bg-porcelain p-3">
+      <div className="flex items-center justify-center overflow-hidden rounded-[16px] bg-porcelain p-3" style={checker}>
         {url && (result.format === "gif" ? (
           <img src={url} alt="Export preview" className="max-h-64 rounded-[8px]" />
         ) : (

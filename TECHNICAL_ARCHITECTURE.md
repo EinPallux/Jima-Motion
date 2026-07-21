@@ -230,6 +230,13 @@ mux a procedurally-synthesized audio track — AAC (MP4) / Opus (WebM) — baked
 timeline's beats via `OfflineAudioContext`. GIF stays silent; browsers without an AudioEncoder
 export silent video (probed, never assumed). No sample files are bundled or fetched.
 
+Optional **transparent (alpha) export** (ADR-013): a "Transparent background" toggle exports a
+**WebM with an alpha channel** (VP9, `alpha: 'keep'` → alpha as packet side data, which Mediabunny
+uses to mark the track transparent). The export runner clears the canvas with alpha 0 and a shared
+`TRANSPARENT_BG` sentinel blanks each template's full-frame background rect, so only the foreground
+carries through — droppable over footage in an NLE. MP4/H.264 and GIF can't carry smooth alpha, so
+the toggle forces WebM.
+
 ### 8.2 Flow (deterministic offline loop — never `captureStream` for real exports)
 ```
 for frame in 0..(duration*fps):
@@ -417,3 +424,17 @@ intentional template change as a P1 bug.
   the original ADR-006 worry — degrade gracefully: capability is probed like video, and a browser
   without it (or GIF, which has no audio) simply exports silent. Sound defaults on but is a
   persisted global preference, not a per-template/undoable value.
+- **ADR-013 — Transparent (alpha) export via WebM/VP9 (2026-07-21, owner request).** A
+  "Transparent background" toggle exports the animation with **no background**, to overlay on footage
+  in an editor. Implemented as **VP9 WebM with alpha** (WebCodecs `alpha: 'keep'`; Mediabunny writes
+  the alpha as VP9 packet side data and marks the WebM track transparent) — the only alpha-capable
+  path our client-side stack can produce (H.264/MP4 has no alpha; GIF only 1-bit). Transparency is an
+  **export property, not a template edit**: the export runner clears with alpha 0
+  (`RunnerConfig.transparent`) and injects a shared `TRANSPARENT_BG` (`#00000000`) sentinel into
+  `values.background`, blanking the uniform full-frame background rect every template draws — so
+  91/95 go fully transparent with zero per-template code, and the 4 full-bleed photo/panel designs
+  (ken-burns, before-after-slider, split-duo, split-showcase) legitimately stay opaque where content
+  fills the frame. Determinism is untouched (export-only; golden frames unchanged). **Known limit,
+  surfaced in the UI:** Premiere Pro often imports WebM alpha as opaque; After Effects / DaVinci
+  Resolve / CapCut / OBS / web read it correctly. A PNG-sequence export (universal alpha incl.
+  Premiere) is the documented fallback if that becomes a need.

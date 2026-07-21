@@ -39,6 +39,8 @@ export interface RunnerConfig {
   seed?: number;
   resolution?: number;
   fonts?: FontRegistry;
+  /** Clear the canvas with alpha 0 (for transparent/alpha WebM export). */
+  transparent?: boolean;
 }
 
 function pickPalette(def: TemplateDefinition, id?: string): Palette {
@@ -121,6 +123,7 @@ export class TemplateRunner {
       size,
       resolution: config.resolution ?? 1,
       background: "#ffffff",
+      ...(config.transparent ? { backgroundAlpha: 0 } : {}),
     });
 
     const runner = new TemplateRunner({

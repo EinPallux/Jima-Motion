@@ -24,6 +24,8 @@ export interface VideoExportArgs {
   /** Optional baked sound track + its audio codec (AAC/Opus). Muxed if both set. */
   audio?: AudioBuffer | null;
   audioCodec?: string | null;
+  /** Keep the canvas alpha channel (transparent WebM). VP9/VP8 only. */
+  alpha?: boolean;
   signal?: AbortSignal;
   onProgress?: (p: ExportProgress) => void;
 }
@@ -46,6 +48,9 @@ export async function exportVideo(args: VideoExportArgs): Promise<Uint8Array> {
     codec: codec as VideoCodec, // validated by capability detection
     bitrate: QUALITY_HIGH,
     keyFrameInterval: 2,
+    // Encode the alpha channel too (WebM/VP9 emits it as packet side data, which
+    // Mediabunny uses to mark the track transparent). Only set for WebM.
+    ...(args.alpha ? { alpha: "keep" as const } : {}),
   });
   output.addVideoTrack(source, { frameRate: fps });
 
