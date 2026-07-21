@@ -30,6 +30,7 @@ export function StudioApp() {
           openTemplate(target, {
             aspect: saved.aspect,
             paletteId: saved.paletteId,
+            font: saved.font,
             values,
             speed: saved.speed,
             loop: saved.loop,
@@ -61,6 +62,7 @@ export function StudioApp() {
           templateId: s.templateId!,
           aspect: s.aspect,
           ...(s.paletteId ? { paletteId: s.paletteId } : {}),
+          ...(s.font ? { font: s.font } : {}),
           values: s.values,
           speed: s.speed,
           loop: s.loop,
@@ -92,6 +94,7 @@ export function StudioApp() {
         openTemplate(target, {
           aspect: resume.aspect,
           paletteId: resume.paletteId,
+          font: resume.font,
           values,
           speed: resume.speed,
           loop: resume.loop,

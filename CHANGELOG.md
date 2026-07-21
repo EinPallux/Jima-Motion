@@ -11,6 +11,35 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.3.0] — 2026-07-21 · Explainer/showcase/ad pack + editor upgrades (55 → 75)
+
+Added **20 templates for real use-cases beyond text** — explainers, showcases, product
+presentations and ads — plus three editor upgrades: editable fonts, a regrouped gallery, and
+clearer per-element colors.
+
+### Added — templates (all deterministic, 4 aspects, 4 palettes, images degrade to placeholders)
+- **Explainers:** Step Flow, Timeline, Before / After, Comparison (vs table), Feature Callouts
+- **Showcases:** Product Showcase, Gallery Strip, Feature Grid, Device Mockup, Review Stars
+- **Product & ads:** Product Hero, Pricing Card, New Arrival, Spec Sheet, Spotlight Reveal
+- **Data / brand / ads:** Stat Trio, Logo Wall, Countdown (pure-`f(t)` digits), End Card, Sale Banner
+- New `showcase` category; the golden suite now covers **75 templates** (75 determinism + 300 posters)
+
+### Added — editor
+- **Editable headline fonts** — a "Font" picker in the Style tab swaps the display font across the
+  whole template, from 7 curated OFL families (Space Grotesk, Archivo, Sora, Poppins, Outfit,
+  Fraunces, JetBrains Mono). New engine `createFontRegistry({headline})` + `FONT_CHOICES`; app and
+  render harness load all faces (weights 400–700) so a swap never falls back. Threaded through
+  preview, export, persistence, and undo/redo.
+- **Gallery regrouped** into browsable use-case sections (Text & titles · Social · Product & ads ·
+  Showcase · Explainers & data · Brand & quotes · Events & travel) with a group filter + search;
+  the landing teaser uses the same groups.
+- **Colors** — a clearer Style-tab "Colors" section for picking background/text/object colors
+  individually (palettes are presets); dropped the misleading "(optional)" tag on color fields.
+
+### Fixed
+- Three Stats: shrink big numbers to fit their column (the count-up's final value could overflow).
+- Logo Wall: use a loaded display weight so chip wordmarks measure correctly and don't clip.
+
 ## [1.2.0] — 2026-07-21 · Smooth-text pack (35 → 55)
 
 Added **20 clean, motion-animated text templates** — a focused set of smooth kinetic typography.

@@ -70,6 +70,27 @@ const TEMPLATES: T[] = [
   { id: "spacing-expand", palette: "ink-white", poster: 2.4, duration: 3.4 },
   { id: "message-rotator", palette: "ink-white", poster: 1.6, duration: 4.8 },
   { id: "box-wipe", palette: "ink-white", poster: 2.6, duration: 3.6 },
+  // Explainer / showcase / product / ad pack (v1.3).
+  { id: "step-flow", palette: "ember", poster: 3.0, duration: 4.0 },
+  { id: "timeline-flow", palette: "ember", poster: 2.8, duration: 3.7 },
+  { id: "before-after", palette: "ember", poster: 3.2, duration: 4.0 },
+  { id: "comparison-vs", palette: "ember", poster: 3.2, duration: 4.2 },
+  { id: "feature-callouts", palette: "ember", poster: 3.2, duration: 3.9 },
+  { id: "product-showcase", palette: "studio", poster: 3.0, duration: 4.0 },
+  { id: "gallery-strip", palette: "ember", poster: 3.2, duration: 4.2 },
+  { id: "feature-grid", palette: "ember", poster: 2.8, duration: 3.8 },
+  { id: "device-mockup", palette: "ember", poster: 3.0, duration: 4.0 },
+  { id: "review-stars", palette: "paper-ink", poster: 3.4, duration: 4.2 },
+  { id: "product-hero", palette: "studio-white", poster: 3.0, duration: 4.0 },
+  { id: "price-card", palette: "studio-white", poster: 3.2, duration: 4.0 },
+  { id: "new-arrival", palette: "fresh-white", poster: 3.0, duration: 4.0 },
+  { id: "spec-list", palette: "studio-white", poster: 3.2, duration: 4.0 },
+  { id: "reveal-spotlight", palette: "spotlight-ink", poster: 3.4, duration: 4.2 },
+  { id: "three-stats", palette: "ink", poster: 3.2, duration: 4.0 },
+  { id: "logo-wall", palette: "ink", poster: 2.8, duration: 3.3 },
+  { id: "countdown-timer", palette: "ember", poster: 3.0, duration: 4.5 },
+  { id: "cta-endcard", palette: "ink", poster: 2.8, duration: 3.3 },
+  { id: "sale-banner", palette: "ember", poster: 3.0, duration: 4.0 },
 ];
 
 const ASPECTS: Aspect[] = ["1:1", "4:5", "9:16", "16:9"];

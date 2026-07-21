@@ -441,3 +441,34 @@ deterministic (pixel-exact re-seek), all 4 aspects, 4 palettes, smooth eases, cl
 | T53 | Spacing Expand | `spacing-expand` | 16:9 | An airy kicker whose letter-spacing expands + headline |
 | T54 | Message Rotator | `message-rotator` | 1:1 | A line crossfades through a list of phrases (loop) |
 | T55 | Box Wipe | `box-wipe` | 16:9 | An accent bar wipes across, revealing each line (masked) |
+
+## 9. Explainer / showcase / product / ad pack — 20 templates (2026-07-21)
+
+The library grew from 55 → **75**. Beyond text: explainers, showcases, product presentations and
+ads. Same contract (§2), same QA bar (§5); all deterministic (pixel-exact re-seek), all 4 aspects,
+4 palettes, exposing `background`/`textColor`/`accent` color fields. Image templates cover-fit a
+user image (masked to a rounded rect) and degrade to a designed placeholder when empty. Adds the
+`showcase` category.
+
+| # | Template | `id` | Category | Default | What it does |
+|---|---|---|---|---|---|
+| T56 | Step Flow | `step-flow` | educational | 16:9 | Numbered process steps connected by drawing arrows |
+| T57 | Timeline | `timeline-flow` | educational | 16:9 | A timeline baseline with milestone dots + dates (zigzag) |
+| T58 | Before / After | `before-after` | comparison | 1:1 | Two states revealed with a wipe + labels (optional images) |
+| T59 | Comparison | `comparison-vs` | comparison | 4:5 | A this-vs-that table with checks/crosses + a VS badge |
+| T60 | Feature Callouts | `feature-callouts` | educational | 1:1 | A product with annotation leader-lines to feature labels (image) |
+| T61 | Product Showcase | `product-showcase` | showcase | 1:1 | A product floats on a lit pedestal with name/price (image) |
+| T62 | Gallery Strip | `gallery-strip` | showcase | 4:5 | 3–4 image cards cascade into a neat strip (images) |
+| T63 | Feature Grid | `feature-grid` | showcase | 1:1 | A grid of icon feature cards (`icon \| title \| blurb`) |
+| T64 | Device Mockup | `device-mockup` | showcase | 9:16 | A phone/browser frame around a screenshot (image) |
+| T65 | Review Stars | `review-stars` | testimonial | 4:5 | A 5-star rating + a serif review + author row |
+| T66 | Product Hero | `product-hero` | product | 16:9 | Product image + name + tagline + CTA (image) |
+| T67 | Pricing Card | `price-card` | product | 4:5 | A plan card: price + feature list + CTA + badge |
+| T68 | New Arrival | `new-arrival` | product | 1:1 | A "NEW" burst + product reveal + shop CTA (image) |
+| T69 | Spec Sheet | `spec-list` | product | 9:16 | A product + a two-column spec list ticking in (image) |
+| T70 | Spotlight Reveal | `reveal-spotlight` | product | 16:9 | A spotlight sweeps to reveal a product on dark (image) |
+| T71 | Stat Trio | `three-stats` | stat | 16:9 | Three big count-up stats with dividers |
+| T72 | Logo Wall | `logo-wall` | brand | 16:9 | "Trusted by" + a grid of client wordmark chips |
+| T73 | Countdown | `countdown-timer` | promo | 1:1 | A DD:HH:MM:SS countdown (pure `f(t)` digits) + CTA |
+| T74 | End Card | `cta-endcard` | brand | 16:9 | An outro: logo/brand + CTA + social handles |
+| T75 | Sale Banner | `sale-banner` | promo | 16:9 | A bold sale with diagonal stripes + discount + CTA |

@@ -58,6 +58,26 @@ import { emphasisLine } from "./emphasis-line/index";
 import { spacingExpand } from "./spacing-expand/index";
 import { messageRotator } from "./message-rotator/index";
 import { boxWipe } from "./box-wipe/index";
+import { stepFlow } from "./step-flow/index";
+import { timelineFlow } from "./timeline-flow/index";
+import { beforeAfter } from "./before-after/index";
+import { comparisonVs } from "./comparison-vs/index";
+import { featureCallouts } from "./feature-callouts/index";
+import { productShowcase } from "./product-showcase/index";
+import { galleryStrip } from "./gallery-strip/index";
+import { featureGrid } from "./feature-grid/index";
+import { deviceMockup } from "./device-mockup/index";
+import { reviewStars } from "./review-stars/index";
+import { productHero } from "./product-hero/index";
+import { priceCard } from "./price-card/index";
+import { newArrival } from "./new-arrival/index";
+import { specList } from "./spec-list/index";
+import { revealSpotlight } from "./reveal-spotlight/index";
+import { threeStats } from "./three-stats/index";
+import { logoWall } from "./logo-wall/index";
+import { countdownTimer } from "./countdown-timer/index";
+import { ctaEndcard } from "./cta-endcard/index";
+import { saleBanner } from "./sale-banner/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -116,6 +136,27 @@ export const templates: TemplateDefinition[] = [
   stackedBuild,
   boxWipe,
   logoSting,
+  // Explainer / showcase / product / ad pack.
+  stepFlow,
+  timelineFlow,
+  beforeAfter,
+  comparisonVs,
+  featureCallouts,
+  productShowcase,
+  galleryStrip,
+  featureGrid,
+  deviceMockup,
+  reviewStars,
+  productHero,
+  priceCard,
+  newArrival,
+  specList,
+  revealSpotlight,
+  threeStats,
+  logoWall,
+  countdownTimer,
+  ctaEndcard,
+  saleBanner,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {

@@ -9,7 +9,7 @@ an MP4, WebM or GIF — up to 1080p. Every frame is rendered client-side on your
 exactly why it can be free: there are no render servers, no accounts, and no paid tier, because
 there is nothing to meter.
 
-> **Status: v1.0 shipped** ✅ — the full Studio, **55 templates**, client-side MP4/WebM/GIF export,
+> **Status: v1.0 shipped** ✅ — the full Studio, **75 templates**, client-side MP4/WebM/GIF export,
 > and the animated WebGL landing page are all built and passing tests. See the
 > [changelog](CHANGELOG.md) and [roadmap](ROADMAP.md).
 >
@@ -25,11 +25,11 @@ that those paywalls exist to recover. Full evidence: [COMPETITOR_RESEARCH.md](CO
 
 ## The v1 experience
 
-Landing page → **Open the Studio** → choose one of **55 templates** (announcements, promos,
-quotes, stats, social-engagement moments — YouTube subscribe, Reel & TikTok follows, double-tap
-hearts — 20 smooth kinetic-text animations, travel cards, coupons, icon animations…) → edit
-text/images/colors/speed in a simple form — no timeline, no keyframes → export MP4/WebM/GIF in
-1:1, 4:5, 9:16 or 16:9.
+Landing page → **Open the Studio** → choose one of **75 templates** (announcements, promos,
+social-engagement moments, 20 smooth kinetic-text animations, explainers & timelines, product
+showcases & ads, pricing cards, device mockups, countdowns, travel cards…) → edit
+text/images/colors in a simple form, **pick a font**, tweak speed — no timeline, no keyframes →
+export MP4/WebM/GIF in 1:1, 4:5, 9:16 or 16:9.
 
 Principles: free means free · defaults are the product · form fields, not timelines · nothing
 leaves the device · fast is a feature · light-mode, bold, animated ([Three.js hero](DESIGN_ARCHITECTURE.md)).
@@ -40,7 +40,8 @@ leaves the device · fast is a feature · light-mode, bold, animated ([Three.js 
    Nothing to install, no sign-up, no email. It just opens.
 2. **Click "Open the Studio"** and pick a template from the gallery.
 3. **Type your words** into the form on the right, and drop in an image if the template uses one.
-   Recolor with a palette and nudge the speed if you like — the preview updates live.
+   In the **Style** tab, pick a palette or set the background/text/object colors individually, and
+   choose a **font** for the headline; nudge the speed in **Motion**. The preview updates live.
 4. **Choose an aspect ratio** (1:1 for feed, 4:5 for portrait, 9:16 for Stories/Reels/TikTok, 16:9
    for YouTube/landscape) — one project exports to any of them.
 5. **Hit Export**, pick MP4, WebM or GIF, and the file renders on your own device and downloads.
