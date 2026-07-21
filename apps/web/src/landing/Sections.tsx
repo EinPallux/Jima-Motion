@@ -1,5 +1,5 @@
 const STEPS = [
-  { n: "1", title: "Pick a template", body: "Start from one of 12 professionally-animated templates." },
+  { n: "1", title: "Pick a template", body: "Start from one of 30+ professionally-animated templates." },
   { n: "2", title: "Type your words, drop your images", body: "Edit text, colors and images in a simple form — no timeline." },
   { n: "3", title: "Export MP4 or GIF", body: "Rendered on your device in seconds. Download and post." },
 ];

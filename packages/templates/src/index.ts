@@ -18,24 +18,64 @@ import { splitDuo } from "./split-duo/index";
 import { iconPop } from "./icon-pop/index";
 import { subscribeBell } from "./subscribe-bell/index";
 import { specialOffer } from "./special-offer/index";
+import { kineticType } from "./kinetic-type/index";
+import { keynoteReveal } from "./keynote-reveal/index";
+import { wordSwap } from "./word-swap/index";
+import { markerHighlight } from "./marker-highlight/index";
+import { youtubeFrame } from "./youtube-frame/index";
+import { reelFrame } from "./reel-frame/index";
+import { notificationPop } from "./notification-pop/index";
+import { likeSpark } from "./like-spark/index";
+import { tiktokFollow } from "./tiktok-follow/index";
+import { doubleTapHeart } from "./double-tap-heart/index";
+import { commentDrop } from "./comment-drop/index";
+import { travelPostcard } from "./travel-postcard/index";
+import { locationPin } from "./location-pin/index";
+import { flashSale } from "./flash-sale/index";
+import { couponReveal } from "./coupon-reveal/index";
+import { statBars } from "./stat-bars/index";
+import { iconGrid } from "./icon-grid/index";
+import { badgeStamp } from "./badge-stamp/index";
+import { folderOpen } from "./folder-open/index";
+import { cardCascade } from "./card-cascade/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
   kineticHeadline,
-  glowPromo,
+  keynoteReveal,
+  specialOffer,
+  subscribeBell,
+  reelFrame,
   bigNumber,
+  glowPromo,
+  youtubeFrame,
+  iconPop,
   quoteSpotlight,
+  flashSale,
+  tiktokFollow,
+  doubleTapHeart,
+  kineticType,
   productPop,
+  statBars,
+  travelPostcard,
+  likeSpark,
+  markerHighlight,
+  notificationPop,
+  commentDrop,
   slideReveal,
   typewriter,
+  iconGrid,
+  couponReveal,
+  wordSwap,
+  locationPin,
+  cardCascade,
+  folderOpen,
   kenBurns,
   saveTheDate,
+  badgeStamp,
   tipsStack,
   splitDuo,
   logoSting,
-  iconPop,
-  subscribeBell,
-  specialOffer,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {

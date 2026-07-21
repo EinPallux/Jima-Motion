@@ -376,3 +376,37 @@ Ranked candidates for the first content drops after launch: Lower Third (talking
 Hiring Post ("We're hiring"), Podcast Audiogram (fake waveform — no audio in v1), Price Table Pop,
 Emoji Rain Reaction, Sticker Pack (animated arrows/circles/underline overlays with transparent
 WebM export), Carousel Cover Loop, Year-in-Review Counter, Menu of the Day, App Screenshot Tilt.
+
+## 7. v1.1 expansion pack — 23 templates (2026-07-21)
+
+The library grew from 12 → **35**. These follow the same contract (§2) and pass the §5 QA checklist
+(all deterministic — pixel-exact re-seek in the golden suite, all 4 aspects, 4 palettes, DE
+max-length). Two engine-side helpers back the pack: `shared/icons.ts` (a 16-glyph vector icon
+library) and `shared/ui.ts` (`dashedPath`/`arcPoints`, `makePill`, `avatar`, `pointerCursor`). Two
+new categories were added: **social** and **travel**.
+
+| # | Template | `id` | Category | Default | What it does |
+|---|---|---|---|---|---|
+| T13 | Icon Pop | `icon-pop` | brand | 1:1 | A bold icon springs onto an accent disc with a ring/particle burst + label |
+| T14 | Subscribe Bell | `subscribe-bell` | social | 16:9 | Cursor clicks Subscribe → button flips to Subscribed, bell rings, subs count up |
+| T15 | Special Offer | `special-offer` | promo | 4:5 | Starburst discount seal stamps in over an old→new price slash + CTA |
+| T16 | Kinetic Type | `kinetic-type` | statement | 9:16 | Word-by-word kinetic typography with an accent highlight on the emphasis word |
+| T17 | Keynote Reveal | `keynote-reveal` | statement | 16:9 | Calm Apple-keynote word reveal + accent divider + muted subline |
+| T18 | Word Swap | `word-swap` | statement | 1:1 | A phrase with one looping word that rolls through a list inside an accent pill |
+| T19 | Marker Highlight | `marker-highlight` | statement | 4:5 | Editorial lines with a hand-drawn marker swipe behind a key phrase |
+| T20 | YouTube Frame | `youtube-frame` | social | 16:9 | A YouTube video card assembles: thumbnail, play, progress, title, channel, actions |
+| T21 | Reel Frame | `reel-frame` | social | 9:16 | IG/TikTok Reel UI: action rail (heart/comment/share/save), caption, audio row, progress |
+| T22 | Notification Pop | `notification-pop` | social | 1:1 | iOS-style push banners drop and stack with a spring |
+| T23 | Like Spark | `like-spark` | social | 1:1 | A like button gets clicked — bounce, accent flip, +1, count-up, confetti |
+| T24 | Follow Pop | `tiktok-follow` | social | 9:16 | TikTok avatar + red "+" tapped → morphs to a check, hearts float up |
+| T25 | Double-Tap Heart | `double-tap-heart` | social | 9:16 | The IG double-tap: big heart pops, hearts burst, like count ticks (loopable) |
+| T26 | Comment Drop | `comment-drop` | social | 4:5 | A live comment feed — bubbles pop in and push the stack upward |
+| T27 | Icon Grid | `icon-grid` | brand | 1:1 | A grid of icon tiles pops in staggered with one accent hero tile |
+| T28 | Badge Stamp | `badge-stamp` | brand | 1:1 | A seal/badge stamps down with an impact ring and a shake settle |
+| T29 | Folder Open | `folder-open` | tech | 16:9 | A folder opens and labelled file cards fan out |
+| T30 | Card Cascade | `card-cascade` | tech | 4:5 | A stack of cards cascades into a neat numbered list |
+| T31 | Travel Postcard | `travel-postcard` | travel | 4:5 | Destination + from→to with a plane flying a dashed arc to a pin + AIR MAIL stamp |
+| T32 | Location Pin | `location-pin` | travel | 9:16 | A map pin drops with ripple rings + place name and coordinates |
+| T33 | Flash Sale | `flash-sale` | promo | 9:16 | High-energy sale with lightning bolts and a draining urgency bar + CTA |
+| T34 | Coupon Reveal | `coupon-reveal` | promo | 1:1 | A perforated coupon ticket reveals a mono code + discount + CTA |
+| T35 | Stat Bars | `stat-bars` | stat | 4:5 | An animated bar chart — bars grow and values count up, top bar highlighted |

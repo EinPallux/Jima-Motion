@@ -9,7 +9,38 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 ## [Unreleased]
 
-_Nothing yet — v1.0 shipped._
+_Nothing yet._
+
+## [1.1.0] — 2026-07-21 · Template expansion (12 → 35)
+
+Added **23 new templates**, nearly tripling the library, plus the shared building blocks behind
+them. Every new template is deterministic (pixel-exact re-seek proven in the golden suite), handles
+all four aspects, ships 4 palettes, and passes the German max-length bar.
+
+### Added — shared engine-side building blocks
+- `shared/icons.ts` — a 16-glyph vector icon library drawn from Pixi primitives (play, heart, thumb,
+  bell, star, bolt, check, plus, cart, comment, share, bookmark, pin, plane, folder, user);
+  deterministic and resolution-independent
+- `shared/ui.ts` — `dashedPath`/`arcPoints` (coupon perforations, dashed flight routes), `makePill`,
+  `avatar`, `pointerCursor`
+- New template categories: **social** and **travel** (with gallery labels)
+
+### Added — templates
+- **Social engagement:** Subscribe Bell (YouTube subscribe → bell ring → count-up), Like Spark,
+  Follow Pop (TikTok), Double-Tap Heart, Comment Drop
+- **Social UI wireframes:** YouTube Frame, Reel Frame (IG/TikTok), Notification Pop
+- **Kinetic text:** Kinetic Type, Keynote Reveal (Apple-keynote style), Word Swap (looping),
+  Marker Highlight
+- **Promo:** Special Offer (starburst seal + price slash), Flash Sale, Coupon Reveal
+- **Brand & icon:** Icon Pop, Icon Grid, Badge Stamp
+- **Tech:** Folder Open, Card Cascade
+- **Travel:** Travel Postcard (dashed flight arc + moving plane), Location Pin
+- **Stat:** Stat Bars (animated bar chart with count-ups)
+
+### Changed
+- Gallery reordered to lead with a diverse, high-impact mix across categories
+- Golden suite now covers **35 templates** (35 determinism re-seek tests + 140 poster frames);
+  landing/README/CLAUDE template counts refreshed
 
 ## [1.0.0] — 2026-07-21 · v1.0 — private release
 

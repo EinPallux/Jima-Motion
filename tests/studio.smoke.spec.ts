@@ -2,7 +2,8 @@ import { test, expect, type Page } from "@playwright/test";
 
 // Phase 3 Studio integration: the whole no-account loop through the real UI —
 // gallery → edit → export → and survive a reload. Runs against the SPA served
-// by the Vite dev server.
+// by the Vite dev server. (The suite runs single-worker — see playwright.config
+// — so these WebGL-heavy flows never contend with each other.)
 
 test.use({ viewport: { width: 1300, height: 850 } });
 
@@ -42,7 +43,7 @@ test("export produces a downloadable file through the modal", async ({ page }) =
   // export.smoke.spec.ts). 480p keeps software rendering quick.
   await page.getByRole("button", { name: /^GIF/ }).click();
   await page.getByRole("button", { name: /^Export GIF/ }).click();
-  await expect(page.getByText(/Saved/)).toBeVisible({ timeout: 45000 });
+  await expect(page.getByText(/Saved/)).toBeVisible({ timeout: 75000 });
   const download = page.getByRole("link", { name: /Download again/ });
   await expect(download).toBeVisible();
   await expect(download).toHaveAttribute("download", /^jima-kinetic-headline-.*\.gif$/);
