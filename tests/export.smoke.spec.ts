@@ -16,6 +16,10 @@ async function runExport(page: Page, profile: ExportProfile) {
   return page.evaluate((p) => window.__jima!.export(p), profile);
 }
 
+async function runExportWithSound(page: Page, profile: ExportProfile) {
+  return page.evaluate((p) => window.__jima!.export(p, 1, true), profile);
+}
+
 // T01 is 4.0s. res 0.25 → 270×270 (even). fps 12 → 48 frames.
 const FPS = 12;
 const EXPECTED_FRAMES = 48;
@@ -82,6 +86,32 @@ test.describe("GIF export", () => {
 
     const header = await page.evaluate((b64) => atob(b64).slice(0, 6), out.base64);
     expect(header).toBe("GIF89a");
+  });
+});
+
+test.describe("sound track", () => {
+  test("WebM with sound on muxes a real audio track alongside the exact video frames", async ({
+    page,
+  }) => {
+    await loadHarness(page);
+    const caps = await page.evaluate(() => window.__jima!.caps());
+    test.skip(!caps.webmAudioCodec, "No Opus/AudioEncoder in this browser/environment.");
+
+    const out = await runExportWithSound(page, { format: "webm", fps: FPS, resolution: 0.25 });
+    expect(out.format).toBe("webm");
+    expect(out.frames).toBe(EXPECTED_FRAMES);
+
+    const probe = await page.evaluate((b64) => window.__jima!.probe(b64), out.base64);
+    expect(probe).not.toBeNull();
+    expect(probe!.packetCount).toBe(EXPECTED_FRAMES); // video unaffected
+    expect(probe!.audioPacketCount).toBeGreaterThan(0); // sound actually baked in
+  });
+
+  test("sound off produces no audio track", async ({ page }) => {
+    await loadHarness(page);
+    const out = await runExport(page, { format: "webm", fps: FPS, resolution: 0.25 });
+    const probe = await page.evaluate((b64) => window.__jima!.probe(b64), out.base64);
+    expect(probe!.audioPacketCount).toBe(0);
   });
 });
 

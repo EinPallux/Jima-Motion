@@ -34,13 +34,14 @@ interface ProbeOut {
   height: number;
   packetCount: number;
   duration: number;
+  audioPacketCount: number;
 }
 interface HarnessApi {
   ready: boolean;
   renderAt: (t: number) => void;
   duration: number;
   canvas: HTMLCanvasElement;
-  export: (profile: ExportProfile) => Promise<ExportOut>;
+  export: (profile: ExportProfile, speed?: number, sound?: boolean) => Promise<ExportOut>;
   exportExpectCancel: (profile: ExportProfile) => Promise<string>;
   probe: (base64: string) => Promise<ProbeOut | null>;
   caps: () => Promise<Capabilities>;
@@ -116,8 +117,8 @@ async function main(): Promise<void> {
     renderAt: (time) => runner.renderAt(time),
     duration: runner.duration,
     canvas: runner.canvas,
-    export: async (profile) => {
-      const result = await exportTemplate({ def, runner: runnerConfig, profile });
+    export: async (profile, speed, sound) => {
+      const result = await exportTemplate({ def, runner: runnerConfig, profile, ...(speed ? { speed } : {}), ...(sound ? { sound: true } : {}) });
       return {
         base64: toBase64(result.bytes),
         byteLength: result.bytes.byteLength,
@@ -146,11 +147,14 @@ async function main(): Promise<void> {
       if (!track) return null;
       const stats = await track.computePacketStats();
       const duration = await input.computeDuration();
+      const audioTrack = await input.getPrimaryAudioTrack();
+      const audioStats = audioTrack ? await audioTrack.computePacketStats() : null;
       return {
         width: track.displayWidth,
         height: track.displayHeight,
         packetCount: stats.packetCount,
         duration,
+        audioPacketCount: audioStats ? audioStats.packetCount : 0,
       };
     },
     caps: () => detectCapabilities(),

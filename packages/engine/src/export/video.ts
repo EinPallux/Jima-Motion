@@ -4,8 +4,11 @@ import {
   Mp4OutputFormat,
   WebMOutputFormat,
   CanvasSource,
+  AudioBufferSource,
   QUALITY_HIGH,
+  QUALITY_MEDIUM,
   type VideoCodec,
+  type AudioCodec,
 } from "mediabunny";
 import type { TemplateRunner } from "../runtime/runner";
 import { ExportCancelledError, type ExportFormat, type ExportProgress } from "./types";
@@ -16,6 +19,11 @@ export interface VideoExportArgs {
   codec: string;
   fps: number;
   totalFrames: number;
+  /** Timeline-time = outputTime × speed (clamped to duration). Default 1. */
+  speed?: number;
+  /** Optional baked sound track + its audio codec (AAC/Opus). Muxed if both set. */
+  audio?: AudioBuffer | null;
+  audioCodec?: string | null;
   signal?: AbortSignal;
   onProgress?: (p: ExportProgress) => void;
 }
@@ -28,6 +36,7 @@ export interface VideoExportArgs {
  */
 export async function exportVideo(args: VideoExportArgs): Promise<Uint8Array> {
   const { runner, format, codec, fps, totalFrames, signal, onProgress } = args;
+  const speed = args.speed && args.speed > 0 ? args.speed : 1;
 
   const output = new Output({
     format: format === "mp4" ? new Mp4OutputFormat() : new WebMOutputFormat(),
@@ -39,6 +48,14 @@ export async function exportVideo(args: VideoExportArgs): Promise<Uint8Array> {
     keyFrameInterval: 2,
   });
   output.addVideoTrack(source, { frameRate: fps });
+
+  // Optional sound track (added before start, fed after the video frames).
+  const audioSource =
+    args.audio && args.audioCodec
+      ? new AudioBufferSource({ codec: args.audioCodec as AudioCodec, bitrate: QUALITY_MEDIUM })
+      : null;
+  if (audioSource) output.addAudioTrack(audioSource);
+
   await output.start();
 
   const frameDur = 1 / fps;
@@ -48,7 +65,7 @@ export async function exportVideo(args: VideoExportArgs): Promise<Uint8Array> {
         await output.cancel();
         throw new ExportCancelledError();
       }
-      runner.renderAt(i * frameDur);
+      runner.renderAt(Math.min(runner.duration, i * frameDur * speed));
       await source.add(i * frameDur, frameDur);
       onProgress?.({
         phase: "render",
@@ -56,6 +73,10 @@ export async function exportVideo(args: VideoExportArgs): Promise<Uint8Array> {
         totalFrames,
         ratio: ((i + 1) / totalFrames) * 0.97,
       });
+    }
+    if (audioSource && args.audio) {
+      await audioSource.add(args.audio);
+      audioSource.close();
     }
     onProgress?.({ phase: "finalize", frame: totalFrames, totalFrames, ratio: 0.99 });
     await output.finalize();

@@ -1,6 +1,7 @@
 import { TemplateRunner, type RunnerConfig } from "../runtime/runner";
 import { sizeOf } from "../layout/aspect";
 import type { TemplateDefinition } from "../sdk/types";
+import { cuesFromTimeline, renderCuesToBuffer, type SoundPack } from "../audio/index";
 import { detectCapabilities } from "./capabilities";
 import { exportVideo } from "./video";
 import { exportGif } from "./gif";
@@ -11,6 +12,11 @@ export interface ExportRequest {
   /** Aspect / values / palette / seed for the render. */
   runner: RunnerConfig;
   profile: ExportProfile;
+  /** Playback speed multiplier (compresses/stretches output length). Default 1. */
+  speed?: number;
+  /** Bake the motion-matched sound track into MP4/WebM (GIF stays silent). */
+  sound?: boolean;
+  soundPack?: SoundPack;
   signal?: AbortSignal;
   onProgress?: (p: ExportProgress) => void;
 }
@@ -45,7 +51,10 @@ export async function exportTemplate(req: ExportRequest): Promise<ExportResult> 
   const runner = await TemplateRunner.create(def, { ...req.runner, resolution });
   try {
     const fps = profile.fps;
-    const totalFrames = Math.max(1, Math.round(runner.duration * fps));
+    // Speed compresses (>1) or stretches (<1) the output: fewer/more frames,
+    // each sampling the timeline at outputTime × speed.
+    const speed = req.speed && req.speed > 0 ? req.speed : 1;
+    const totalFrames = Math.max(1, Math.round((runner.duration / speed) * fps));
 
     let bytes: Uint8Array;
     if (profile.format === "gif") {
@@ -53,6 +62,7 @@ export async function exportTemplate(req: ExportRequest): Promise<ExportResult> 
         runner,
         fps,
         totalFrames,
+        speed,
         ...(profile.gifMaxColors !== undefined ? { maxColors: profile.gifMaxColors } : {}),
         ...(signal ? { signal } : {}),
         ...(onProgress ? { onProgress } : {}),
@@ -65,12 +75,27 @@ export async function exportTemplate(req: ExportRequest): Promise<ExportResult> 
           `This browser can't encode ${profile.format.toUpperCase()} — try GIF, or WebM on Firefox.`,
         );
       }
+
+      // Bake the motion-matched sound track offline (skipped silently if the
+      // browser can't encode audio, or OfflineAudioContext is unavailable).
+      const audioCodec = profile.format === "mp4" ? caps.mp4AudioCodec : caps.webmAudioCodec;
+      let audio: AudioBuffer | null = null;
+      if (req.sound && audioCodec) {
+        const cues = cuesFromTimeline(runner.timeline, runner.duration);
+        audio = await renderCuesToBuffer(cues, runner.duration, {
+          speed,
+          ...(req.soundPack ? { pack: req.soundPack } : {}),
+        });
+      }
+
       bytes = await exportVideo({
         runner,
         format: profile.format,
         codec,
         fps,
         totalFrames,
+        speed,
+        ...(audio ? { audio, audioCodec } : {}),
         ...(signal ? { signal } : {}),
         ...(onProgress ? { onProgress } : {}),
       });

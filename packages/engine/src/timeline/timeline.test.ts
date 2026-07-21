@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { JimaTimeline } from "./timeline";
-import { linear, outQuint } from "./easings";
+import { linear, outQuint, outBack, spring } from "./easings";
 
 function node() {
   return { x: 0, alpha: 1, rotation: 0, scale: { x: 1, y: 1 }, visible: false, text: "" };
@@ -120,6 +120,47 @@ describe("JimaTimeline", () => {
       .to(n, { prop: "x", from: 0, to: 1, start: 0, duration: 2, ease: linear })
       .set(n, "visible", true, 3.5);
     expect(tl.duration).toBeCloseTo(3.5, 10);
+  });
+
+  it("beats(): groups tweens by ~20ms start buckets, sorted by time", () => {
+    const n = node();
+    const tl = new JimaTimeline()
+      .to(n, { prop: "x", from: 0, to: 100, start: 0.5, duration: 0.4, ease: linear })
+      .to(n, { prop: "alpha", from: 0, to: 1, start: 0.508, duration: 0.4, ease: linear }) // same 20ms bucket as x
+      .to(n, { prop: "scale.x", from: 0.2, to: 1, start: 1.2, duration: 0.5, ease: spring() });
+    const beats = tl.beats();
+    expect(beats.map((b) => b.time)).toEqual([0.5, 1.2]);
+    expect(beats[0]!.count).toBe(2); // x + alpha merged
+    expect(beats[1]!.count).toBe(1);
+  });
+
+  it("beats(): classifies motion — move, fade, spring entrance, overshoot", () => {
+    const n = node();
+    const tl = new JimaTimeline()
+      .to(n, { prop: "x", from: 0, to: 300, start: 0, duration: 0.5, ease: linear })
+      .to(n, { prop: "alpha", from: 0, to: 1, start: 0, duration: 0.5, ease: linear })
+      .to(n, { prop: "scale.x", from: 0.1, to: 1, start: 1, duration: 0.5, ease: spring() })
+      .to(n, { prop: "rotation", from: -1, to: 0, start: 2, duration: 0.5, ease: outBack });
+    const beats = tl.beats();
+    const at = (t: number) => beats.find((b) => Math.abs(b.time - t) < 1e-6)!;
+    expect(at(0).moveDist).toBeCloseTo(300, 6);
+    expect(at(0).fadeIn).toBe(true);
+    expect(at(1).scaleFromSmall).toBe(true);
+    expect(at(1).overshoot).toBe(true); // spring overshoots 1
+    expect(at(2).rotate).toBe(true);
+    expect(at(2).overshoot).toBe(true); // outBack overshoots 1
+  });
+
+  it("beats(): skips zero-duration tweens and is deterministic", () => {
+    const n = node();
+    const build = () =>
+      new JimaTimeline()
+        .to(n, { prop: "x", from: 0, to: 10, start: 0.3, duration: 0, ease: linear })
+        .to(n, { prop: "y", from: 0, to: 90, start: 0.3, duration: 0.4, ease: linear });
+    const a = build().beats();
+    const b = build().beats();
+    expect(a).toHaveLength(1); // instantaneous tween excluded
+    expect(a).toEqual(b);
   });
 
   it("produces identical full sweeps across two runs (determinism)", () => {

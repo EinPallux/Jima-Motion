@@ -2,6 +2,7 @@ import { create } from "zustand";
 import {
   resolveValues,
   type Aspect,
+  type SoundPack,
   type TemplateDefinition,
   type Values,
 } from "@jima/engine";
@@ -23,6 +24,9 @@ interface StudioStore extends EditableState {
   future: EditableState[];
   lastEditKey: string | null;
   lastEditAt: number;
+  /** Global sound preference (persisted, not per-template, not undoable). */
+  sound: boolean;
+  soundPack: SoundPack;
 
   openTemplate: (def: TemplateDefinition, initial?: Partial<EditableState>) => void;
   setValue: (key: string, value: unknown) => void;
@@ -31,10 +35,25 @@ interface StudioStore extends EditableState {
   setFont: (font: string | undefined) => void;
   setSpeed: (speed: number) => void;
   setLoop: (loop: boolean) => void;
+  setSound: (on: boolean) => void;
+  setSoundPack: (pack: SoundPack) => void;
   reset: () => void;
   undo: () => void;
   redo: () => void;
   close: () => void;
+}
+
+const SOUND_KEY = "jima.sound";
+const PACK_KEY = "jima.soundPack";
+
+function readSoundPref(): boolean {
+  if (typeof localStorage === "undefined") return true;
+  return localStorage.getItem(SOUND_KEY) !== "0"; // default on
+}
+function readPackPref(): SoundPack {
+  if (typeof localStorage === "undefined") return "pop";
+  const v = localStorage.getItem(PACK_KEY);
+  return v === "soft" || v === "retro" || v === "pop" ? v : "pop";
 }
 
 const HISTORY_LIMIT = 50;
@@ -80,6 +99,8 @@ export const useStudio = create<StudioStore>((set, get) => ({
   future: [],
   lastEditKey: null,
   lastEditAt: 0,
+  sound: readSoundPref(),
+  soundPack: readPackPref(),
 
   openTemplate: (def, initial) => {
     const paletteId = initial?.paletteId ?? def.palettes[0]?.id;
@@ -139,7 +160,7 @@ export const useStudio = create<StudioStore>((set, get) => ({
 
   setSpeed: (speed) => {
     const s = get();
-    const clamped = Math.max(0.5, Math.min(2, speed));
+    const clamped = Math.max(0.25, Math.min(3, speed));
     if (clamped === s.speed) return;
     set({ past: [...s.past, snapshot(s)].slice(-HISTORY_LIMIT), future: [], speed: clamped, lastEditKey: null });
   },
@@ -147,6 +168,17 @@ export const useStudio = create<StudioStore>((set, get) => ({
   setLoop: (loop) => {
     const s = get();
     set({ past: [...s.past, snapshot(s)].slice(-HISTORY_LIMIT), future: [], loop, lastEditKey: null });
+  },
+
+  // Sound is a global preference (like volume): persisted, and kept out of the
+  // per-template undo history and snapshots.
+  setSound: (on) => {
+    if (typeof localStorage !== "undefined") localStorage.setItem(SOUND_KEY, on ? "1" : "0");
+    set({ sound: on });
+  },
+  setSoundPack: (pack) => {
+    if (typeof localStorage !== "undefined") localStorage.setItem(PACK_KEY, pack);
+    set({ soundPack: pack });
   },
 
   reset: () => {

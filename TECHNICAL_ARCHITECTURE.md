@@ -225,7 +225,10 @@ interface TemplateDefinition {
 | **WebM** | WebM / VP9 | 1080p (720p option) | 30 (60) | default on Tier B; option elsewhere (Chromium) |
 | **GIF** | GIF | 480p default, 720p option | 15 (12 option) | ≤ 10 s enforced by template durations; loop flag on |
 
-No audio track in v1 (ADR-006) — muxing is video-only, which simplifies every path.
+Optional **motion-matched sound track** (ADR-012, supersedes ADR-006): when Sound is on, MP4/WebM
+mux a procedurally-synthesized audio track — AAC (MP4) / Opus (WebM) — baked offline from the
+timeline's beats via `OfflineAudioContext`. GIF stays silent; browsers without an AudioEncoder
+export silent video (probed, never assumed). No sample files are bundled or fetched.
 
 ### 8.2 Flow (deterministic offline loop — never `captureStream` for real exports)
 ```
@@ -384,8 +387,9 @@ intentional template change as a P1 bug.
 - **ADR-005 — Main-thread export loop in v1.** Worker font loading is uneven outside Chromium;
   modal UX blocks editing during export anyway; engine kept worker-ready for post-v1 migration.
   GIF quantization in a worker from day one.
-- **ADR-006 — No audio in v1.** Social feeds autoplay muted; video-only muxing removes the
-  hardest cross-browser surface (AudioEncoder gaps). Post-v1 candidate.
+- **ADR-006 (superseded 2026-07-21 by ADR-012) — No audio in v1.** Social feeds autoplay muted;
+  video-only muxing removed the hardest cross-browser surface (AudioEncoder gaps). Held through
+  v1.4; superseded when the owner requested motion-matched sound.
 - **ADR-007 — Custom deterministic timeline.** Export must seek exactly; tween evaluator is small;
   removes third-party license/maintenance risk from the core.
 - **ADR-008 (amended 2026-07-21) — Vercel static hosting.** Owner decision; zero-config Git
@@ -399,3 +403,17 @@ intentional template change as a P1 bug.
   friends/family. Consequences: SEO, marketing/launch assets, trademark checks and discovery work
   are out of scope; English-only UI; no custom domain (Vercel URL). Product quality bars —
   a11y, performance, determinism, the free/no-account principles — are unchanged.
+- **ADR-012 — Procedural, motion-matched sound (2026-07-21, owner request; supersedes ADR-006).**
+  Every animation gets an optional sound track that fits its motion, toggleable on/off. **No sample
+  files** are bundled, licensed, or fetched (keeps CSP airtight and the "client-side only, free"
+  rules intact) — SFX are **synthesized with the Web Audio API** from recipe graphs (oscillators,
+  filtered seeded noise, envelopes). Cues are **auto-derived from each template's timeline beats**
+  (`JimaTimeline.beats()` → `cuesFromBeats`): a springy scale-in → a pop, a slide → a swoosh, the
+  settle → a ding. This scales to all 95 templates with zero per-template authoring and stays
+  deterministic (seeded noise; sound is never part of the visual render, so golden frames are
+  unaffected). Preview plays cues live via an `AudioContext` unlocked on the first play/toggle
+  gesture; export bakes the same cues offline (`OfflineAudioContext` → `AudioBuffer`) and muxes them
+  with Mediabunny (`AudioBufferSource`: **AAC** for MP4, **Opus** for WebM). AudioEncoder gaps —
+  the original ADR-006 worry — degrade gracefully: capability is probed like video, and a browser
+  without it (or GIF, which has no audio) simply exports silent. Sound defaults on but is a
+  persisted global preference, not a per-template/undoable value.

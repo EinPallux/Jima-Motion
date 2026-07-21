@@ -31,6 +31,22 @@ export interface TweenSpec {
   ease?: EaseFn;
 }
 
+/** A summarized cluster of tweens sharing a start time (for the sound layer). */
+export interface TimelineBeat {
+  time: number;
+  /** An ease overshoots 1.0 (spring/back/elastic) → springy. */
+  overshoot: boolean;
+  /** A scale.* tween grows from < 0.75 → an entrance/pop. */
+  scaleFromSmall: boolean;
+  /** Largest x/y travel in logical px. */
+  moveDist: number;
+  rotate: boolean;
+  /** An alpha 0→1 fade-in. */
+  fadeIn: boolean;
+  /** How many tweens fired on this beat. */
+  count: number;
+}
+
 export interface StaggerOptions {
   /** Seconds between successive items. */
   each: number;
@@ -112,6 +128,38 @@ export class JimaTimeline {
       });
     });
     return this;
+  }
+
+  /**
+   * Motion "beats" — tweens grouped by (rounded) start time, each summarized so
+   * a sound layer can pick a fitting SFX (pop on a springy entrance, swoosh on a
+   * slide, etc.). Pure and deterministic; does not affect rendering.
+   */
+  beats(): TimelineBeat[] {
+    const groups = new Map<number, TimelineBeat>();
+    for (const tw of this.tweens) {
+      if (tw.duration <= 0) continue; // skip instantaneous sets-as-tweens
+      const key = Math.round(tw.start * 50); // 20ms buckets
+      const time = key / 50;
+      let b = groups.get(key);
+      if (!b) {
+        b = { time, overshoot: false, scaleFromSmall: false, moveDist: 0, rotate: false, fadeIn: false, count: 0 };
+        groups.set(key, b);
+      }
+      b.count++;
+      // Overshoot (spring/back/elastic) → a springy "pop" feel. Detect by sampling.
+      if (tw.ease(0.4) > 1.03 || tw.ease(0.6) > 1.03 || tw.ease(0.78) > 1.03) b.overshoot = true;
+      if (tw.prop === "scale.x" || tw.prop === "scale.y") {
+        if (tw.from < 0.75 && tw.to >= tw.from) b.scaleFromSmall = true;
+      } else if (tw.prop === "x" || tw.prop === "y") {
+        b.moveDist = Math.max(b.moveDist, Math.abs(tw.to - tw.from));
+      } else if (tw.prop === "rotation") {
+        b.rotate = true;
+      } else if (tw.prop === "alpha" && tw.to > tw.from) {
+        b.fadeIn = true;
+      }
+    }
+    return [...groups.values()].sort((a, b) => a.time - b.time);
   }
 
   /** Total timeline length in seconds (latest tween end or set time). */

@@ -236,8 +236,8 @@ device" test. Chromium (incl. headless SwiftShader WebGL) is fully covered here.
 5. **Transparent WebM (alpha) exports + sticker/overlay template pack** — attacks Ccleaf's premium
    moat with a free answer.
 6. **Worker + OffscreenCanvas export migration** (ADR-005 revisit); WebGPU preview evaluation.
-7. **Optional sound:** per-template SFX/music toggle (users cite SFX as magic at Ccleaf) — needs
-   AudioEncoder/mux support reassessment.
+7. ~~**Optional sound:** per-template SFX/music toggle~~ — ✅ shipped v1.5 (ADR-012): procedural,
+   motion-matched SFX auto-cued from timeline beats, toggle + 3 packs, baked into MP4/WebM.
 8. **Custom font upload** (FontFace from file, stays local).
 9. **i18n** (DE first — templates already QA'd with German string lengths).
 10. **PWA/offline** (static app is 90 % there), custom aspect sizes, more export profiles.
@@ -269,5 +269,7 @@ rendering, AI credits, dark mode.
 | Phase 4 Templates | ✅ 2026-07-21 — 12/12 |
 | Phase 5 Landing | ✅ 2026-07-21 |
 | Phase 6 Launch | ✅ 2026-07-21 — **v1.0.0** |
+| Post-v1 template expansions | ✅ 2026-07-21 — **v1.1–v1.4**, library 12 → 95 |
+| Sound + editable speed/length | ✅ 2026-07-21 — **v1.5** (ADR-012) |
 
 *(Update this table + CHANGELOG.md at every phase transition.)*

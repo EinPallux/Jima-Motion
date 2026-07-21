@@ -29,6 +29,9 @@ export function ExportModal({
   const values = useStudio((s) => s.values);
   const paletteId = useStudio((s) => s.paletteId);
   const font = useStudio((s) => s.font);
+  const speed = useStudio((s) => s.speed);
+  const sound = useStudio((s) => s.sound);
+  const soundPack = useStudio((s) => s.soundPack);
 
   const [phase, setPhase] = useState<Phase>("configure");
   const [format, setFormat] = useState<ExportFormat>("webm");
@@ -73,6 +76,9 @@ export function ExportModal({
         def,
         runner: { aspect, values: engineValues(values), ...(paletteId ? { paletteId } : {}), fonts: createFontRegistry({ headline: font }) },
         profile,
+        speed,
+        sound,
+        soundPack,
         signal: controller.signal,
         onProgress: setProgress,
       });
@@ -127,6 +133,7 @@ export function ExportModal({
               gifSize={gifSize}
               setGifSize={setGifSize}
               aspect={aspect}
+              sound={sound}
               onExport={run}
             />
           )}
@@ -161,9 +168,10 @@ function Configure(props: {
   gifSize: "480" | "720";
   setGifSize: (s: "480" | "720") => void;
   aspect: string;
+  sound: boolean;
   onExport: () => void;
 }) {
-  const { format, setFormat, available, caps } = props;
+  const { format, setFormat, available, caps, sound } = props;
   return (
     <div className="flex flex-col gap-5">
       <div className="grid grid-cols-3 gap-2">
@@ -201,6 +209,14 @@ function Configure(props: {
         {props.aspect} · everything renders on your device — nothing is uploaded.
         {caps === null ? " Checking formats…" : ""}
       </p>
+
+      {sound && (
+        <p className="rounded-[10px] bg-porcelain px-3 py-2 text-xs text-slate">
+          {format === "gif"
+            ? "🔇 GIF has no audio — export MP4 or WebM to include the sound."
+            : "🔊 Sound is on — the matched sound effects are baked into the file."}
+        </p>
+      )}
 
       <button
         type="button"

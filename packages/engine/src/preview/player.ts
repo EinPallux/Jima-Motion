@@ -6,6 +6,13 @@ export interface PreviewPlayerOptions {
   autoplay?: boolean;
   /** Called after each painted frame with the current time (seconds). */
   onFrame?: (t: number, duration: number) => void;
+  /**
+   * Called only while playing (not on seek/scrub) with the time interval the
+   * playhead just crossed, `(fromT, toT]`. `wrapped` is true when a loop
+   * restarted within the step (then the interval is `(fromT, duration]` plus
+   * `(0, toT]`). Lets a sound layer fire cues the playhead passes over.
+   */
+  onAdvance?: (fromT: number, toT: number, wrapped: boolean, duration: number) => void;
   onEnded?: () => void;
 }
 
@@ -24,6 +31,7 @@ export class PreviewPlayer {
   private rafId: number | null = null;
   private lastTs: number | null = null;
   private readonly onFrame?: (t: number, duration: number) => void;
+  private readonly onAdvance?: (fromT: number, toT: number, wrapped: boolean, duration: number) => void;
   private readonly onEnded?: () => void;
 
   constructor(runner: TemplateRunner, opts: PreviewPlayerOptions = {}) {
@@ -31,6 +39,7 @@ export class PreviewPlayer {
     this.loopEnabled = opts.loop ?? true;
     this.speed = opts.speed ?? 1;
     if (opts.onFrame) this.onFrame = opts.onFrame;
+    if (opts.onAdvance) this.onAdvance = opts.onAdvance;
     if (opts.onEnded) this.onEnded = opts.onEnded;
     this.renderCurrent();
     if (opts.autoplay) this.play();
@@ -90,15 +99,19 @@ export class PreviewPlayer {
     const dt = ((ts - this.lastTs) / 1000) * this.speed;
     this.lastTs = ts;
 
+    const from = this.time;
     let next = this.time + dt;
     const dur = this.duration;
+    let wrapped = false;
     if (next >= dur) {
       if (this.loopEnabled) {
         next = dur > 0 ? next % dur : 0;
+        wrapped = true;
       } else {
         next = dur;
         this.time = next;
         this.renderCurrent();
+        this.onAdvance?.(from, next, false, dur);
         this.pause();
         this.onEnded?.();
         return;
@@ -106,6 +119,7 @@ export class PreviewPlayer {
     }
     this.time = next;
     this.renderCurrent();
+    this.onAdvance?.(from, next, wrapped, dur);
     this.rafId = requestAnimationFrame(this.tick);
   };
 

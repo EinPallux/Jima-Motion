@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FONT_CHOICES, type TemplateDefinition, type TemplateField } from "@jima/engine";
+import { FONT_CHOICES, SOUND_PACKS, type TemplateDefinition, type TemplateField } from "@jima/engine";
 import { useStudio } from "../state/store";
 import { Field } from "../components/Field";
 
@@ -8,7 +8,7 @@ type Tab = "content" | "style" | "motion";
 const CONTENT_TYPES = new Set(["text", "textarea", "textlist", "image"]);
 const MOTION_TYPES = new Set(["select", "slider", "toggle"]);
 
-export function Inspector({ def }: { def: TemplateDefinition }) {
+export function Inspector({ def, baseDuration }: { def: TemplateDefinition; baseDuration: number }) {
   const [tab, setTab] = useState<Tab>("content");
   const values = useStudio((s) => s.values);
   const setValue = useStudio((s) => s.setValue);
@@ -31,7 +31,7 @@ export function Inspector({ def }: { def: TemplateDefinition }) {
           <FieldGroup fields={content} values={values} onChange={setValue} def={def} emptyHint="This template has no text fields." />
         )}
         {tab === "style" && <StyleTab def={def} colors={colors} values={values} onChange={setValue} />}
-        {tab === "motion" && <MotionTab def={def} motionFields={motion} values={values} onChange={setValue} />}
+        {tab === "motion" && <MotionTab def={def} motionFields={motion} values={values} onChange={setValue} baseDuration={baseDuration} />}
       </div>
 
       <div className="border-t border-mist px-4 py-3">
@@ -163,36 +163,84 @@ function MotionTab({
   motionFields,
   values,
   onChange,
+  baseDuration,
 }: {
   def: TemplateDefinition;
   motionFields: TemplateField[];
   values: Record<string, unknown>;
   onChange: (key: string, v: unknown) => void;
+  baseDuration: number;
 }) {
   const speed = useStudio((s) => s.speed);
   const setSpeed = useStudio((s) => s.setSpeed);
   const loop = useStudio((s) => s.loop);
   const setLoop = useStudio((s) => s.setLoop);
+  const sound = useStudio((s) => s.sound);
+  const setSound = useStudio((s) => s.setSound);
+  const soundPack = useStudio((s) => s.soundPack);
+  const setSoundPack = useStudio((s) => s.setSoundPack);
+  const length = baseDuration > 0 ? baseDuration / speed : 0;
   return (
     <div className="flex flex-col gap-5">
       <div>
         <div className="flex items-baseline justify-between">
-          <span className="text-sm font-medium text-ink">Speed</span>
-          <span className="text-sm tabular-nums text-slate">{speed.toFixed(2)}×</span>
+          <span className="text-sm font-medium text-ink">Speed &amp; length</span>
+          <span className="text-sm tabular-nums text-slate">
+            {speed.toFixed(2)}× · {length.toFixed(1)}s
+          </span>
         </div>
         <input
           type="range"
           className="mt-1.5 h-1.5 w-full cursor-pointer accent-ember"
-          min={0.5}
-          max={2}
+          min={0.25}
+          max={3}
           step={0.05}
           value={speed}
-          aria-label="Playback speed"
+          aria-label="Playback speed and length"
           onChange={(e) => setSpeed(Number(e.target.value))}
         />
+        <div className="mt-1 flex justify-between text-[11px] text-slate">
+          <span>Slower / longer</span>
+          <span>Faster / shorter</span>
+        </div>
       </div>
 
       <FieldGroup fields={motionFields} values={values} onChange={onChange} def={def} emptyHint="No motion options." />
+
+      <div className="border-t border-mist pt-4">
+        <label className="flex items-center justify-between">
+          <span className="text-sm font-medium text-ink">Sound effects</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={sound}
+            aria-label="Sound effects"
+            onClick={() => setSound(!sound)}
+            className={`relative h-6 w-11 rounded-full transition-colors ${sound ? "bg-ember" : "bg-mist"}`}
+          >
+            <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow-sm transition-transform ${sound ? "translate-x-5" : "translate-x-0.5"}`} />
+          </button>
+        </label>
+        <p className="mt-1 text-xs text-slate">Auto-matched to the motion — plays in the preview and is baked into MP4/WebM exports.</p>
+        {sound && (
+          <div className="mt-3 grid grid-cols-3 gap-2" role="group" aria-label="Sound pack">
+            {SOUND_PACKS.map((p) => {
+              const active = p.id === soundPack;
+              return (
+                <button
+                  key={p.id}
+                  type="button"
+                  onClick={() => setSoundPack(p.id)}
+                  aria-pressed={active}
+                  className={`rounded-[10px] border px-3 py-2 text-sm font-medium transition-colors ${active ? "border-ember-text bg-ember-tint text-ink" : "border-mist text-ink hover:border-slate"}`}
+                >
+                  {p.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
 
       {def.loopable && (
         <label className="flex items-center justify-between">

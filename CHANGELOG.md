@@ -11,6 +11,34 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.5.0] — 2026-07-21 · Motion-matched sound + editable speed/length
+
+Two owner-requested capabilities across all 95 templates: **fitting sound effects you can toggle**,
+and **editable animation speed/length that the export honours**.
+
+### Added — Sound (ADR-012, supersedes ADR-006 "no audio in v1")
+- **Procedural, motion-matched SFX for every template.** Sound is **synthesized with the Web Audio
+  API** — no sample files are bundled, licensed or fetched (CSP-safe; the client-side + free rules
+  hold). Cues are **auto-derived from each template's timeline beats** (`JimaTimeline.beats()` →
+  `cuesFromBeats`), so the audio fits the motion — a springy scale-in → a pop, a slide → a swoosh,
+  the settle → a ding — with zero per-template authoring.
+- **On/off toggle + three sound packs** (Pop, Soft, Retro) in the Motion tab; a persisted global
+  preference (defaults on), not a per-template/undoable value.
+- **Preview** plays cues live via an `AudioContext` unlocked on the first play/toggle gesture.
+- **Export** bakes the same cues offline (`OfflineAudioContext` → `AudioBuffer`) and muxes them with
+  Mediabunny — **AAC** for MP4, **Opus** for WebM. GIF stays silent; a browser without an
+  AudioEncoder exports silent video (capability probed, never assumed).
+
+### Added — Editable speed / length
+- The **Speed & length** slider (0.25×–3×) now shows the resulting clip length and, crucially,
+  **changes the exported video** — export remaps frame times by speed (fewer/longer or more/shorter
+  frames), so a 2× clip really is half the length. Previously speed only affected the live preview.
+
+### Changed
+- `Capabilities` gains `mp4AudioCodec` / `webmAudioCodec` (probed AAC/Opus support).
+- Export-smoke suite now asserts a real audio track is muxed when Sound is on (and none when off);
+  determinism unaffected — sound is never part of the visual render, so golden frames are identical.
+
 ## [1.4.0] — 2026-07-21 · Showcase & product-presentation pack (75 → 95)
 
 Added **20 more templates** — 10 in **Showcase**, 10 for **Product presentation** — all

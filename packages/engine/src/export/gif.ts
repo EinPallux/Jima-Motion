@@ -8,6 +8,8 @@ export interface GifExportArgs {
   runner: TemplateRunner;
   fps: number;
   totalFrames: number;
+  /** Timeline-time = outputTime × speed (clamped to duration). Default 1. */
+  speed?: number;
   maxColors?: number;
   signal?: AbortSignal;
   onProgress?: (p: ExportProgress) => void;
@@ -21,6 +23,7 @@ export interface GifExportArgs {
 export async function exportGif(args: GifExportArgs): Promise<Uint8Array> {
   const { runner, fps, totalFrames, signal, onProgress } = args;
   const maxColors = args.maxColors ?? 256;
+  const speed = args.speed && args.speed > 0 ? args.speed : 1;
 
   const frames: GifFrameData[] = [];
   let width = 0;
@@ -29,7 +32,7 @@ export async function exportGif(args: GifExportArgs): Promise<Uint8Array> {
 
   for (let i = 0; i < totalFrames; i++) {
     if (signal?.aborted) throw new ExportCancelledError();
-    runner.renderAt(i * frameDur);
+    runner.renderAt(Math.min(runner.duration, i * frameDur * speed));
     const shot = readCanvasRGBA(runner.canvas);
     width = shot.width;
     height = shot.height;

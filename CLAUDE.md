@@ -3,11 +3,15 @@
 Jima Motion is a **100 % free, no-account, browser-only motion-graphics tool for social media
 managers**: pick a template → type your text / drop images → export MP4/WebM/GIF, rendered
 entirely client-side. Brand = "Jima Motion"; the editor = "Jima Studio" ("the Studio").
-**Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 95.**
+**Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 95,
+plus a v1.5 sound + editable-speed release.**
 Workspace/CI/guardrails; deterministic motion engine + **95 templates** (12 launch + a 23-template
 expansion + a 20-template smooth-text pack + a 20-template explainer/showcase/product/ad pack + a
 20-template showcase & product-presentation pack);
 editable headline fonts (7 OFL families), a use-case-grouped gallery, and per-element color pickers;
+**optional procedural, motion-matched sound (ADR-012) — synthesized SFX auto-cued from each
+template's timeline beats, toggleable with 3 packs, baked into MP4/WebM exports; GIF silent**;
+**editable animation speed/length (0.25×–3×) that the export honours**;
 client-side MP4/WebM/GIF export; the full Jima Studio UI;
 the bold animated Three.js/WebGL landing page (3D "motion tile" hero); and Phase 6 hardening
 (axe-core a11y sweep with zero serious/critical violations, engine-rendered OG image, German
@@ -41,7 +45,8 @@ If you must deviate, add/amend an ADR in the same PR and note it in `CHANGELOG.m
    in the browser (localStorage/IndexedDB). No analytics at launch (ADR-009).
 3. **Light/white-mode only.** No dark theme, no `prefers-color-scheme: dark` styling.
 4. **No collaboration features** (Jitter's turf — explicit non-goal), no timelines/keyframes for
-   users, no AI, no audio in v1.
+   users, no AI. (Audio: shipped post-v1 as optional **procedurally-synthesized, motion-matched**
+   sound — ADR-012. Still no bundled/fetched sample files, so the client-side + free rules hold.)
 5. **v1 ships ≥ 10 templates** (12 spec'd; T11/T12 are the only allowed slips).
 6. **Determinism:** engine/templates are pure `f(t, values, aspect, seed)`. `Date.now`,
    `Math.random`, network/DOM reads are banned in `packages/engine` and `packages/templates`

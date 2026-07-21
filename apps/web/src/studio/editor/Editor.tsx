@@ -25,6 +25,8 @@ export function Editor({
   const font = useStudio((s) => s.font);
   const speed = useStudio((s) => s.speed);
   const loop = useStudio((s) => s.loop);
+  const sound = useStudio((s) => s.sound);
+  const soundPack = useStudio((s) => s.soundPack);
   const openTemplate = useStudio((s) => s.openTemplate);
   const undo = useStudio((s) => s.undo);
   const redo = useStudio((s) => s.redo);
@@ -32,7 +34,7 @@ export function Editor({
   const caps = useCapabilities();
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const preview = usePreview(containerRef, { def, aspect, values, paletteId, font, speed, loop, reducedMotion: reduced });
+  const preview = usePreview(containerRef, { def, aspect, values, paletteId, font, speed, loop, sound, soundPack, reducedMotion: reduced });
   const [exportOpen, setExportOpen] = useState(false);
 
   useEffect(() => {
@@ -83,7 +85,7 @@ export function Editor({
         <TemplateRail templates={templates} currentId={def.id} onSelect={(t) => openTemplate(t)} />
         <PreviewStage containerRef={containerRef} preview={preview} />
         <aside className="flex max-h-[46vh] w-full shrink-0 flex-col border-t border-mist bg-paper lg:max-h-none lg:w-[360px] lg:border-l lg:border-t-0">
-          <Inspector def={def} />
+          <Inspector def={def} baseDuration={preview.duration} />
         </aside>
       </div>
 

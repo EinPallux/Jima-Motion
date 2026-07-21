@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import {
   createFontRegistry,
+  CueScheduler,
+  cuesFromTimeline,
   isImageRef,
   PreviewPlayer,
   TemplateRunner,
   sizeOf,
   type Aspect,
+  type SoundPack,
   type TemplateDefinition,
   type Values,
 } from "@jima/engine";
@@ -32,6 +35,8 @@ interface Params {
   font: string | undefined;
   speed: number;
   loop: boolean;
+  sound: boolean;
+  soundPack: SoundPack;
   reducedMotion: boolean;
 }
 
@@ -51,6 +56,7 @@ function fit(container: HTMLElement, aspect: Aspect) {
 export function usePreview(containerRef: RefObject<HTMLElement | null>, params: Params): PreviewApi {
   const runnerRef = useRef<TemplateRunner | null>(null);
   const playerRef = useRef<PreviewPlayer | null>(null);
+  const schedulerRef = useRef<CueScheduler | null>(null);
   const [state, setState] = useState({ t: 0, duration: 0, playing: false, ready: false });
 
   // Recreate the runner (which reloads image textures) when an image changes.
@@ -83,6 +89,10 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
       }
       runnerRef.current = runner;
 
+      const scheduler = new CueScheduler({ enabled: params.sound, pack: params.soundPack });
+      scheduler.setCues(cuesFromTimeline(runner.timeline, runner.duration));
+      schedulerRef.current = scheduler;
+
       const canvas = runner.canvas;
       canvas.style.display = "block";
       canvas.style.maxWidth = "100%";
@@ -107,6 +117,7 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
         speed: params.speed,
         autoplay: !params.reducedMotion,
         onFrame: (t, duration) => setState((s) => ({ ...s, t, duration, playing: player.isPlaying })),
+        onAdvance: (fromT, toT, wrapped, duration) => scheduler.advance(fromT, toT, wrapped, duration),
       });
       playerRef.current = player;
       setState({ t: 0, duration: runner.duration, playing: player.isPlaying, ready: true });
@@ -120,6 +131,8 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
       observer?.disconnect();
       playerRef.current?.destroy();
       playerRef.current = null;
+      schedulerRef.current?.destroy();
+      schedulerRef.current = null;
       const r = runnerRef.current;
       if (r) {
         r.canvas.remove();
@@ -139,10 +152,12 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
     const id = setTimeout(() => {
       runner.rebuildScene(engineValues(params.values), params.paletteId);
       setState((s) => ({ ...s, duration: runner.duration }));
+      // Editing values can change the motion (and its timing) → refit the cues.
+      schedulerRef.current?.setCues(cuesFromTimeline(runner.timeline, runner.duration));
       if (player && !player.isPlaying) runner.renderAt(player.currentTime);
     }, 60);
     return () => clearTimeout(id);
-     
+
   }, [params.values, params.paletteId]);
 
   useEffect(() => {
@@ -153,6 +168,16 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
     playerRef.current?.setLoop(params.loop);
   }, [params.loop]);
 
+  useEffect(() => {
+    schedulerRef.current?.setEnabled(params.sound);
+    // Toggling sound on is a user gesture → safe to unlock the audio context.
+    if (params.sound) void schedulerRef.current?.resume();
+  }, [params.sound]);
+
+  useEffect(() => {
+    schedulerRef.current?.setPack(params.soundPack);
+  }, [params.soundPack]);
+
   const player = () => playerRef.current;
   return {
     currentTime: state.t,
@@ -160,6 +185,7 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
     playing: state.playing,
     ready: state.ready,
     play: () => {
+      void schedulerRef.current?.resume(); // unlock audio from this gesture
       player()?.play();
       setState((s) => ({ ...s, playing: true }));
     },
@@ -170,6 +196,7 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
     toggle: () => {
       const p = player();
       if (!p) return;
+      void schedulerRef.current?.resume(); // unlock audio from this gesture
       p.toggle();
       setState((s) => ({ ...s, playing: p.isPlaying }));
     },

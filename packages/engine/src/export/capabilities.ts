@@ -1,4 +1,4 @@
-import { getFirstEncodableVideoCodec } from "mediabunny";
+import { getFirstEncodableVideoCodec, getFirstEncodableAudioCodec } from "mediabunny";
 import type { Capabilities } from "./types";
 
 let cached: Capabilities | null = null;
@@ -31,12 +31,31 @@ export async function detectCapabilities(
     }
   }
 
+  // Audio codecs for the optional sound track (AAC → MP4, Opus → WebM). Probed
+  // the same way — a browser without AudioEncoder just exports silent video.
+  let mp4AudioCodec: string | null = null;
+  let webmAudioCodec: string | null = null;
+  if (typeof AudioEncoder !== "undefined") {
+    try {
+      mp4AudioCodec = await getFirstEncodableAudioCodec(["aac"]);
+    } catch {
+      mp4AudioCodec = null;
+    }
+    try {
+      webmAudioCodec = await getFirstEncodableAudioCodec(["opus"]);
+    } catch {
+      webmAudioCodec = null;
+    }
+  }
+
   cached = {
     mp4: mp4Codec ? "native" : "none",
     webm: webmCodec ? "native" : "none",
     gif: "always",
     mp4Codec,
     webmCodec,
+    mp4AudioCodec,
+    webmAudioCodec,
   };
   return cached;
 }

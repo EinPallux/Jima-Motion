@@ -38,6 +38,9 @@ export interface Capabilities {
   /** Codec chosen for MP4 (avc) / WebM (vp9|vp8|av1) if available. */
   mp4Codec: string | null;
   webmCodec: string | null;
+  /** Audio codec for the sound track: AAC (MP4) / Opus (WebM), null if none. */
+  mp4AudioCodec: string | null;
+  webmAudioCodec: string | null;
 }
 
 export class ExportCancelledError extends Error {
