@@ -85,6 +85,17 @@ dropped/duplicated frames (frame count exact); GIF ≤ 8 MB at default profile; 
 and leaks nothing (VideoFrames closed); Firefox exports WebM without ever being offered a broken
 MP4 card.
 
+**✅ Done 2026-07-21.** Export pipeline built: capability detection via Mediabunny's real
+encodability probe (handles the Firefox-lie case natively), deterministic frame-loop exporter
+(WebCodecs → Mediabunny MP4/WebM with backpressure-respecting `source.add`), gifenc single-global-
+palette GIF in a Web Worker (main-thread fallback), dedicated export-resolution runner (never reads
+the preview canvas), progress + `AbortSignal` cancel, even-dimension + filename handling, and Tier
+B/C fallback scaffolding (ffmpeg.wasm / MediaRecorder contracts). Export-smoke tests decode outputs
+back with Mediabunny: **WebM has exactly 48/48 packets**, GIF is valid GIF89a under the 8 MB budget,
+cancel throws `ExportCancelledError`, capabilities probed honestly. MP4/H.264 path is identical code
+(codec `avc`) and runs where a platform encoder exists — auto-skipped in this headless SwiftShader
+Chromium, which correctly reports `mp4:"none"` (the exact Tier-B case the design anticipates).
+
 ## Phase 3 — Studio UI ⏳ *(~1.5–2 weeks)*
 
 **Goal:** the full no-account editing loop around the engine.
@@ -206,7 +217,7 @@ rendering, AI credits, dark mode.
 | Planning & research | ✅ 2026-07-21 |
 | Phase 0 Foundation | ✅ 2026-07-21 |
 | Phase 1 Engine core | ✅ 2026-07-21 |
-| Phase 2 Export | ⏳ not started |
+| Phase 2 Export | ✅ 2026-07-21 |
 | Phase 3 Studio UI | ⏳ not started |
 | Phase 4 Templates | ⏳ not started |
 | Phase 5 Landing | ⏳ not started |

@@ -1,0 +1,85 @@
+import type { TemplateRunner } from "../runtime/runner";
+import { readCanvasRGBA } from "./pixels";
+import { encodeGif, type GifFrameData } from "./gifEncode";
+import { ExportCancelledError, type ExportProgress } from "./types";
+import type { GifWorkerRequest, GifWorkerResponse } from "./gif.worker";
+
+export interface GifExportArgs {
+  runner: TemplateRunner;
+  fps: number;
+  totalFrames: number;
+  maxColors?: number;
+  signal?: AbortSignal;
+  onProgress?: (p: ExportProgress) => void;
+}
+
+/**
+ * Render each frame, read its pixels, then encode a single-global-palette GIF.
+ * Encoding runs in a worker when available (keeps the main thread responsive);
+ * falls back to inline encoding otherwise. Deterministic either way.
+ */
+export async function exportGif(args: GifExportArgs): Promise<Uint8Array> {
+  const { runner, fps, totalFrames, signal, onProgress } = args;
+  const maxColors = args.maxColors ?? 256;
+
+  const frames: GifFrameData[] = [];
+  let width = 0;
+  let height = 0;
+  const frameDur = 1 / fps;
+
+  for (let i = 0; i < totalFrames; i++) {
+    if (signal?.aborted) throw new ExportCancelledError();
+    runner.renderAt(i * frameDur);
+    const shot = readCanvasRGBA(runner.canvas);
+    width = shot.width;
+    height = shot.height;
+    frames.push({ rgba: shot.rgba });
+    onProgress?.({ phase: "render", frame: i + 1, totalFrames, ratio: ((i + 1) / totalFrames) * 0.7 });
+  }
+
+  onProgress?.({ phase: "finalize", frame: totalFrames, totalFrames, ratio: 0.72 });
+  const bytes = await encode(frames, { width, height, fps, maxColors });
+  onProgress?.({ phase: "finalize", frame: totalFrames, totalFrames, ratio: 1 });
+  return bytes;
+}
+
+async function encode(
+  frames: GifFrameData[],
+  opts: { width: number; height: number; fps: number; maxColors: number },
+): Promise<Uint8Array> {
+  try {
+    return await encodeInWorker(frames, opts);
+  } catch {
+    // Worker unavailable/failed — encode inline (still correct, just blocks).
+    return encodeGif(frames, opts);
+  }
+}
+
+function encodeInWorker(
+  frames: GifFrameData[],
+  opts: { width: number; height: number; fps: number; maxColors: number },
+): Promise<Uint8Array> {
+  if (typeof Worker === "undefined") return Promise.reject(new Error("no worker"));
+
+  return new Promise<Uint8Array>((resolve, reject) => {
+    const worker = new Worker(new URL("./gif.worker.ts", import.meta.url), { type: "module" });
+    const buffers = frames.map((f) => f.rgba.buffer as ArrayBuffer);
+    const req: GifWorkerRequest = {
+      frames: buffers,
+      width: opts.width,
+      height: opts.height,
+      fps: opts.fps,
+      maxColors: opts.maxColors,
+    };
+    worker.onmessage = (e: MessageEvent<GifWorkerResponse>) => {
+      worker.terminate();
+      if (e.data.ok) resolve(new Uint8Array(e.data.bytes));
+      else reject(new Error(e.data.error));
+    };
+    worker.onerror = (e) => {
+      worker.terminate();
+      reject(new Error(e.message || "gif worker error"));
+    };
+    worker.postMessage(req, buffers);
+  });
+}

@@ -37,8 +37,24 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 - Tests: 36 Vitest unit + 11 Playwright — determinism proven by pixel-exact re-seek and
   fresh-instance equality; golden posters stable across two runs
 
+### Added — Phase 2 · Client-side export pipeline (2026-07-21)
+- Capability detection using Mediabunny's real encodability probe (a genuine
+  `VideoEncoder.configure` under the hood — the Firefox "claims H.264 then fails" case is
+  reported honestly as `mp4:"none"`)
+- Deterministic frame-loop exporter: WebCodecs → Mediabunny for **MP4 (H.264)** and **WebM (VP9)**,
+  awaiting `source.add` so encoder/writer backpressure is respected (no OOM on long exports)
+- **GIF** via gifenc with one global palette sampled across the clip, encoded in a Web Worker
+  (main-thread fallback); pure and deterministic
+- Orchestrator builds a dedicated runner at the exact output resolution (never reads the
+  DPR-scaled preview canvas), reports per-frame progress, cancels via `AbortSignal`, forces even
+  dimensions, and names files `jima-<id>-<w>x<h>.<ext>`
+- Tier B/C fallback scaffolding (ffmpeg.wasm / MediaRecorder contracts) with honest messaging hooks
+- Tests: GIF-encoder unit test (Node) + export-smoke suite that decodes outputs back with
+  Mediabunny — WebM verified at exactly 48/48 packets, GIF valid GIF89a under the 8 MB budget,
+  cancellation throws `ExportCancelledError`, MP4 auto-skips where no H.264 encoder exists
+- Build: the test-only render harness is excluded from the production bundle (app shell 78.6 kB brotli)
+
 ### Planned
-- Phase 2 — Export pipeline: MP4 / WebM / GIF, fully client-side
 - Phase 3 — Studio UI: template gallery, editor form, playback, autosave
 - Phase 4 — Template library: 12 launch templates (`TEMPLATE_LIBRARY.md`)
 - Phase 5 — Landing page: Three.js/WebGL hero, light-mode brand site

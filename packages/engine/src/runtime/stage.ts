@@ -38,6 +38,9 @@ export class SceneRenderer {
       backgroundAlpha: opts.backgroundAlpha ?? 1,
       antialias: opts.antialias ?? true,
       clearBeforeRender: true,
+      // Keep the drawn buffer readable so the exporter can capture each frame
+      // (VideoFrame-from-canvas / 2D readback) reliably after render.
+      preserveDrawingBuffer: true,
     });
     return new SceneRenderer(renderer);
   }

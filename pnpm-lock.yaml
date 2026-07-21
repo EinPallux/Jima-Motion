@@ -47,6 +47,9 @@ importers:
       '@jima/templates':
         specifier: workspace:*
         version: link:../../packages/templates
+      mediabunny:
+        specifier: ^1.50.9
+        version: 1.50.9
       pixi.js:
         specifier: ^8.19.0
         version: 8.19.0

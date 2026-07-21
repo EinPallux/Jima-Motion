@@ -14,6 +14,7 @@
     "@fontsource/space-grotesk": "^5.3.0",
     "@jima/engine": "workspace:*",
     "@jima/templates": "workspace:*",
+    "mediabunny": "^1.50.9",
     "pixi.js": "^8.19.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
@@ -34,11 +35,7 @@
   "size-limit": [
     {
       "name": "app shell (React + Router + landing route, excl. lazy studio/hero)",
-      "path": [
-        "dist/assets/main-*.js",
-        "dist/assets/Landing-*.js",
-        "dist/assets/modulepreload-polyfill-*.js"
-      ],
+      "path": ["dist/assets/index-*.js", "dist/assets/Landing-*.js"],
       "limit": "220 kB"
     }
   ]
