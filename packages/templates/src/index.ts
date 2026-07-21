@@ -3,4 +3,13 @@
 // Consumers (gallery, Studio routes, poster generation, golden tests) iterate
 // this array — adding a template is one entry here plus its folder.
 
-export const templates: unknown[] = [];
+import type { TemplateDefinition } from "@jima/engine";
+import { kineticHeadline } from "./kinetic-headline/index";
+
+export const templates: TemplateDefinition[] = [kineticHeadline];
+
+export function getTemplate(id: string): TemplateDefinition | undefined {
+  return templates.find((t) => t.id === id);
+}
+
+export { kineticHeadline };

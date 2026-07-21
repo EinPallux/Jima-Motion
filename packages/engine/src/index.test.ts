@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { ENGINE_VERSION } from "./index";
+// Import from ./version (not the barrel) so this Node test never pulls in the
+// Pixi-touching browser modules.
+import { ENGINE_VERSION } from "./version";
 
 describe("@jima/engine", () => {
   it("exposes a version string", () => {

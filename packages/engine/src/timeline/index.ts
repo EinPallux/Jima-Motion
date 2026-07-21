@@ -1,3 +1,4 @@
-// Timeline barrel. Phase 1 adds easings, tweens, springs, stagger and the
-// JimaTimeline evaluator here.
-export {};
+// Timeline public surface.
+export * from "./easings";
+export * from "./rng";
+export * from "./timeline";

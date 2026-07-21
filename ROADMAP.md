@@ -56,6 +56,17 @@ Acceptance: T01 plays at 60 fps at preview res on reference hardware; identical 
 across two runs and across Chromium+WebKit render paths (per-browser goldens); seeking to
 arbitrary `t` is exact; no banned APIs (lint green).
 
+**✅ Done 2026-07-21.** Engine built: easings (exact-endpoint families + spring/steps), mulberry32
+seeded RNG, stateless `JimaTimeline` (grouped per-property resolution, sequenced tweens, discrete
+sets, stagger), aspect/safe-zone + text-fit helpers, `FontRegistry` (Fontsource OFL Space
+Grotesk + Inter, `document.fonts.load` gating), `SceneRenderer` (Pixi v8 WebGL, context-loss
+recovery), `TemplateRunner`, `PreviewPlayer` (rAF-timestamp clock, no banned APIs). Template SDK +
+registry. **T01 Kinetic Headline** implemented (pop/rise/slam, 4 aspects, 4 palettes) — visually
+verified professional across all aspects. Tests: **36 unit** (easings/RNG/timeline/layout) + **11
+Playwright** — determinism proven by pixel-exact re-seek AND fresh-instance equality; golden
+posters stable across two runs. Determinism note: goldens are Chromium-only here (WebKit not
+installed in this environment); revisit per-browser goldens if the project ever needs them.
+
 ## Phase 2 — Export pipeline ⏳ *(~1–1.5 weeks)*
 
 **Goal:** T01 leaves the browser as MP4, WebM and GIF — client-side only.
@@ -194,7 +205,7 @@ rendering, AI credits, dark mode.
 |---|---|
 | Planning & research | ✅ 2026-07-21 |
 | Phase 0 Foundation | ✅ 2026-07-21 |
-| Phase 1 Engine core | ⏳ not started |
+| Phase 1 Engine core | ✅ 2026-07-21 |
 | Phase 2 Export | ⏳ not started |
 | Phase 3 Studio UI | ⏳ not started |
 | Phase 4 Templates | ⏳ not started |

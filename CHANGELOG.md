@@ -22,8 +22,22 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
   using the pre-installed Chromium — de-risks Phase 1 golden frames
 - Placeholder landing + Studio route shells (lazy-split), headless render-harness entry
 
+### Added — Phase 1 · Motion engine core + T01 (2026-07-21)
+- `@jima/engine` timeline: exact-endpoint easing families, `spring`/`steps`, mulberry32 seeded
+  RNG, and the stateless `JimaTimeline` evaluator (per-property grouped resolution, sequenced
+  tweens, discrete sets, stagger) — `evaluate(t)` is a pure function of t
+- Layout: aspect sizes, platform safe zones, shrink-to-fit + word-wrap text helpers
+- Text: `FontRegistry` with `document.fonts.load` gating (self-hosted OFL Space Grotesk + Inter
+  via Fontsource); crisp role-based `makeText`
+- Runtime: `SceneRenderer` (Pixi v8, WebGL forced, context-loss recovery), `TemplateRunner`
+  (build → seekable `renderAt(t)`), `PreviewPlayer` (rAF-timestamp clock, play/pause/seek/loop/speed)
+- Template SDK types + registry; **T01 Kinetic Headline** (pop/rise/slam entrances, 4 aspects,
+  4 palettes)
+- Render harness (`/harness.html`) driven by URL params, for golden + export tests
+- Tests: 36 Vitest unit + 11 Playwright — determinism proven by pixel-exact re-seek and
+  fresh-instance equality; golden posters stable across two runs
+
 ### Planned
-- Phase 1 — Motion engine core: deterministic runtime, timeline, preview player, T01
 - Phase 2 — Export pipeline: MP4 / WebM / GIF, fully client-side
 - Phase 3 — Studio UI: template gallery, editor form, playback, autosave
 - Phase 4 — Template library: 12 launch templates (`TEMPLATE_LIBRARY.md`)
