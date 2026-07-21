@@ -38,11 +38,17 @@ import { iconGrid } from "./icon-grid/index";
 import { badgeStamp } from "./badge-stamp/index";
 import { folderOpen } from "./folder-open/index";
 import { cardCascade } from "./card-cascade/index";
+import { fadeCascade } from "./fade-cascade/index";
+import { letterReveal } from "./letter-reveal/index";
+import { lineRise } from "./line-rise/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
   kineticHeadline,
   keynoteReveal,
+  fadeCascade,
+  letterReveal,
+  lineRise,
   specialOffer,
   subscribeBell,
   reelFrame,
