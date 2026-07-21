@@ -54,8 +54,21 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
   cancellation throws `ExportCancelledError`, MP4 auto-skips where no H.264 encoder exists
 - Build: the test-only render harness is excluded from the production bundle (app shell 78.6 kB brotli)
 
+### Added — Phase 3 · Studio UI (2026-07-21)
+- Gallery: engine-rendered poster cards, search, category filters, resume banner
+- Editor: three-zone layout (template rail · live-preview stage with playback scrubber ·
+  Content/Style/Motion inspector), aspect switcher, undo/redo with coalesced edits
+- All eight field controls (text, textarea, textlist, image dropzone, color, select, slider, toggle)
+- Palette-as-preset colour model — selecting a palette fills the color fields (single source of truth)
+- Export modal (configure → rendering → done/error) on the Phase 2 pipeline, with capability-aware
+  format cards and honest disabled-MP4 messaging; progress + cancel; auto-download
+- Autosave to localStorage (+ IndexedDB blob plumbing for images), reload-restore, `?t=` deep-link
+- Keyboard map (space/←→/Home/⌘Z/⌘E), reduced-motion handling, mobile stacked layout,
+  WebGL2 capability floor
+- Live editing rebuilds the scene in place (no WebGL context churn per keystroke)
+- `eslint-plugin-react-hooks` added; 4 Playwright studio-integration specs (gallery→edit→export→reload)
+
 ### Planned
-- Phase 3 — Studio UI: template gallery, editor form, playback, autosave
 - Phase 4 — Template library: 12 launch templates (`TEMPLATE_LIBRARY.md`)
 - Phase 5 — Landing page: Three.js/WebGL hero, light-mode brand site
 - Phase 6 — Hardening & release: QA matrix, performance budgets, private release

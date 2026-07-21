@@ -1,6 +1,7 @@
 // @ts-check
 import js from "@eslint/js";
 import tseslint from "typescript-eslint";
+import reactHooks from "eslint-plugin-react-hooks";
 import globals from "globals";
 
 /**
@@ -47,6 +48,15 @@ export default tseslint.config(
     files: ["packages/engine/**/*.ts", "packages/templates/**/*.ts"],
     ignores: ["**/*.test.ts", "**/*.bench.ts"],
     rules: determinismRules,
+  },
+  {
+    // React hooks correctness for the web app.
+    files: ["apps/web/**/*.{ts,tsx}"],
+    plugins: { "react-hooks": reactHooks },
+    rules: {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+    },
   },
   {
     files: ["**/*.test.ts", "**/*.spec.ts", "tests/**/*.ts"],

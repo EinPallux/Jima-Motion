@@ -43,10 +43,10 @@ function aspectLayout(aspect: Aspect): AspectLayout {
 }
 
 const PALETTES: Palette[] = [
-  { id: "ink-white", name: "Ink on white", colors: { background: "#FFFFFF", text: "#101014", accent: "#FF4D1C" } },
-  { id: "white-orange", name: "White on orange", colors: { background: "#FF4D1C", text: "#FFFFFF", accent: "#101014" } },
-  { id: "ink-lime", name: "Ink on lime", colors: { background: "#D8F34D", text: "#101014", accent: "#FF4D1C" } },
-  { id: "violet-cream", name: "Violet on cream", colors: { background: "#FAF5EA", text: "#3A1D6E", accent: "#7C5CFF" } },
+  { id: "ink-white", name: "Ink on white", colors: { background: "#FFFFFF", textColor: "#101014", accent: "#FF4D1C" } },
+  { id: "white-orange", name: "White on orange", colors: { background: "#FF4D1C", textColor: "#FFFFFF", accent: "#101014" } },
+  { id: "ink-lime", name: "Ink on lime", colors: { background: "#D8F34D", textColor: "#101014", accent: "#FF4D1C" } },
+  { id: "violet-cream", name: "Violet on cream", colors: { background: "#FAF5EA", textColor: "#3A1D6E", accent: "#7C5CFF" } },
 ];
 
 interface StyleEntrance {
@@ -75,7 +75,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
 
   const pcol = (key: string, d: string): string => palette.colors[key] ?? d;
   const bg = str(values.background, pcol("background", "#FFFFFF"));
-  const textColor = str(values.textColor, pcol("text", "#101014"));
+  const textColor = str(values.textColor, pcol("textColor", "#101014"));
   const accent = str(values.accent, pcol("accent", "#FF4D1C"));
   const headline = str(values.headline, "Say it with motion.");
   const subline = str(values.subline, "");

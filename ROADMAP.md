@@ -113,6 +113,18 @@ Acceptance: with T01 only — a first-time user goes gallery → edit → export
 usability run); full flow completable keyboard-only; axe checks pass; state survives reload;
 Studio route chunk ≤ 250 kB gz (engine chunk lazy).
 
+**✅ Done 2026-07-21.** Studio built: gallery (engine-rendered poster cards, search, category
+filters, resume banner) and editor (three zones — template rail, live-preview stage with playback
+scrubber, Content/Style/Motion inspector), aspect switcher, undo/redo with coalesced edits,
+palette-as-preset colour model, export modal (configure → rendering → done/error) wired to Phase 2
+with capability-aware format cards and honest disabled-MP4 messaging, autosave (localStorage +
+IndexedDB blob plumbing) with reload-restore and `?t=` deep-link, keyboard map (space/arrows/home/
+⌘Z/⌘E), reduced-motion handling, mobile stacked layout, and a WebGL2 capability floor. Live editing
+uses in-place scene rebuild (no WebGL context churn per keystroke). Studio route chunk 82 kB gz +
+lazy Pixi ≈ 220 kB gz total (≤ 250 budget). Tests: 4 Playwright studio-integration specs
+(gallery→edit→export→reload-restore) green. Note: a11y built to spec (labels, roles, aria-live,
+focus ring, full keyboard); automated axe sweep is deferred to Phase 6.
+
 ## Phase 4 — Template library ⏳ *(~2 weeks)*
 
 **Goal:** ship the 12 launch templates. **This phase is the product.**
@@ -218,7 +230,7 @@ rendering, AI credits, dark mode.
 | Phase 0 Foundation | ✅ 2026-07-21 |
 | Phase 1 Engine core | ✅ 2026-07-21 |
 | Phase 2 Export | ✅ 2026-07-21 |
-| Phase 3 Studio UI | ⏳ not started |
+| Phase 3 Studio UI | ✅ 2026-07-21 |
 | Phase 4 Templates | ⏳ not started |
 | Phase 5 Landing | ⏳ not started |
 | Phase 6 Launch | ⏳ not started |

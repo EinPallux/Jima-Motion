@@ -3,9 +3,10 @@
 Jima Motion is a **100 % free, no-account, browser-only motion-graphics tool for social media
 managers**: pick a template → type your text / drop images → export MP4/WebM/GIF, rendered
 entirely client-side. Brand = "Jima Motion"; the editor = "Jima Studio" ("the Studio").
-**Current state: Phases 0–2 complete — workspace/CI/guardrails; deterministic motion engine + T01;
-client-side MP4/WebM/GIF export (WebCodecs + Mediabunny + gifenc) with passing golden, determinism
-and export-smoke tests. Next up is Phase 3 (Studio UI) in `ROADMAP.md`.**
+**Current state: Phases 0–3 complete — workspace/CI/guardrails; deterministic motion engine + T01;
+client-side MP4/WebM/GIF export; and the full Jima Studio UI (gallery, live-preview form editor,
+export modal, autosave) with passing golden, determinism, export-smoke and studio-integration
+tests. Next up is Phase 4 (build templates T02–T12) in `ROADMAP.md`.**
 **Scope (ADR-011):** built to the quality bar of a real Jitter/Ccleaf competitor, but deployed
 privately for the owner + friends/family on Vercel — no SEO, marketing, or launch work anywhere;
 English-only UI.
