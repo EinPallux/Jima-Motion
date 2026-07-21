@@ -41,6 +41,10 @@ import { cardCascade } from "./card-cascade/index";
 import { fadeCascade } from "./fade-cascade/index";
 import { letterReveal } from "./letter-reveal/index";
 import { lineRise } from "./line-rise/index";
+import { focusIn } from "./focus-in/index";
+import { sideSlide } from "./side-slide/index";
+import { scaleIn } from "./scale-in/index";
+import { flipWords } from "./flip-words/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -49,6 +53,10 @@ export const templates: TemplateDefinition[] = [
   fadeCascade,
   letterReveal,
   lineRise,
+  focusIn,
+  sideSlide,
+  scaleIn,
+  flipWords,
   specialOffer,
   subscribeBell,
   reelFrame,
