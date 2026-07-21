@@ -28,3 +28,6 @@ tests/**/__screenshots__/**/*-diff.png
 .env
 .env.local
 .env.*.local
+
+# temporary QA/scratch specs (prefix _), not part of the suite
+tests/_*.spec.ts

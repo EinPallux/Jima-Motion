@@ -15,6 +15,9 @@ import { logoSting } from "./logo-sting/index";
 import { saveTheDate } from "./save-the-date/index";
 import { tipsStack } from "./tips-stack/index";
 import { splitDuo } from "./split-duo/index";
+import { iconPop } from "./icon-pop/index";
+import { subscribeBell } from "./subscribe-bell/index";
+import { specialOffer } from "./special-offer/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -30,6 +33,9 @@ export const templates: TemplateDefinition[] = [
   tipsStack,
   splitDuo,
   logoSting,
+  iconPop,
+  subscribeBell,
+  specialOffer,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {

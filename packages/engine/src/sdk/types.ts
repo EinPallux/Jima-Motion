@@ -18,7 +18,9 @@ export type TemplateCategory =
   | "brand"
   | "event"
   | "educational"
-  | "comparison";
+  | "comparison"
+  | "social"
+  | "travel";
 
 export type FieldType =
   | "text"
