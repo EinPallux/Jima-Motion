@@ -45,6 +45,13 @@ import { focusIn } from "./focus-in/index";
 import { sideSlide } from "./side-slide/index";
 import { scaleIn } from "./scale-in/index";
 import { flipWords } from "./flip-words/index";
+import { dropLetters } from "./drop-letters/index";
+import { curtainWipe } from "./curtain-wipe/index";
+import { stackedBuild } from "./stacked-build/index";
+import { shineText } from "./shine-text/index";
+import { splitReveal } from "./split-reveal/index";
+import { waveText } from "./wave-text/index";
+import { bounceIn } from "./bounce-in/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -57,6 +64,13 @@ export const templates: TemplateDefinition[] = [
   sideSlide,
   scaleIn,
   flipWords,
+  dropLetters,
+  curtainWipe,
+  stackedBuild,
+  shineText,
+  splitReveal,
+  waveText,
+  bounceIn,
   specialOffer,
   subscribeBell,
   reelFrame,
