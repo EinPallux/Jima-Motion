@@ -1,0 +1,35 @@
+{
+  "name": "@jima/web",
+  "version": "0.1.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@jima/engine": "workspace:*",
+    "@jima/templates": "workspace:*",
+    "pixi.js": "^8.19.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-router-dom": "^7.18.1",
+    "zustand": "^5.0.14"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^6.0.3",
+    "size-limit": "^11.1.6",
+    "@size-limit/file": "^11.1.6",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.7.3",
+    "vite": "^8.1.5"
+  },
+  "size-limit": [
+    { "name": "app shell (React + Router + landing route, excl. lazy studio/hero)", "path": ["dist/assets/main-*.js", "dist/assets/Landing-*.js", "dist/assets/modulepreload-polyfill-*.js"], "limit": "220 kB" }
+  ]
+}

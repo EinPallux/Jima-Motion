@@ -3,8 +3,8 @@
 Jima Motion is a **100 % free, no-account, browser-only motion-graphics tool for social media
 managers**: pick a template → type your text / drop images → export MP4/WebM/GIF, rendered
 entirely client-side. Brand = "Jima Motion"; the editor = "Jima Studio" ("the Studio").
-**Current state: docs-only planning is complete; no code exists yet. Start with Phase 0 in
-`ROADMAP.md`.**
+**Current state: Phase 0 complete (workspace, CI, guardrails, deploy config). Next up is Phase 1
+(motion engine + T01) in `ROADMAP.md`.**
 **Scope (ADR-011):** built to the quality bar of a real Jitter/Ccleaf competitor, but deployed
 privately for the owner + friends/family on Vercel — no SEO, marketing, or launch work anywhere;
 English-only UI.
@@ -45,7 +45,7 @@ If you must deviate, add/amend an ADR in the same PR and note it in `CHANGELOG.m
   dual-licensed references (openvideodev/DesignCombo — read, don't paste).
 - Allowed licenses: MIT / Apache-2.0 / BSD / ISC / MPL-2.0; fonts OFL-1.1. CI license-checker
   enforces this.
-- Core stack (verified 2026-07, re-pin at scaffold): Vite 7 + React 19 SPA (React Router),
+- Core stack (verified 2026-07, scaffolded on current majors): Vite 8 + React 19 SPA (React Router 7),
   Tailwind 4, TypeScript strict, Zustand, **PixiJS v8 (WebGL)** + custom `JimaTimeline`,
   **WebCodecs + Mediabunny** (MP4/WebM), **gifenc** worker (GIF), lazy ffmpeg.wasm fallback,
   three + @react-three/fiber 9 + drei 10 (landing hero only), pnpm workspace, Vercel (static).
@@ -64,8 +64,23 @@ If you must deviate, add/amend an ADR in the same PR and note it in `CHANGELOG.m
 
 ## Commands
 
-*(To be filled in during Phase 0 — planned: `pnpm dev`, `pnpm build`, `pnpm test`, `pnpm lint`,
-`pnpm test:golden`, `pnpm posters`. Until then there is nothing to run.)*
+Requires Node ≥ 20.11 and pnpm 10. Run `pnpm install` once.
+
+| Command | What it does |
+|---|---|
+| `pnpm dev` | Vite dev server for the web app (landing + Studio) |
+| `pnpm build` | Production build → `apps/web/dist` (the only deployable) |
+| `pnpm preview` | Serve the production build locally |
+| `pnpm typecheck` | `tsc --noEmit` across engine, templates, web |
+| `pnpm lint` | ESLint (incl. determinism guard + GSAP ban) |
+| `pnpm test` | Vitest unit tests (pure logic, Node) |
+| `pnpm test:golden` | Playwright golden-frame + export-smoke tests (real browser) |
+| `pnpm check` | typecheck + lint + test + build (the pre-push gate) |
+| `pnpm --filter @jima/web exec size-limit` | Bundle-size budgets |
+
+Notes: `pnpm posters` (engine-rendered gallery/OG images) arrives with Phase 4/5. Golden tests use
+the environment's pre-installed Chromium automatically (see `playwright.config.ts`); WebGL runs on
+SwiftShader headless.
 
 ## Known pitfalls (pre-researched — don't rediscover these)
 

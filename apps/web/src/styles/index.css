@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+/*
+ * Jima Motion design tokens — DESIGN_ARCHITECTURE.md §2-4.
+ * Light/white-mode ONLY. No dark theme, no prefers-color-scheme:dark (CLAUDE.md rule 3).
+ */
+@theme {
+  /* Surfaces & text */
+  --color-paper: #ffffff;
+  --color-porcelain: #faf9f7;
+  --color-mist: #ebeaf2;
+  --color-ink: #101014;
+  --color-slate: #5b5b68;
+
+  /* Ember — the brand accent */
+  --color-ember: #ff4d1c;
+  --color-ember-deep: #e13d0e;
+  --color-ember-text: #b93000;
+  --color-ember-tint: #ffede6;
+
+  /* Gradient anchors */
+  --color-candy: #ff2e9e;
+  --color-violet: #7c5cff;
+  --color-sky: #38c7ff;
+  --color-lime-pop: #d8f34d;
+
+  /* Semantic */
+  --color-success: #17a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+
+  /* Typography */
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Radii (DESIGN_ARCHITECTURE.md §4) */
+  --radius-input: 12px;
+  --radius-card: 20px;
+  --radius-modal: 28px;
+
+  /* Elevation — soft, warm, never gray-muddy */
+  --shadow-card: 0 2px 8px rgb(16 16 20 / 4%), 0 12px 32px rgb(16 16 20 / 6%);
+  --shadow-pop: 0 8px 16px rgb(16 16 20 / 8%), 0 24px 56px rgb(255 77 28 / 10%);
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Visible focus ring — a11y (DESIGN_ARCHITECTURE.md §8) */
+:focus-visible {
+  outline: 2px solid var(--color-ember-text);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -42,7 +42,7 @@ flowchart LR
 
 | Layer | Decision | Why | Rejected |
 |---|---|---|---|
-| Site framework | **Vite 7 + React 19 SPA** (React Router, static build) | The product is an app and SEO is explicitly a non-goal (ADR-011) — so the simplest modern stack wins: one mental model, first-class workers/wasm/code-split DX, instant HMR; landing and Studio are lazy route chunks | Astro islands (its zero-JS-landing advantage is moot without SEO; adds a second mental model); Next.js static export (server abstractions for zero benefit here) |
+| Site framework | **Vite 8 + React 19 SPA** (React Router, static build) | The product is an app and SEO is explicitly a non-goal (ADR-011) — so the simplest modern stack wins: one mental model, first-class workers/wasm/code-split DX, instant HMR; landing and Studio are lazy route chunks | Astro islands (its zero-JS-landing advantage is moot without SEO; adds a second mental model); Next.js static export (server abstractions for zero benefit here) |
 | UI runtime | **React 19 + TypeScript (strict)** | R3F v9 requires React 19; team/AI familiarity; typed template SDK | Svelte/Solid (ecosystem fit with R3F/tooling) |
 | Styling | **Tailwind CSS 4** + design tokens (`DESIGN_ARCHITECTURE.md`) | Speed, consistency, light-mode enforcement via tokens | CSS modules only |
 | State | **Zustand** | Tiny, MIT, no boilerplate; single store for editor state | Redux (weight), Context-only (perf) |
@@ -377,7 +377,7 @@ intentional template change as a P1 bug.
   their author in favor of Mediabunny (MPL-2.0, active, Remotion itself migrated to it).
 - **ADR-003 (amended 2026-07-21) — Vite + React SPA.** Originally Astro + React island, chosen
   for its zero-JS SEO landing; superseded when the owner descoped SEO entirely (ADR-011). With
-  SEO moot, the simplest modern app stack wins: Vite 7 + React 19 + React Router, static build.
+  SEO moot, the simplest modern app stack wins: Vite 8 + React 19 + React Router 7, static build.
   Astro/Next remain documented alternatives if the scope ever changes.
 - **ADR-004 — Pixi v8 on WebGL for render/export; WebGPU deferred.** Deterministic sync readback
   and cross-device consistency beat WebGPU gains today; revisit post-v1 for preview only.

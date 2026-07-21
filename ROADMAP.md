@@ -18,7 +18,7 @@ MP4/WebM/GIF export up to 1080p. No accounts, no watermark, no collaboration, no
 
 Deliverables:
 - pnpm workspace per `TECHNICAL_ARCHITECTURE.md` § 5 (`apps/web`, `packages/engine`,
-  `packages/templates`, `tests`); Vite 7 + React 19 + React Router + Tailwind 4 + TS strict.
+  `packages/templates`, `tests`); Vite 8 + React 19 + React Router 7 + Tailwind 4 + TS strict.
 - Design tokens from `DESIGN_ARCHITECTURE.md` § 2–4 as the Tailwind theme; fonts self-hosted with
   license files; `color-scheme: light`.
 - CI (`typecheck · lint · unit · build · size-limit`) on GitHub Actions + Vercel Git-integration
@@ -30,6 +30,13 @@ Deliverables:
 Acceptance: `pnpm dev/build/test/lint` all green in CI; production URL serves the skeleton;
 budgets wired (failing sizes fail CI); `CHANGELOG.md` updated. Update `CLAUDE.md` § Commands with
 the real commands.
+
+**✅ Done 2026-07-21.** pnpm workspace on Vite 8 +
+React 19 + React Router 7 + Tailwind 4 + TS strict. Determinism ESLint guard verified firing on
+`Math.random`/`Date.now`; GSAP import ban active. Playwright pipeline green against the
+environment's pre-installed Chromium with **headless WebGL confirmed working** (SwiftShader) —
+de-risks Phase 1 golden frames. Build splits Landing/Studio/harness into separate chunks; app
+shell 80.6 kB brotli (budget 220 kB). CI + `vercel.json` in place.
 
 ## Phase 1 — Motion engine core ⏳ *(~1.5–2 weeks)*
 
@@ -186,7 +193,7 @@ rendering, AI credits, dark mode.
 | Phase | Status |
 |---|---|
 | Planning & research | ✅ 2026-07-21 |
-| Phase 0 Foundation | ⏳ not started |
+| Phase 0 Foundation | ✅ 2026-07-21 |
 | Phase 1 Engine core | ⏳ not started |
 | Phase 2 Export | ⏳ not started |
 | Phase 3 Studio UI | ⏳ not started |
