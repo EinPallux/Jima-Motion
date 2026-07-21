@@ -9,7 +9,7 @@ an MP4, WebM or GIF — up to 1080p. Every frame is rendered client-side on your
 exactly why it can be free: there are no render servers, no accounts, and no paid tier, because
 there is nothing to meter.
 
-> **Status: v1.0 shipped** ✅ — the full Studio, **75 templates**, client-side MP4/WebM/GIF export,
+> **Status: v1.0 shipped** ✅ — the full Studio, **95 templates**, client-side MP4/WebM/GIF export,
 > and the animated WebGL landing page are all built and passing tests. See the
 > [changelog](CHANGELOG.md) and [roadmap](ROADMAP.md).
 >
@@ -25,7 +25,7 @@ that those paywalls exist to recover. Full evidence: [COMPETITOR_RESEARCH.md](CO
 
 ## The v1 experience
 
-Landing page → **Open the Studio** → choose one of **75 templates** (announcements, promos,
+Landing page → **Open the Studio** → choose one of **95 templates** (announcements, promos,
 social-engagement moments, 20 smooth kinetic-text animations, explainers & timelines, product
 showcases & ads, pricing cards, device mockups, countdowns, travel cards…) → edit
 text/images/colors in a simple form, **pick a font**, tweak speed — no timeline, no keyframes →

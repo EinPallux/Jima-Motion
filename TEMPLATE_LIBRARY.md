@@ -472,3 +472,31 @@ user image (masked to a rounded rect) and degrade to a designed placeholder when
 | T73 | Countdown | `countdown-timer` | promo | 1:1 | A DD:HH:MM:SS countdown (pure `f(t)` digits) + CTA |
 | T74 | End Card | `cta-endcard` | brand | 16:9 | An outro: logo/brand + CTA + social handles |
 | T75 | Sale Banner | `sale-banner` | promo | 16:9 | A bold sale with diagonal stripes + discount + CTA |
+
+## 10. Showcase & product-presentation pack — 20 templates (2026-07-21)
+
+Library 75 → **95**. Same contract; deterministic, all 4 aspects, 4 palettes, image→placeholder
+degradation, per-element color fields.
+
+| # | Template | `id` | Category | Default | What it does |
+|---|---|---|---|---|---|
+| T76 | Photo Grid | `photo-grid` | showcase | 1:1 | A mosaic of images tiles in, staggered |
+| T77 | Polaroid Stack | `polaroid-stack` | showcase | 4:5 | Polaroid photos fan out with captions |
+| T78 | Before/After Slider | `before-after-slider` | showcase | 1:1 | A divider sweeps to reveal after-over-before |
+| T79 | Carousel Cover | `carousel-cover` | showcase | 4:5 | An IG carousel cover with peeking cards + swipe |
+| T80 | Team Grid | `team-grid` | showcase | 16:9 | Meet-the-team avatar cards with name/role |
+| T81 | Testimonial Wall | `testimonial-wall` | showcase | 1:1 | Star-rated review cards pop into place |
+| T82 | Feature Spotlight | `feature-spotlight` | showcase | 16:9 | One hero feature: big icon + title + blurb |
+| T83 | Image Reveal | `image-reveal` | showcase | 16:9 | A hero image reveals under a scrim + title |
+| T84 | Split Showcase | `split-showcase` | showcase | 16:9 | Split screen: image + title + bullet points |
+| T85 | Mockup Tilt | `mockup-tilt` | showcase | 1:1 | A screenshot floats at a 3D tilt (skew) |
+| T86 | Product Carousel | `product-carousel` | product | 1:1 | Product images cycle with name + price + dots |
+| T87 | Product 360 | `product-360` | product | 1:1 | Product on a rotating turntable + "360° view" |
+| T88 | Color Variants | `color-variants` | product | 4:5 | Backdrop switches through color swatches |
+| T89 | Product Lineup | `product-lineup` | product | 16:9 | A family lineup of products with prices |
+| T90 | Bundle Offer | `bundle-offer` | product | 1:1 | Products bundled + computed savings + CTA |
+| T91 | Product Detail | `product-detail` | product | 1:1 | A magnifier callout on a product detail + buy |
+| T92 | Unbox Reveal | `unbox-reveal` | product | 9:16 | A box opens and the product rises out |
+| T93 | Size Compare | `size-compare` | product | 1:1 | Drafting-style H×W×D dimension guides |
+| T94 | Product Review | `product-review` | product | 4:5 | Product + star rating + customer quote |
+| T95 | Shop Grid | `shop-grid` | product | 4:5 | A shop collection grid with prices + CTA |

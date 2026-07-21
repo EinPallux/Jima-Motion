@@ -91,6 +91,27 @@ const TEMPLATES: T[] = [
   { id: "countdown-timer", palette: "ember", poster: 3.0, duration: 4.5 },
   { id: "cta-endcard", palette: "ink", poster: 2.8, duration: 3.3 },
   { id: "sale-banner", palette: "ember", poster: 3.0, duration: 4.0 },
+  // Showcase + product expansion (v1.4).
+  { id: "photo-grid", palette: "ember", poster: 2.6, duration: 4.0 },
+  { id: "polaroid-stack", palette: "sunset", poster: 2.8, duration: 3.6 },
+  { id: "before-after-slider", palette: "studio", poster: 2.6, duration: 4.0 },
+  { id: "carousel-cover", palette: "ember", poster: 2.6, duration: 3.8 },
+  { id: "team-grid", palette: "paper", poster: 2.8, duration: 3.4 },
+  { id: "testimonial-wall", palette: "ember", poster: 3.0, duration: 3.9 },
+  { id: "feature-spotlight", palette: "ember", poster: 2.6, duration: 3.8 },
+  { id: "image-reveal", palette: "ember", poster: 2.6, duration: 4.0 },
+  { id: "split-showcase", palette: "ember", poster: 2.8, duration: 3.65 },
+  { id: "mockup-tilt", palette: "ember", poster: 2.6, duration: 4.0 },
+  { id: "product-carousel", palette: "studio-white", poster: 2.4, duration: 4.7 },
+  { id: "product-360", palette: "studio", poster: 2.6, duration: 4.2 },
+  { id: "color-variants", palette: "studio-white", poster: 2.8, duration: 4.0 },
+  { id: "product-lineup", palette: "fresh-white", poster: 2.8, duration: 3.6 },
+  { id: "bundle-offer", palette: "fresh-white", poster: 2.8, duration: 4.2 },
+  { id: "product-detail", palette: "studio-white", poster: 3.0, duration: 4.0 },
+  { id: "unbox-reveal", palette: "kraft", poster: 2.8, duration: 4.2 },
+  { id: "size-compare", palette: "studio-white", poster: 3.0, duration: 4.0 },
+  { id: "product-review", palette: "studio-white", poster: 3.0, duration: 4.2 },
+  { id: "shop-grid", palette: "studio-white", poster: 2.8, duration: 3.6 },
 ];
 
 const ASPECTS: Aspect[] = ["1:1", "4:5", "9:16", "16:9"];

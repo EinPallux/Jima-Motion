@@ -38,6 +38,26 @@ import { iconGrid } from "./icon-grid/index";
 import { badgeStamp } from "./badge-stamp/index";
 import { folderOpen } from "./folder-open/index";
 import { cardCascade } from "./card-cascade/index";
+import { photoGrid } from "./photo-grid/index";
+import { polaroidStack } from "./polaroid-stack/index";
+import { beforeAfterSlider } from "./before-after-slider/index";
+import { carouselCover } from "./carousel-cover/index";
+import { teamGrid } from "./team-grid/index";
+import { testimonialWall } from "./testimonial-wall/index";
+import { featureSpotlight } from "./feature-spotlight/index";
+import { imageReveal } from "./image-reveal/index";
+import { splitShowcase } from "./split-showcase/index";
+import { mockupTilt } from "./mockup-tilt/index";
+import { productCarousel } from "./product-carousel/index";
+import { product360 } from "./product-360/index";
+import { colorVariants } from "./color-variants/index";
+import { productLineup } from "./product-lineup/index";
+import { bundleOffer } from "./bundle-offer/index";
+import { productDetail } from "./product-detail/index";
+import { unboxReveal } from "./unbox-reveal/index";
+import { sizeCompare } from "./size-compare/index";
+import { productReview } from "./product-review/index";
+import { shopGrid } from "./shop-grid/index";
 import { fadeCascade } from "./fade-cascade/index";
 import { letterReveal } from "./letter-reveal/index";
 import { lineRise } from "./line-rise/index";
@@ -157,6 +177,26 @@ export const templates: TemplateDefinition[] = [
   countdownTimer,
   ctaEndcard,
   saleBanner,
+  photoGrid,
+  polaroidStack,
+  beforeAfterSlider,
+  carouselCover,
+  teamGrid,
+  testimonialWall,
+  featureSpotlight,
+  imageReveal,
+  splitShowcase,
+  mockupTilt,
+  productCarousel,
+  product360,
+  colorVariants,
+  productLineup,
+  bundleOffer,
+  productDetail,
+  unboxReveal,
+  sizeCompare,
+  productReview,
+  shopGrid,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {

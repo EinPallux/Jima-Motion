@@ -11,6 +11,27 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.4.0] — 2026-07-21 · Showcase & product-presentation pack (75 → 95)
+
+Added **20 more templates** — 10 in **Showcase**, 10 for **Product presentation** — all
+deterministic (pixel-exact re-seek), all 4 aspects, 4 palettes, image→placeholder degradation,
+per-element color fields.
+
+### Added — Showcase
+- **Photo Grid** (image mosaic), **Polaroid Stack**, **Before/After Slider** (divider reveal),
+  **Carousel Cover** (IG carousel), **Team Grid**, **Testimonial Wall** (star reviews),
+  **Feature Spotlight**, **Image Reveal** (scrim + title), **Split Showcase**, **Mockup Tilt**
+  (perspective device float)
+
+### Added — Product presentation
+- **Product Carousel**, **Product 360** (turntable), **Color Variants** (swatch switch),
+  **Product Lineup** (family shot), **Bundle Offer** (computed savings), **Product Detail**
+  (magnifier callout), **Unbox Reveal** (box opens), **Size Compare** (dimension guides),
+  **Product Review** (stars + quote), **Shop Grid** (collection)
+
+### Changed
+- Golden suite now covers **95 templates** (95 determinism re-seek tests + 380 poster frames)
+
 ## [1.3.0] — 2026-07-21 · Explainer/showcase/ad pack + editor upgrades (55 → 75)
 
 Added **20 templates for real use-cases beyond text** — explainers, showcases, product
