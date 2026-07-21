@@ -1,0 +1,48 @@
+# Jima Motion ✦
+
+**Motion graphics for social media — in seconds. 100 % free, no account, no watermark, and nothing
+you make ever leaves your browser.**
+
+Jima Motion is a browser tool for social media managers: open the **Studio**, pick a motion
+template, type your own text, drop in your images, tweak colors and speed if you like, and export
+an MP4, WebM or GIF — up to 1080p. Every frame is rendered client-side on your own device, which is
+exactly why it can be free: there are no render servers, no accounts, and no paid tier, because
+there is nothing to meter.
+
+> **Status: planning.** The product is fully specified; implementation starts with Phase 0 of the
+> [roadmap](ROADMAP.md). No code exists in this repository yet.
+
+## Why it exists
+
+Every mainstream option taxes the user before a clean export: watermarked free tiers (VEED,
+Kapwing, Jitter…), HD paywalls, signup walls, server render queues with cooldowns and monthly
+download quotas (Ccleaf), or $10–110/month subscriptions. Client-side rendering deletes the cost
+that those paywalls exist to recover. Full evidence: [COMPETITOR_RESEARCH.md](COMPETITOR_RESEARCH.md).
+
+## The v1 experience
+
+Landing page → **Open the Studio** → choose one of **12 templates** (announcements, promos,
+quotes, stats, countdowns, product pops, logo stings…) → edit text/images/colors/speed in a simple
+form — no timeline, no keyframes → export MP4/WebM/GIF in 1:1, 4:5, 9:16 or 16:9.
+
+Principles: free means free · defaults are the product · form fields, not timelines · nothing
+leaves the device · fast is a feature · light-mode, bold, animated ([Three.js hero](DESIGN_ARCHITECTURE.md)).
+
+## Documentation
+
+| Doc | What's in it |
+|---|---|
+| [PRODUCT_BRIEF.md](PRODUCT_BRIEF.md) | Vision, audience, positioning, scope & non-goals |
+| [COMPETITOR_RESEARCH.md](COMPETITOR_RESEARCH.md) | Deep research: Jitter, Ccleaf, the wider market, SEO gaps |
+| [TECHNICAL_ARCHITECTURE.md](TECHNICAL_ARCHITECTURE.md) | Stack & ADRs: Astro + React island, PixiJS v8 engine, WebCodecs + Mediabunny export, budgets |
+| [DESIGN_ARCHITECTURE.md](DESIGN_ARCHITECTURE.md) | Brand system, tokens, landing & Studio UX specs, copy deck |
+| [TEMPLATE_LIBRARY.md](TEMPLATE_LIBRARY.md) | The 12 launch templates, spec'd storyboard-level |
+| [ROADMAP.md](ROADMAP.md) | Phases 0–6 with acceptance criteria, risks, status |
+| [CLAUDE.md](CLAUDE.md) | Working agreement & guardrails for (AI-assisted) development |
+| [CHANGELOG.md](CHANGELOG.md) | Keep-a-Changelog record |
+
+## License
+
+Code license: TBD by the project owner before public launch (planning docs © the project).
+Bundled fonts will be OFL-1.1; dependency license policy is defined in
+[TECHNICAL_ARCHITECTURE.md](TECHNICAL_ARCHITECTURE.md) § 3.1.
