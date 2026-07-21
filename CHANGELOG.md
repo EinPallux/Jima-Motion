@@ -68,8 +68,21 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 - Live editing rebuilds the scene in place (no WebGL context churn per keystroke)
 - `eslint-plugin-react-hooks` added; 4 Playwright studio-integration specs (gallery→edit→export→reload)
 
+### Added — Phase 4 · Template library, batch 1 (2026-07-21)
+- **T03 Glow Promo** — living gradient-blob background (resolution-independent radial-glow
+  sprites), letter-spacing kicker, slam headline, spring CTA pill; loopable (seamless tail fade)
+- **T07 Big Number** — count-up (`update(t)`) with deterministic thousands grouping, landing beat,
+  and seeded confetti-burst physics computed as a pure function of t
+- **T08 Quote Spotlight** — multi-line word-by-word reveal in Fraunces serif, quote-mark watermark,
+  optional circle-cropped avatar from a user image
+- Engine: `BuiltTemplate.update(t)` per-frame hook (count-ups/particles as pure f(t)); image-texture
+  loading into `TemplateContext.images`; `serif` font role (self-hosted Fraunces); shared glow-texture
+  + number-format helpers; poster rendering serialized (one WebGL context at a time)
+- Data-driven golden suite over the whole registry (determinism re-seek + poster frames), stable
+  across two runs; 4 of 12 templates now shipped (T01, T03, T07, T08)
+
 ### Planned
-- Phase 4 — Template library: 12 launch templates (`TEMPLATE_LIBRARY.md`)
+- Phase 4 — Template library: remaining 8 templates (`TEMPLATE_LIBRARY.md`)
 - Phase 5 — Landing page: Three.js/WebGL hero, light-mode brand site
 - Phase 6 — Hardening & release: QA matrix, performance budgets, private release
 

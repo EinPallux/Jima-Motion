@@ -90,9 +90,10 @@ export class FontRegistry {
   }
 }
 
-/** Default registry for v1: display (Space Grotesk) + body (Inter). */
+/** Default registry: display (Space Grotesk), body (Inter), serif (Fraunces). */
 export function createDefaultFontRegistry(): FontRegistry {
   return new FontRegistry()
     .register("display", { family: "Space Grotesk", weights: [500, 700] })
-    .register("body", { family: "Inter", weights: [400, 500, 600] });
+    .register("body", { family: "Inter", weights: [400, 500, 600] })
+    .register("serif", { family: "Fraunces", weights: [500, 600] });
 }

@@ -231,7 +231,7 @@ rendering, AI credits, dark mode.
 | Phase 1 Engine core | ✅ 2026-07-21 |
 | Phase 2 Export | ✅ 2026-07-21 |
 | Phase 3 Studio UI | ✅ 2026-07-21 |
-| Phase 4 Templates | ⏳ not started |
+| Phase 4 Templates | 🔄 in progress — 4/12 (T01, T03, T07, T08) |
 | Phase 5 Landing | ⏳ not started |
 | Phase 6 Launch | ⏳ not started |
 

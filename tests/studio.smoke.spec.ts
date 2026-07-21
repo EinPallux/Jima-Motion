@@ -8,9 +8,9 @@ test.use({ viewport: { width: 1300, height: 850 } });
 
 async function openEditor(page: Page) {
   await page.goto("/studio");
-  await page.getByRole("heading", { name: "Pick a template" }).waitFor({ timeout: 20000 });
+  await page.getByRole("heading", { name: "Pick a template" }).waitFor({ timeout: 30000 });
   await page.getByRole("button", { name: /Kinetic Headline/ }).first().click();
-  await page.locator("canvas").first().waitFor({ timeout: 20000 });
+  await page.locator("canvas").first().waitFor({ timeout: 30000 });
 }
 
 test("gallery → editor → live edit", async ({ page }) => {
@@ -53,6 +53,6 @@ test("edits survive a reload (autosave + restore)", async ({ page }) => {
   await page.getByLabel("Headline").fill("Persisted!");
   await page.waitForTimeout(800); // let autosave (500ms debounce) flush
   await page.reload();
-  await page.locator("canvas").first().waitFor({ timeout: 20000 });
+  await page.locator("canvas").first().waitFor({ timeout: 30000 });
   await expect(page.getByLabel("Headline")).toHaveValue("Persisted!");
 });

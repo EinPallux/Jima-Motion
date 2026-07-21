@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import {
+  isImageRef,
   PreviewPlayer,
   TemplateRunner,
   sizeOf,
@@ -49,6 +50,15 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
   const runnerRef = useRef<TemplateRunner | null>(null);
   const playerRef = useRef<PreviewPlayer | null>(null);
   const [state, setState] = useState({ t: 0, duration: 0, playing: false, ready: false });
+
+  // Recreate the runner (which reloads image textures) when an image changes.
+  const imagesKey = useMemo(() => {
+    const parts: string[] = [];
+    for (const [k, v] of Object.entries(params.values)) {
+      if (isImageRef(v)) parts.push(`${k}:${v.url}`);
+    }
+    return parts.join("|");
+  }, [params.values]);
 
   // Create runner + player when the template or aspect changes.
   useEffect(() => {
@@ -112,7 +122,7 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
       setState({ t: 0, duration: 0, playing: false, ready: false });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.def, params.aspect]);
+  }, [params.def, params.aspect, imagesKey]);
 
   // Rebuild scene on value/palette changes (debounced, in place).
   useEffect(() => {

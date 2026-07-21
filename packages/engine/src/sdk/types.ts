@@ -1,4 +1,4 @@
-import type { Container } from "pixi.js";
+import type { Container, Texture } from "pixi.js";
 import type { Aspect, Size } from "../layout/aspect";
 import type { Rng } from "../timeline/rng";
 import type { JimaTimeline } from "../timeline/timeline";
@@ -77,12 +77,24 @@ export interface TemplateContext {
   palette: Palette;
   rng: Rng;
   fonts: FontRegistry;
+  /** Pre-loaded textures for image fields (null when empty/unset). */
+  images: Record<string, Texture | null>;
 }
 
 export interface BuiltTemplate {
   timeline: JimaTimeline;
   /** Seconds at speed 1. Defaults to timeline.duration; override to add a hold. */
   duration?: number;
+  /**
+   * Optional per-frame hook run after `timeline.evaluate(t)`, before render.
+   * Must be a pure function of t (count-ups, particle physics, digit rolls).
+   */
+  update?: (t: number) => void;
+}
+
+/** A value that references a user image by object URL (from the Studio). */
+export function isImageRef(v: unknown): v is { url: string } {
+  return typeof v === "object" && v !== null && typeof (v as { url?: unknown }).url === "string";
 }
 
 export interface TemplateDefinition {
