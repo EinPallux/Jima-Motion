@@ -410,3 +410,34 @@ new categories were added: **social** and **travel**.
 | T33 | Flash Sale | `flash-sale` | promo | 9:16 | High-energy sale with lightning bolts and a draining urgency bar + CTA |
 | T34 | Coupon Reveal | `coupon-reveal` | promo | 1:1 | A perforated coupon ticket reveals a mono code + discount + CTA |
 | T35 | Stat Bars | `stat-bars` | stat | 4:5 | An animated bar chart — bars grow and values count up, top bar highlighted |
+
+## 8. Smooth-text pack — 20 templates (2026-07-21)
+
+The library grew from 35 → **55** with a focused set of clean, smooth kinetic-typography templates
+(all `category: "statement"`). Two techniques back the pack beyond the standard `layoutWords`:
+`layoutChars()` (kerning-accurate per-glyph layout, in `shared/words.ts`) for per-letter motion, and
+Pixi container masking (a `Graphics` rect as `container.mask`) for wipe/reveal effects. All are
+deterministic (pixel-exact re-seek), all 4 aspects, 4 palettes, smooth eases, clean end-hold.
+
+| # | Template | `id` | Default | Motion |
+|---|---|---|---|---|
+| T36 | Fade Cascade | `fade-cascade` | 1:1 | Words fade + drift up, one soft beat at a time |
+| T37 | Letter Reveal | `letter-reveal` | 16:9 | Each character pops into place in sequence (accent last word) |
+| T38 | Line Rise | `line-rise` | 16:9 | Each line slides up from behind a clean masked edge |
+| T39 | Focus In | `focus-in` | 16:9 | Per-word letterSpacing collapse + fade — a lens focusing |
+| T40 | Side Slide | `side-slide` | 4:5 | Lines slide in from alternating sides and settle |
+| T41 | Scale In | `scale-in` | 1:1 | The headline scales up smoothly then breathes |
+| T42 | Flip In | `flip-words` | 16:9 | Words flip in on the X-axis (squash-open) |
+| T43 | Shine Sweep | `shine-text` | 16:9 | A bright band sweeps across the letters (masked) |
+| T44 | Split Reveal | `split-reveal` | 16:9 | Each line assembles from a top/bottom split (masked) |
+| T45 | Wave | `wave-text` | 16:9 | Letters bob in a seamless continuous sine wave (loop) |
+| T46 | Bounce In | `bounce-in` | 1:1 | Words drop and settle with a soft spring + squash |
+| T47 | Drop In | `drop-letters` | 1:1 | Letters drop from above with a soft-bounce landing |
+| T48 | Curtain Wipe | `curtain-wipe` | 16:9 | An accent curtain bar sweeps off to reveal the text (masked) |
+| T49 | Stacked Build | `stacked-build` | 4:5 | A statement builds upward, line by line |
+| T50 | Push In | `push-in` | 16:9 | A cinematic dolly-in scale settle, then a slow drift |
+| T51 | Text Scramble | `text-scramble` | 16:9 | A left-to-right decode — glyphs scramble then resolve |
+| T52 | Emphasis Line | `emphasis-line` | 4:5 | A muted sentence with one keyword popping in accent |
+| T53 | Spacing Expand | `spacing-expand` | 16:9 | An airy kicker whose letter-spacing expands + headline |
+| T54 | Message Rotator | `message-rotator` | 1:1 | A line crossfades through a list of phrases (loop) |
+| T55 | Box Wipe | `box-wipe` | 16:9 | An accent bar wipes across, revealing each line (masked) |

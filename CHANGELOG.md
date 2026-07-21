@@ -11,6 +11,28 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.2.0] — 2026-07-21 · Smooth-text pack (35 → 55)
+
+Added **20 clean, motion-animated text templates** — a focused set of smooth kinetic typography.
+Every one is deterministic (pixel-exact re-seek proven in the golden suite), handles all four
+aspects, ships 4 palettes, and settles on a clean end-hold.
+
+### Added — engine-side building block
+- `layoutChars()` in `shared/words.ts` — kerning-accurate per-glyph layout (word-wrapped), so
+  letters can animate individually (used by the per-letter reveals, drops, wave, and decode)
+
+### Added — text templates
+- **Word/line reveals:** Fade Cascade, Line Rise (mask reveal), Side Slide, Stacked Build, Focus In,
+  Spacing Expand, Push In (dolly)
+- **Per-letter:** Letter Reveal, Drop In, Wave (seamless loop), Text Scramble (decode)
+- **Word motion:** Flip In, Scale In, Bounce In, Message Rotator (looping crossfade), Emphasis Line
+- **Sweeps/reveals (masking):** Shine Sweep, Split Reveal, Curtain Wipe, Box Wipe
+
+### Changed
+- Gallery reordered to interleave the text templates with the rest (no single-category block)
+- Golden suite now covers **55 templates** (55 determinism re-seek tests + 220 poster frames)
+- README / CLAUDE template counts refreshed
+
 ## [1.1.0] — 2026-07-21 · Template expansion (12 → 35)
 
 Added **23 new templates**, nearly tripling the library, plus the shared building blocks behind

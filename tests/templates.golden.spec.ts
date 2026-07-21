@@ -49,6 +49,27 @@ const TEMPLATES: T[] = [
   { id: "flash-sale", palette: "ember", poster: 2.4, duration: 4.0 },
   { id: "coupon-reveal", palette: "ember", poster: 2.6, duration: 4.0 },
   { id: "stat-bars", palette: "ink", poster: 3.2, duration: 3.8 },
+  // Smooth-text pack (v1.2) — 20 kinetic-typography templates.
+  { id: "fade-cascade", palette: "ink-white", poster: 2.6, duration: 3.2 },
+  { id: "letter-reveal", palette: "ink-white", poster: 2.4, duration: 2.6 },
+  { id: "line-rise", palette: "ink-white", poster: 2.6, duration: 3.0 },
+  { id: "focus-in", palette: "ink-white", poster: 2.4, duration: 3.6 },
+  { id: "side-slide", palette: "ink-white", poster: 2.6, duration: 3.6 },
+  { id: "scale-in", palette: "ink-white", poster: 2.2, duration: 3.4 },
+  { id: "flip-words", palette: "ink-white", poster: 2.4, duration: 3.4 },
+  { id: "shine-text", palette: "ink-white", poster: 2.6, duration: 3.6 },
+  { id: "split-reveal", palette: "ink-white", poster: 2.6, duration: 3.6 },
+  { id: "wave-text", palette: "ink-white", poster: 1.5, duration: 2.9 },
+  { id: "bounce-in", palette: "ink-white", poster: 2.2, duration: 3.4 },
+  { id: "drop-letters", palette: "ink-white", poster: 2.2, duration: 2.8 },
+  { id: "curtain-wipe", palette: "ink-white", poster: 2.6, duration: 3.4 },
+  { id: "stacked-build", palette: "ink-white", poster: 2.8, duration: 3.7 },
+  { id: "push-in", palette: "ink-white", poster: 2.6, duration: 3.6 },
+  { id: "text-scramble", palette: "ink-white", poster: 2.4, duration: 2.8 },
+  { id: "emphasis-line", palette: "ink-white", poster: 2.6, duration: 3.6 },
+  { id: "spacing-expand", palette: "ink-white", poster: 2.4, duration: 3.4 },
+  { id: "message-rotator", palette: "ink-white", poster: 1.6, duration: 4.8 },
+  { id: "box-wipe", palette: "ink-white", poster: 2.6, duration: 3.6 },
 ];
 
 const ASPECTS: Aspect[] = ["1:1", "4:5", "9:16", "16:9"];
