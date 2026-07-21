@@ -81,8 +81,20 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 - Data-driven golden suite over the whole registry (determinism re-seek + poster frames), stable
   across two runs; 4 of 12 templates now shipped (T01, T03, T07, T08)
 
+### Added — Phase 4 · Template library, batch 2 (2026-07-21) → library complete (12/12)
+- **T02 Slide & Reveal** (clip-mask line reveals, accent bar), **T04 Product Pop** (card + spring
+  product drop + price chip; drifting pattern; image or placeholder), **T05 Typewriter** (mono
+  type-on with blinking caret + terminal chrome; prompt lines in accent), **T06 Ken Burns Story**
+  (cover-fit photo with a slow zoom/pan, gradient scrim, safe-zone caption; gradient placeholder),
+  **T09 Logo Sting** (spring logo pop + shape/ring burst), **T10 Save the Date** (clockwise border
+  draw, masked event name, rolling date groups), **T11 Tips Stack** (built-in checklist with
+  check/number/arrow markers; duration scales with items), **T12 Split Duo** (vertical/diagonal
+  panels wipe to the seam, punch/spin VS badge; images or color)
+- Engine: `mono` font role (self-hosted JetBrains Mono); shared vertical-scrim texture helper
+- Golden suite now covers all 12 templates × 4 aspects (48 poster frames) + 12 determinism
+  re-seek tests, stable across two runs
+
 ### Planned
-- Phase 4 — Template library: remaining 8 templates (`TEMPLATE_LIBRARY.md`)
 - Phase 5 — Landing page: Three.js/WebGL hero, light-mode brand site
 - Phase 6 — Hardening & release: QA matrix, performance budgets, private release
 

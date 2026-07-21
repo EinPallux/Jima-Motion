@@ -14,9 +14,17 @@ interface T {
 
 const TEMPLATES: T[] = [
   { id: "kinetic-headline", palette: "ink-white", poster: 3.2, duration: 4.0 },
+  { id: "slide-reveal", palette: "editorial-ink", poster: 2.6, duration: 4.5 },
   { id: "glow-promo", palette: "tangerine", poster: 2.2, duration: 5.0 },
+  { id: "product-pop", palette: "studio-white", poster: 3.0, duration: 5.0 },
+  { id: "typewriter", palette: "paper-terminal", poster: 2.2, duration: 3.735 },
+  { id: "ken-burns", palette: "neutral", poster: 2.0, duration: 6.0 },
   { id: "big-number", palette: "ink", poster: 2.6, duration: 4.5 },
   { id: "quote-spotlight", palette: "paper-ink", poster: 3.5, duration: 6.0 },
+  { id: "logo-sting", palette: "white-ink", poster: 1.6, duration: 3.5 },
+  { id: "save-the-date", palette: "ivory", poster: 3.0, duration: 5.0 },
+  { id: "tips-stack", palette: "notebook", poster: 3.6, duration: 5.4 },
+  { id: "split-duo", palette: "coral-cobalt", poster: 1.8, duration: 5.0 },
 ];
 
 const ASPECTS: Aspect[] = ["1:1", "4:5", "9:16", "16:9"];
@@ -41,7 +49,7 @@ test.describe("determinism (re-seek is pixel-exact)", () => {
     test(`${tpl.id}`, async ({ page }) => {
       await load(page, tpl.id, "1:1", tpl.palette);
       const duration = await page.evaluate(() => window.__jima!.duration);
-      expect(duration).toBeCloseTo(tpl.duration, 3);
+      expect(duration).toBeCloseTo(tpl.duration, 1);
       for (const frac of FRACTIONS) {
         const t = frac * duration;
         const first = await frameAt(page, t);

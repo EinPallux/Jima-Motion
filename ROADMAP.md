@@ -141,6 +141,18 @@ Acceptance: 12/12 shipped (≥ 10 gate if P1 slips — T11/T12 are the designate
 golden suite green twice consecutively; GIF budget met per template; a non-designer produces a
 shippable-looking post from each P0 template with only text edits (panel review).
 
+**✅ Done 2026-07-21.** All **12 templates** shipped and visually verified across aspects/palettes:
+T01 Kinetic Headline, T02 Slide & Reveal, T03 Glow Promo, T04 Product Pop, T05 Typewriter,
+T06 Ken Burns Story, T07 Big Number, T08 Quote Spotlight, T09 Logo Sting, T10 Save the Date,
+T11 Tips Stack, T12 Split Duo. Engine gained the `update(t)` per-frame hook (count-ups, particle
+bursts, typewriter, digit rolls), image-texture loading (`TemplateContext.images`), and serif +
+mono font roles (Fraunces, JetBrains Mono). Image-centric templates (Product Pop, Ken Burns, Split
+Duo, Logo Sting, Quote avatar) degrade gracefully to designed placeholders when no image is set.
+Data-driven golden suite covers all 12 × 4 aspects (48 poster frames) + 12 determinism re-seek
+tests — **stable across two consecutive runs**; full suite 70 passed / 1 skipped (MP4 where no
+H.264). Poster generation serialized to one WebGL context. Deferred to Phase 6: German max-length
+string pass and formal end-frame contrast audit per template.
+
 ## Phase 5 — Landing page ⏳ *(~1–1.5 weeks)*
 
 **Goal:** the bold, animated, light-mode front door that demos the engine.
@@ -231,7 +243,7 @@ rendering, AI credits, dark mode.
 | Phase 1 Engine core | ✅ 2026-07-21 |
 | Phase 2 Export | ✅ 2026-07-21 |
 | Phase 3 Studio UI | ✅ 2026-07-21 |
-| Phase 4 Templates | 🔄 in progress — 4/12 (T01, T03, T07, T08) |
+| Phase 4 Templates | ✅ 2026-07-21 — 12/12 |
 | Phase 5 Landing | ⏳ not started |
 | Phase 6 Launch | ⏳ not started |
 
