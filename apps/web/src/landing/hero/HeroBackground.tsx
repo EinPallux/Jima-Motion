@@ -1,151 +1,181 @@
-import { useRef, type ReactNode } from "react";
-import { Canvas, useFrame, type ThreeElements } from "@react-three/fiber";
-import { Color, type Group, type ShaderMaterial } from "three";
+import { useLayoutEffect, useMemo, useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import {
+  CanvasTexture,
+  Color,
+  ExtrudeGeometry,
+  type Group,
+  type InstancedMesh,
+  Object3D,
+  Shape,
+} from "three";
 
-// Soft flowing pastel gradient on near-white — domain-warped value-noise fbm.
-const fragment = /* glsl */ `
-  precision highp float;
-  uniform float uTime;
-  uniform vec2 uMouse;
-  uniform vec3 uEmber;
-  uniform vec3 uCandy;
-  uniform vec3 uViolet;
-  uniform vec3 uSky;
-  varying vec2 vUv;
-
-  float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-  float noise(vec2 p){
-    vec2 i = floor(p); vec2 f = fract(p);
-    vec2 u = f*f*(3.0-2.0*f);
-    return mix(mix(hash(i), hash(i+vec2(1,0)), u.x),
-               mix(hash(i+vec2(0,1)), hash(i+vec2(1,1)), u.x), u.y);
-  }
-  float fbm(vec2 p){
-    float v = 0.0; float a = 0.5;
-    for(int i=0;i<5;i++){ v += a*noise(p); p *= 2.0; a *= 0.5; }
-    return v;
-  }
-
-  void main(){
-    vec2 uv = vUv;
-    float t = uTime * 0.045;
-    vec2 m = (uMouse - 0.5) * 0.35;
-    vec2 p = uv * 2.4 + m;
-    float n1 = fbm(p + vec2(t, -t));
-    float n2 = fbm(p * 1.6 + vec2(-t, t) + n1);
-    float n3 = fbm(p + n2 * 1.2);
-
-    vec3 col = vec3(1.0);
-    col = mix(col, uEmber,  smoothstep(0.25, 0.75, n1) * 0.55);
-    col = mix(col, uCandy,  smoothstep(0.35, 0.85, n2) * 0.42);
-    col = mix(col, uViolet, smoothstep(0.45, 0.95, n3) * 0.34);
-    col = mix(col, uSky,    smoothstep(0.55, 1.0,  fbm(p*0.8 - t)) * 0.28);
-    col = mix(col, vec3(1.0), 0.28); // keep it a LIGHT theme
-    gl_FragColor = vec4(col, 1.0);
-  }
-`;
-
-// Clip-space fullscreen quad — ignores the camera.
-const vertex = /* glsl */ `
-  varying vec2 vUv;
-  void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }
-`;
-
-function GradientPlane() {
-  const mat = useRef<ShaderMaterial>(null);
-  useFrame((state) => {
-    if (!mat.current) return;
-    mat.current.uniforms.uTime!.value = state.clock.elapsedTime;
-    const u = mat.current.uniforms.uMouse!.value as [number, number];
-    u[0] += (state.pointer.x * 0.5 + 0.5 - u[0]) * 0.05;
-    u[1] += (state.pointer.y * 0.5 + 0.5 - u[1]) * 0.05;
-  });
-  return (
-    <mesh frustumCulled={false} renderOrder={-1}>
-      <planeGeometry args={[2, 2]} />
-      <shaderMaterial
-        ref={mat}
-        vertexShader={vertex}
-        fragmentShader={fragment}
-        depthTest={false}
-        depthWrite={false}
-        uniforms={{
-          uTime: { value: 0 },
-          uMouse: { value: [0.5, 0.5] },
-          uEmber: { value: new Color("#FF6A3D") },
-          uCandy: { value: new Color("#FF6FC1") },
-          uViolet: { value: new Color("#9B87FF") },
-          uSky: { value: new Color("#7ADBFF") },
-        }}
-      />
-    </mesh>
-  );
+// A rounded-rectangle profile extruded with a soft bevel — the "motion tile".
+function roundedRectShape(w: number, h: number, r: number): Shape {
+  const s = new Shape();
+  s.moveTo(-w / 2 + r, -h / 2);
+  s.lineTo(w / 2 - r, -h / 2);
+  s.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + r);
+  s.lineTo(w / 2, h / 2 - r);
+  s.quadraticCurveTo(w / 2, h / 2, w / 2 - r, h / 2);
+  s.lineTo(-w / 2 + r, h / 2);
+  s.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - r);
+  s.lineTo(-w / 2, -h / 2 + r);
+  s.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + r, -h / 2);
+  return s;
 }
 
-// Minimal float: gentle bob + rotation. (Replaces drei's <Float>.)
-function Floaty({ speed = 1, amp = 0.3, children }: { speed?: number; amp?: number; children: ReactNode }) {
+function MotionTile() {
   const ref = useRef<Group>(null);
-  const seed = useRef(Math.PI * speed);
+  const geo = useMemo(() => {
+    const g = new ExtrudeGeometry(roundedRectShape(1.7, 1.7, 0.42), {
+      depth: 0.32,
+      bevelEnabled: true,
+      bevelSize: 0.07,
+      bevelThickness: 0.07,
+      bevelSegments: 5,
+      curveSegments: 24,
+    });
+    g.center();
+    return g;
+  }, []);
+
   useFrame((state) => {
     if (!ref.current) return;
-    const t = state.clock.elapsedTime * speed + seed.current;
-    ref.current.position.y = Math.sin(t) * amp;
-    ref.current.rotation.z = Math.sin(t * 0.6) * 0.25;
-    ref.current.rotation.x = Math.cos(t * 0.4) * 0.2;
+    const t = state.clock.elapsedTime;
+    // Gentle sway (keeps the play face toward the viewer), not a full spin.
+    ref.current.rotation.y = Math.sin(t * 0.5) * 0.42;
+    ref.current.rotation.x = -0.42 + Math.sin(t * 0.6) * 0.05;
+    ref.current.position.y = 1.15 + Math.sin(t * 0.9) * 0.12;
   });
-  return <group ref={ref}>{children}</group>;
+
+  return (
+    <group ref={ref} position={[0, 1.15, 0]} rotation={[-0.5, 0, 0.22]}>
+      <mesh geometry={geo} castShadow>
+        <meshStandardMaterial color="#FF4D1C" roughness={0.28} metalness={0.18} />
+      </mesh>
+      {/* Play glyph on the face. */}
+      <mesh position={[0.03, 0, 0.3]} rotation={[0, 0, -Math.PI / 2]}>
+        <cylinderGeometry args={[0.36, 0.36, 0.06, 3]} />
+        <meshStandardMaterial color="#FFFFFF" roughness={0.35} emissive="#FFFFFF" emissiveIntensity={0.25} />
+      </mesh>
+    </group>
+  );
 }
 
-function Pebble(props: ThreeElements["mesh"] & { color: string }) {
-  const { color, ...rest } = props;
+function GridPlatform() {
+  const ref = useRef<InstancedMesh>(null);
+  const cols = 11;
+  const rows = 16;
+  const spacing = 0.74;
+
+  useLayoutEffect(() => {
+    if (!ref.current) return;
+    const dummy = new Object3D();
+    const base = new Color("#EDEDF3");
+    let i = 0;
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const x = (c - (cols - 1) / 2) * spacing;
+        const z = (r - (rows - 1) / 2) * spacing - 1.5;
+        // Gentle dome so the platform feels like a soft surface.
+        const d = Math.hypot(x, z + 1.5);
+        const y = -0.06 - d * 0.03;
+        dummy.position.set(x, y, z);
+        dummy.updateMatrix();
+        ref.current.setMatrixAt(i, dummy.matrix);
+        ref.current.setColorAt(i, base);
+        i++;
+      }
+    }
+    ref.current.instanceMatrix.needsUpdate = true;
+    if (ref.current.instanceColor) ref.current.instanceColor.needsUpdate = true;
+  }, []);
+
   return (
-    <mesh {...rest}>
-      <icosahedronGeometry args={[1, 3]} />
-      <meshStandardMaterial color={color} roughness={0.25} metalness={0.1} transparent opacity={0.9} />
+    <instancedMesh ref={ref} args={[undefined, undefined, cols * rows]} receiveShadow>
+      <boxGeometry args={[0.58, 0.16, 0.58]} />
+      <meshStandardMaterial roughness={0.78} metalness={0.03} color="#E8E8F0" />
+    </instancedMesh>
+  );
+}
+
+function ContactShadow() {
+  const tex = useMemo(() => {
+    const c = document.createElement("canvas");
+    c.width = c.height = 128;
+    const ctx = c.getContext("2d")!;
+    const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    g.addColorStop(0, "rgba(20,16,30,0.36)");
+    g.addColorStop(0.7, "rgba(20,16,30,0.12)");
+    g.addColorStop(1, "rgba(20,16,30,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 128, 128);
+    return new CanvasTexture(c);
+  }, []);
+  return (
+    <mesh position={[0, 0.12, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+      <planeGeometry args={[3.4, 3.4]} />
+      <meshBasicMaterial map={tex} transparent depthWrite={false} />
     </mesh>
   );
 }
 
-function Pebbles() {
+function Scene({ animate }: { animate: boolean }) {
   const group = useRef<Group>(null);
   useFrame((state) => {
     if (group.current) {
-      group.current.rotation.y = state.pointer.x * 0.15;
-      group.current.rotation.x = state.pointer.y * 0.1;
+      group.current.rotation.y = state.pointer.x * 0.12;
+      group.current.position.x = state.pointer.x * 0.2;
     }
   });
-  const shapes: { pos: [number, number, number]; color: string; scale: number; speed: number }[] = [
-    { pos: [-2.6, 1.3, -1], color: "#FF4D1C", scale: 0.55, speed: 1.1 },
-    { pos: [2.8, 0.8, -1.5], color: "#7C5CFF", scale: 0.7, speed: 0.9 },
-    { pos: [1.9, -1.6, -0.5], color: "#38C7FF", scale: 0.45, speed: 1.3 },
-    { pos: [-2.2, -1.4, -1.2], color: "#FF2E9E", scale: 0.5, speed: 1.0 },
-    { pos: [0.2, 2.0, -2], color: "#D8F34D", scale: 0.4, speed: 1.5 },
-  ];
   return (
     <group ref={group}>
-      {shapes.map((s, i) => (
-        <Floaty key={i} speed={s.speed}>
-          <Pebble position={s.pos} color={s.color} scale={s.scale} />
-        </Floaty>
-      ))}
+      <GridPlatform />
+      {/* Object sits over the right of the grid, clear of the left-side copy. */}
+      <group position={[1.35, 0, 0.5]}>
+        <ContactShadow />
+        {animate ? <MotionTile /> : <StaticTile />}
+      </group>
     </group>
+  );
+}
+
+function StaticTile() {
+  const geo = useMemo(() => {
+    const g = new ExtrudeGeometry(roundedRectShape(1.7, 1.7, 0.42), {
+      depth: 0.32,
+      bevelEnabled: true,
+      bevelSize: 0.07,
+      bevelThickness: 0.07,
+      bevelSegments: 5,
+      curveSegments: 24,
+    });
+    g.center();
+    return g;
+  }, []);
+  return (
+    <mesh geometry={geo} position={[0, 1.15, 0]} rotation={[-0.5, 0, 0.22]}>
+      <meshStandardMaterial color="#FF4D1C" roughness={0.28} metalness={0.18} />
+    </mesh>
   );
 }
 
 export default function HeroBackground({ animate }: { animate: boolean }) {
   return (
     <Canvas
-      dpr={[1, 1.5]}
-      camera={{ position: [0, 0, 6], fov: 45 }}
+      dpr={[1, 1.6]}
+      shadows={false}
+      camera={{ position: [0.4, 2.1, 6.4], fov: 42 }}
       frameloop={animate ? "always" : "demand"}
-      gl={{ antialias: true, alpha: false }}
+      gl={{ antialias: true, alpha: true }}
+      onCreated={({ camera }) => camera.lookAt(0.5, 0.85, 0)}
       style={{ position: "absolute", inset: 0 }}
     >
-      <color attach="background" args={["#ffffff"]} />
-      <ambientLight intensity={1.1} />
-      <directionalLight position={[3, 4, 5]} intensity={1.4} />
-      <GradientPlane />
-      {animate && <Pebbles />}
+      <ambientLight intensity={0.75} />
+      <directionalLight position={[4, 7, 4]} intensity={1.4} color="#fff4ec" />
+      <directionalLight position={[-5, 3, -2]} intensity={0.55} color="#dfe6ff" />
+      <Scene animate={animate} />
     </Canvas>
   );
 }
