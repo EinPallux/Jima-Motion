@@ -44,7 +44,7 @@ export function GalleryTeaser() {
             <PosterThumb def={def} aspect="1:1" paletteId={def.palettes[0]?.id} alt={def.name} className="w-full" />
             <div className="px-3 py-2.5">
               <p className="font-display text-sm font-bold text-ink">{def.name}</p>
-              <p className="mt-0.5 text-xs text-ink/60">{def.tagline}</p>
+              <p className="mt-0.5 text-xs text-slate">{def.tagline}</p>
             </div>
           </Link>
         ))}

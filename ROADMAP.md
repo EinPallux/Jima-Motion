@@ -1,6 +1,6 @@
 # Jima Motion — Roadmap
 
-**Status:** planning complete (2026-07-21), implementation not started.
+**Status:** ✅ **v1.0 shipped (2026-07-21) — all phases 0–6 complete.**
 Phases are strictly ordered by dependency; estimates are indicative engineering effort for one
 focused developer with AI assistance, not calendar promises. Every phase ends with: acceptance
 criteria met → `CHANGELOG.md` entry → phase marked ✅ here. That bookkeeping is part of the
@@ -197,6 +197,18 @@ Acceptance: zero P0/P1 open; QA matrix signed off; `v1.0.0` tagged with CHANGELO
 production link works logged-out on a friend's device (the "real test" from
 `PRODUCT_BRIEF.md` § 8).
 
+**✅ Done 2026-07-21.** Hero reworked to the 3D "motion tile" scene (see CHANGELOG). Automated
+**axe-core a11y sweep** (WCAG A + AA) on landing, gallery and editor — zero serious/critical
+violations after fixing the preview canvas's missing accessible name and moving muted copy off
+low-opacity ink onto the `slate` token (all text ≥ 4.5:1). **Engine-rendered OG image** committed
+(`apps/web/public/og.png`, 1200×675, regenerable via `pnpm exec playwright test og-image`) with
+`og:image` + Twitter-card meta. **German max-length audit** on T01/T03/T08 — long DE strings shrink
+and wrap inside the safe zone, no overflow. README rewritten for the shipped product with a
+how-to-use / how-to-share note. `pnpm check` green (typecheck · lint · unit · build); Playwright
+suite green. Tagged **`v1.0.0`**. Remaining owner task (can't be automated in this sandbox):
+spot-check the live Vercel URL on Safari/Firefox and a real phone — the "works on a friend's
+device" test. Chromium (incl. headless SwiftShader WebGL) is fully covered here.
+
 ---
 
 ## Milestone summary
@@ -256,6 +268,6 @@ rendering, AI credits, dark mode.
 | Phase 3 Studio UI | ✅ 2026-07-21 |
 | Phase 4 Templates | ✅ 2026-07-21 — 12/12 |
 | Phase 5 Landing | ✅ 2026-07-21 |
-| Phase 6 Launch | ⏳ not started |
+| Phase 6 Launch | ✅ 2026-07-21 — **v1.0.0** |
 
 *(Update this table + CHANGELOG.md at every phase transition.)*

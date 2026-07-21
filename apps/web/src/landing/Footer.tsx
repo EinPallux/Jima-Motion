@@ -12,7 +12,7 @@ export function Footer() {
           <p className="mt-2 text-sm text-ink/70">
             Motion graphics for social media — 100% free, no account, rendered in your browser.
           </p>
-          <p className="mt-3 text-xs text-ink/50">
+          <p className="mt-3 text-xs text-slate">
             Made with the Jima engine — every animation on this page is a Jima template.
           </p>
         </div>

@@ -85,6 +85,10 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
       canvas.style.maxWidth = "100%";
       canvas.style.maxHeight = "100%";
       canvas.setAttribute("role", "img");
+      // Generic, template-name-free label: embedding the template name (e.g.
+      // "Kinetic Headline") would collide with field labels like "Headline" under
+      // accessible-name matching. This still gives the canvas an accessible name.
+      canvas.setAttribute("aria-label", "Live animation preview");
       container.appendChild(canvas);
 
       const applyFit = () => {

@@ -9,8 +9,9 @@ an MP4, WebM or GIF — up to 1080p. Every frame is rendered client-side on your
 exactly why it can be free: there are no render servers, no accounts, and no paid tier, because
 there is nothing to meter.
 
-> **Status: planning.** The product is fully specified; implementation starts with Phase 0 of the
-> [roadmap](ROADMAP.md). No code exists in this repository yet.
+> **Status: v1.0 shipped** ✅ — the full Studio, all 12 templates, client-side MP4/WebM/GIF export,
+> and the animated WebGL landing page are all built and passing tests. See the
+> [changelog](CHANGELOG.md) and [roadmap](ROADMAP.md).
 >
 > **Scope:** a personal project — built to the quality bar of a real Jitter/Ccleaf competitor,
 > but deployed privately on Vercel for the owner, friends and family. No public launch, no SEO.
@@ -30,6 +31,38 @@ form — no timeline, no keyframes → export MP4/WebM/GIF in 1:1, 4:5, 9:16 or 
 
 Principles: free means free · defaults are the product · form fields, not timelines · nothing
 leaves the device · fast is a feature · light-mode, bold, animated ([Three.js hero](DESIGN_ARCHITECTURE.md)).
+
+## How to use it (send this with the link)
+
+1. **Open the link** in a modern browser — Chrome, Edge, Safari or Firefox — on desktop or phone.
+   Nothing to install, no sign-up, no email. It just opens.
+2. **Click "Open the Studio"** and pick a template from the gallery.
+3. **Type your words** into the form on the right, and drop in an image if the template uses one.
+   Recolor with a palette and nudge the speed if you like — the preview updates live.
+4. **Choose an aspect ratio** (1:1 for feed, 4:5 for portrait, 9:16 for Stories/Reels/TikTok, 16:9
+   for YouTube/landscape) — one project exports to any of them.
+5. **Hit Export**, pick MP4, WebM or GIF, and the file renders on your own device and downloads.
+   Post it.
+
+Good to know: your text and images **never leave your browser** — there's no server and no upload.
+Work autosaves in that browser, so closing the tab won't lose it (use **Clear saved data** in the
+footer to wipe it). MP4 needs a browser with an H.264 encoder; where that's missing, the Studio
+quietly offers WebM + GIF instead, which play everywhere. There's no watermark, ever.
+
+## Running it yourself
+
+Requires Node ≥ 20.11 and pnpm 10.
+
+```bash
+pnpm install      # once
+pnpm dev          # local dev server (landing + Studio)
+pnpm build        # production build → apps/web/dist  (the only deployable)
+pnpm check        # typecheck · lint · unit tests · build  (the pre-push gate)
+pnpm test:golden  # Playwright golden-frame + export-smoke + a11y tests (real browser)
+```
+
+Deploy is a static build on **Vercel** (Root Directory `apps/web`); every push to the default
+branch ships. See [`TECHNICAL_ARCHITECTURE.md`](TECHNICAL_ARCHITECTURE.md) for the full stack.
 
 ## Documentation
 

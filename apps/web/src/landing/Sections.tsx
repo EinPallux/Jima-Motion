@@ -57,7 +57,7 @@ export function WhyFree() {
                 {COLS.map((c, i) => (
                   <th
                     key={c}
-                    className={`rounded-t-[12px] p-3 font-display text-base font-bold ${i === 0 ? "bg-ember text-ink" : "text-ink/60"}`}
+                    className={`rounded-t-[12px] p-3 font-display text-base font-bold ${i === 0 ? "bg-ember text-ink" : "text-slate"}`}
                   >
                     {c}
                   </th>

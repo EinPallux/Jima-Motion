@@ -43,7 +43,7 @@ export function TemplateRail() {
         <Row items={rowA} direction="left" />
         <Row items={rowB} direction="right" />
       </div>
-      <p className="mt-8 text-center text-sm text-ink/60">
+      <p className="mt-8 text-center text-sm text-slate">
         {templates.length} templates at launch — all free, all yours.
       </p>
     </section>

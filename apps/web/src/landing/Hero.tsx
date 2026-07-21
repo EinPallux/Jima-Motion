@@ -47,7 +47,7 @@ export function Hero() {
                 Browse templates →
               </a>
             </div>
-            <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-ink/65">
+            <ul className="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm font-medium text-slate">
               {CHIPS.map((c) => (
                 <li key={c} className="flex items-center gap-1.5">
                   <span className="text-ember" aria-hidden>
@@ -90,7 +90,7 @@ export function Hero() {
           </div>
         ))}
       </div>
-      <p className="mt-4 text-center text-sm text-ink/55">Every size and format your feed wants — free.</p>
+      <p className="mt-4 text-center text-sm text-slate">Every size and format your feed wants — free.</p>
     </section>
   );
 }

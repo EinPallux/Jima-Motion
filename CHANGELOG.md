@@ -9,6 +9,14 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 ## [Unreleased]
 
+_Nothing yet — v1.0 shipped._
+
+## [1.0.0] — 2026-07-21 · v1.0 — private release
+
+First complete release: the full Jima Studio, all 12 templates, client-side MP4/WebM/GIF export,
+and the animated WebGL landing page — free, no account, rendered entirely in the browser. Phases
+0–6 below are the road to this tag.
+
 ### Added — Phase 0 · Foundation (2026-07-21)
 - pnpm workspace: `apps/web` (Vite 8 + React 19 + React Router 7 + Tailwind 4, TS strict),
   `packages/engine`, `packages/templates`, `tests`
@@ -104,9 +112,38 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
   hero chunk 192 kB brotli (lazy). Every page animation is engine-rendered or CSS (no video/Lottie)
 - 3 landing smoke tests (CTA → Studio, gallery deep-link, FAQ accordion)
 
-### Planned
-- Phase 6 — Hardening & release: cross-browser QA, DE/contrast template audit, a11y sweep, v1.0.0
-- Phase 6 — Hardening & release: QA matrix, performance budgets, private release
+### Changed — Hero rework (2026-07-21)
+- Rebuilt the landing hero into a **3D "motion tile"** scene (Three.js/R3F): an ember rounded-rect
+  card with a play glyph swaying gently above an isometric grid platform, a soft contact shadow, and
+  a frosted-glass pill nav + FORMATS strip — replacing the earlier gradient-shader-and-pebbles hero,
+  in the Jima ember palette. Static-image fallback for reduced-motion / no-WebGL is unchanged in spirit
+- `HeroBackground` is still fully lazy (Three.js never blocks first paint); the old `LiveTemplate`
+  inline render was removed with the shader hero
+
+### Added — Phase 6 · Hardening & v1.0 release (2026-07-21)
+- **Accessibility sweep:** automated axe-core (WCAG 2.0/2.1 A + AA) pass over landing, gallery, and
+  editor — zero serious/critical violations. Fixes: the live-preview `<canvas>` now carries a
+  descriptive `aria-label`; muted body copy moved off low-opacity ink onto the `slate` token so every
+  text/background pair clears 4.5:1
+- **Engine-rendered OG image** (`apps/web/public/og.png`, 1200×675) so shared links preview well —
+  a real T01 render, regenerable via `pnpm exec playwright test og-image`; `og:image` + Twitter
+  summary-card meta wired into `index.html`
+- **German max-length + end-frame contrast audit** across the templates — long DE strings
+  (`Benachrichtigungen`, `Veröffentlichungen`, `SOMMERSCHLUSSVERKAUF`, `Motion-Design-Studio`) shrink
+  and wrap inside the safe zone without overflow on T01/T03/T08 spot-checks
+- README rewritten for the shipped product with a short "how to use / how to share" note
+
+### Fixed — Phase 6
+- The preview canvas's accessible name is now a generic "Live animation preview" — embedding the
+  template name (e.g. "Kinetic Headline") collided with form-field labels like "Headline" under
+  accessible-name lookups (tripped Studio integration tests)
+- Playwright test timeout raised to 60s + one CI retry: Studio end-to-end flows are CPU-bound under
+  headless SwiftShader WebGL and can overrun a 30s budget when workers overlap
+
+### Known limitations at v1.0
+- Automated cross-browser QA in this environment is Chromium-only (headless SwiftShader); Safari,
+  Firefox and real mobile devices are for the owner to spot-check. MP4/H.264 export depends on a
+  platform encoder — where none exists the Studio honestly offers WebM + GIF instead
 
 ## [0.1.1] — 2026-07-21 · Owner decisions folded in
 
