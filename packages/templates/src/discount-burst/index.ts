@@ -19,10 +19,10 @@ const str = (v: unknown, fallback: string): string =>
   typeof v === "string" && v.length > 0 ? v : fallback;
 
 const PALETTES: Palette[] = [
-  { id: "ember", name: "Ember", colors: { background: "#FFF3EE", accent: "#FF4D1C", onAccent: "#FFFFFF" } },
-  { id: "midnight", name: "Midnight", colors: { background: "#101014", accent: "#FF4D1C", onAccent: "#FFFFFF" } },
+  { id: "ember", name: "Ember", colors: { background: "#FFF3EE", accent: "#C2380F", onAccent: "#FFFFFF" } },
+  { id: "midnight", name: "Midnight", colors: { background: "#101014", accent: "#C2380F", onAccent: "#FFFFFF" } },
   { id: "royal", name: "Royal", colors: { background: "#EEF2FF", accent: "#3455E6", onAccent: "#FFFFFF" } },
-  { id: "berry", name: "Berry", colors: { background: "#FFEEF6", accent: "#FF2E9E", onAccent: "#FFFFFF" } },
+  { id: "berry", name: "Berry", colors: { background: "#FFEEF6", accent: "#C21473", onAccent: "#FFFFFF" } },
 ];
 
 /** Create text, shrinking one size if it would overflow `maxWidth` (crisp, never upscaled). */

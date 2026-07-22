@@ -136,7 +136,9 @@ export const swipeUp: TemplateDefinition = {
   aspects: ["9:16", "1:1", "4:5", "16:9"],
   defaultAspect: "9:16",
   loopable: false,
-  posterTime: 2.4,
+  // After the last chevron nudge settles (~3.14s) so the poster shows a clean
+  // resting stack, not three chevrons frozen at different mid-nudge offsets.
+  posterTime: 3.4,
   palettes: PALETTES,
   fields: [
     { key: "label", type: "text", label: "Label", default: "Swipe up", maxLength: 24, shrinkToFit: true },

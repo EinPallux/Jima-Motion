@@ -18,7 +18,7 @@ const str = (v: unknown, fallback: string): string =>
 const clamp01 = (u: number): number => (u < 0 ? 0 : u > 1 ? 1 : u);
 
 const PALETTES: Palette[] = [
-  { id: "kraft", name: "Kraft", colors: { background: "#F4F2EC", box: "#E8E2D6", boxDark: "#CFC7B6", accent: "#FF4D1C", textColor: "#14140F", onAccent: "#FFFFFF" } },
+  { id: "kraft", name: "Kraft", colors: { background: "#F4F2EC", box: "#E8E2D6", boxDark: "#CFC7B6", accent: "#C2380F", textColor: "#14140F", onAccent: "#FFFFFF" } },
   { id: "violet", name: "Violet", colors: { background: "#F2EEFB", box: "#E4DCF5", boxDark: "#CDC0EC", accent: "#6D3BEA", textColor: "#180F2E", onAccent: "#FFFFFF" } },
   { id: "splash-blue", name: "Splash blue", colors: { background: "#E9F1FC", box: "#D6E2F1", boxDark: "#BBD0EA", accent: "#1E6FE0", textColor: "#0B1A2E", onAccent: "#FFFFFF" } },
   { id: "ink-lime", name: "Ink lime", colors: { background: "#15171C", box: "#2A2F38", boxDark: "#1C2027", accent: "#C7F24A", textColor: "#FFFFFF", onAccent: "#14161A" } },

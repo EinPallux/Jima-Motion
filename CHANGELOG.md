@@ -11,6 +11,51 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.7.1] — 2026-07-21 · Gallery search upgrade + full bug sweep
+
+A smarter gallery search for the 145-template library, and a codebase-wide bug hunt (engine, Studio,
+landing, and all templates) with every confirmed defect fixed.
+
+### Changed — Gallery search
+- Concept/synonym-aware matching: each template's search haystack now includes its group label and a
+  per-category keyword set, so natural queries land ("lower third", "caption", "background",
+  "transparent", "intro", "opener" all resolve). Multi-word queries match on every term (AND). Added
+  a live result count and Esc-to-clear.
+
+### Fixed — Studio / landing (5)
+- **Speed slider ate undo history:** dragging the Motion-tab speed slider fired ~40–55 change events,
+  each pushing an undo snapshot and evicting the 50-entry history — real edits became un-undoable.
+  Now coalesced into one undo entry per drag (like text edits).
+- **Reset blanked the color pickers:** "Reset template" now overlays the palette's colors (like
+  opening a template) instead of showing empty/black swatches.
+- **Repeated-export blob leak:** each "Export another" now revokes the previous result's object URL
+  instead of leaking multi-MB blobs until the modal closed.
+- **Stuck transparent toggle:** the error screen's "Try GIF instead" now clears the transparent
+  (WebM-only) toggle instead of leaving it on with a non-alpha format.
+- **Landing hero WebGL churn:** the hero probed WebGL2 in its render body, minting a throwaway
+  context every render; now probed once.
+
+### Fixed — Engine (2)
+- **Corrupt GIF on worker failure:** the GIF worker path transfers (detaches) frame buffers; if the
+  worker failed *after* the transfer, the inline fallback read empty buffers and emitted a blank GIF.
+  It now only falls back when the buffers are intact, else surfaces the real error.
+- **Silent opening SFX in preview:** a sound cue at exactly t=0 was skipped on the first play
+  (half-open interval) but present in the export; the first pass now fires it, matching the export.
+
+### Fixed — Templates (4)
+- **`intro-bars`** revealed its title for ~0.2s *before* the bars covered the frame (title stayed at
+  full opacity, hidden only by z-order); it's now hidden until the stack fully covers, so it pops out
+  as the bars clear — as intended.
+- **Contrast:** white text on the brand orange/pink/blue accent fell below the 4.5:1 QA floor on
+  `price-slash`, `discount-burst`, `milestone-counter`, `new-drop` and `unbox-reveal` (incl. their
+  default palettes). Darkened those accent shades to clear 5.4–6.0:1 (matching `shipping-badge`).
+- **`swipe-up`** poster moved off a mid-nudge frame to the settled resting stack.
+- **`feature-tags`** required ≥2 tags before overriding the default, so a single tag can't leave a
+  lopsided 2-slot layout.
+
+_No crashes, determinism violations, or toggle-off failures were found — the toggle guarding added in
+1.7.0 verified correct across all 145 templates._
+
 ## [1.7.0] — 2026-07-21 · +50 templates (95 → 145), new categories & editable decorations
 
 The biggest content drop yet: **50 new templates** across the whole library plus **three new

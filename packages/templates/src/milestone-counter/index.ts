@@ -25,10 +25,10 @@ const clamp01 = (u: number): number => (u < 0 ? 0 : u > 1 ? 1 : u);
 // Reused, previously-shipped role combinations (badge-stamp / product-hero) so
 // onAccent-on-accent text stays comfortably above the 4.5:1 end-frame bar.
 const PALETTES: Palette[] = [
-  { id: "ember", name: "Ember", colors: { background: "#FFFFFF", textColor: "#101014", accent: "#FF4D1C", onAccent: "#FFFFFF" } },
-  { id: "cobalt", name: "Cobalt", colors: { background: "#EEF3FF", textColor: "#0B1F4D", accent: "#2E7DF6", onAccent: "#FFFFFF" } },
+  { id: "ember", name: "Ember", colors: { background: "#FFFFFF", textColor: "#101014", accent: "#C2380F", onAccent: "#FFFFFF" } },
+  { id: "cobalt", name: "Cobalt", colors: { background: "#EEF3FF", textColor: "#0B1F4D", accent: "#2A5AD6", onAccent: "#FFFFFF" } },
   { id: "violet", name: "Violet", colors: { background: "#F1ECFB", textColor: "#180F2E", accent: "#6D3BEA", onAccent: "#FFFFFF" } },
-  { id: "berry", name: "Berry", colors: { background: "#FFEEF6", textColor: "#3A0A28", accent: "#FF2E9E", onAccent: "#FFFFFF" } },
+  { id: "berry", name: "Berry", colors: { background: "#FFEEF6", textColor: "#3A0A28", accent: "#C21473", onAccent: "#FFFFFF" } },
 ];
 
 function numberFrac(aspect: Aspect): number {

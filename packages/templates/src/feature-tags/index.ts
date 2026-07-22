@@ -18,7 +18,9 @@ const str = (v: unknown, fallback: string): string =>
 const asItems = (v: unknown, fallback: string[]): string[] => {
   if (Array.isArray(v)) {
     const arr = v.filter((s): s is string => typeof s === "string" && s.length > 0);
-    if (arr.length) return arr;
+    // The layout reserves at least 2 tag slots (Math.max(2, …)); accept the array
+    // only when it has ≥2 real items so a lone tag can't leave a lopsided slot.
+    if (arr.length >= 2) return arr;
   }
   return fallback;
 };

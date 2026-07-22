@@ -22,7 +22,7 @@ const str = (v: unknown, fallback: string): string =>
   typeof v === "string" && v.length > 0 ? v : fallback;
 
 const PALETTES: Palette[] = [
-  { id: "studio-white", name: "Studio white", colors: { background: "#F4F2EC", imageBack: "#FFFFFF", accent: "#FF4D1C", textColor: "#14140F", onAccent: "#FFFFFF" } },
+  { id: "studio-white", name: "Studio white", colors: { background: "#F4F2EC", imageBack: "#FFFFFF", accent: "#C2380F", textColor: "#14140F", onAccent: "#FFFFFF" } },
   { id: "electric-violet", name: "Electric violet", colors: { background: "#F1ECFB", imageBack: "#FFFFFF", accent: "#6D3BEA", textColor: "#180F2E", onAccent: "#FFFFFF" } },
   { id: "splash-blue", name: "Splash blue", colors: { background: "#E9F1FC", imageBack: "#FFFFFF", accent: "#1E6FE0", textColor: "#0B1A2E", onAccent: "#FFFFFF" } },
   { id: "ink-lime", name: "Ink lime", colors: { background: "#15171C", imageBack: "#21252C", accent: "#C7F24A", textColor: "#FFFFFF", onAccent: "#14161A" } },

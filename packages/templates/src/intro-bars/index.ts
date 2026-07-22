@@ -115,7 +115,14 @@ function build(ctx: TemplateContext): BuiltTemplate {
   });
   titleText.position.set(W / 2, H / 2);
   titleText.scale.set(0.94);
+  titleText.alpha = 0;
   root.addChild(titleText);
+  // Hidden until the bar stack fully covers the frame — otherwise the title is
+  // visible in the gaps for the first ~0.2s, before any bar has arrived (the
+  // whole point is a wipe-to-reveal). Both the 0 and the later 1 are timeline
+  // `set`s (not a one-time build assignment) so alpha is a pure function of t —
+  // seeking backward re-establishes 0, keeping re-seek pixel-exact.
+  timeline.set(titleText, "alpha", 0, 0);
 
   // --- Bar stack: staggered, alternating-direction wipe across, then clear ---
   const entryStart0 = 0.15;
@@ -144,6 +151,10 @@ function build(ctx: TemplateContext): BuiltTemplate {
     lastEntryEnd = Math.max(lastEntryEnd, enterEnd);
     timeline.to(bar, { prop: "x", from: fromX, to: 0, start: enterStart, duration: entryDur, ease: outQuint });
   }
+
+  // Reveal the title only once every bar has landed (frame fully covered), so it
+  // pops out from behind the stack as it clears rather than leaking early.
+  timeline.set(titleText, "alpha", 1, lastEntryEnd);
 
   const exitStart0 = lastEntryEnd + holdGap;
   let lastExitEnd = 0;
