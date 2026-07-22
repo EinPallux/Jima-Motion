@@ -96,6 +96,9 @@ export function ExportModal({
         onProgress: setProgress,
       });
       const url = URL.createObjectURL(res.blob);
+      // Revoke the previous export's URL before replacing it; otherwise each
+      // repeated "Export another" leaks its prior blob until the modal unmounts.
+      if (resultUrlRef.current) URL.revokeObjectURL(resultUrlRef.current);
       resultUrlRef.current = url;
       setResult(res);
       setPhase("done");
@@ -157,7 +160,7 @@ export function ExportModal({
             <Done result={result} url={resultUrlRef.current} transparent={transparent && result.format === "webm"} onAnother={() => setPhase("configure")} onClose={onClose} />
           )}
           {phase === "error" && (
-            <ErrorState message={error} onRetry={() => setPhase("configure")} onGif={() => { setFormat("gif"); setPhase("configure"); }} />
+            <ErrorState message={error} onRetry={() => setPhase("configure")} onGif={() => { chooseFormat("gif"); setPhase("configure"); }} />
           )}
         </div>
       </div>

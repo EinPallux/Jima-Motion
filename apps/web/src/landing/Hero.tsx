@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Link } from "react-router-dom";
 import { useReducedMotion } from "../studio/hooks/useReducedMotion";
 import { hasWebGL2 } from "../studio/CapabilityFloor";
@@ -10,7 +10,11 @@ const FORMATS = ["1:1", "4:5", "9:16", "16:9", "MP4", "WebM", "GIF"];
 
 export function Hero() {
   const reduced = useReducedMotion();
-  const showWebGL = hasWebGL2() && !reduced;
+  // Probe WebGL2 once. Calling hasWebGL2() inline in render creates a throwaway
+  // WebGL context on every render, which can exhaust the browser's context pool
+  // (and drop the live hero canvas). Matches StudioApp's useState(hasWebGL2).
+  const [webglOK] = useState(hasWebGL2);
+  const showWebGL = webglOK && !reduced;
 
   return (
     <section className="px-3 pt-4 sm:px-5">

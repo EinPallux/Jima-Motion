@@ -162,7 +162,18 @@ export const useStudio = create<StudioStore>((set, get) => ({
     const s = get();
     const clamped = Math.max(0.25, Math.min(3, speed));
     if (clamped === s.speed) return;
-    set({ past: [...s.past, snapshot(s)].slice(-HISTORY_LIMIT), future: [], speed: clamped, lastEditKey: null });
+    // Dragging the speed slider fires a change per step; coalesce them into a
+    // single undo entry (like setValue) so one drag doesn't push dozens of
+    // snapshots and evict the rest of the 50-entry history.
+    const now = Date.now();
+    const coalesce = s.lastEditKey === "__speed" && now - s.lastEditAt < COALESCE_MS;
+    set({
+      past: coalesce ? s.past : [...s.past, snapshot(s)].slice(-HISTORY_LIMIT),
+      future: [],
+      speed: clamped,
+      lastEditKey: "__speed",
+      lastEditAt: now,
+    });
   },
 
   setLoop: (loop) => {
@@ -184,11 +195,14 @@ export const useStudio = create<StudioStore>((set, get) => ({
   reset: () => {
     const s = get();
     if (!s.def) return;
+    const paletteId = s.def.palettes[0]?.id;
     set({
       past: [...s.past, snapshot(s)].slice(-HISTORY_LIMIT),
       future: [],
-      values: resolveValues(s.def),
-      paletteId: s.def.palettes[0]?.id,
+      // Mirror openTemplate: overlay the palette colors so the inspector shows
+      // concrete swatches, not blank color fields, after a reset.
+      values: { ...resolveValues(s.def), ...paletteColorValues(s.def, paletteId) },
+      paletteId,
       speed: 1,
       lastEditKey: null,
     });
