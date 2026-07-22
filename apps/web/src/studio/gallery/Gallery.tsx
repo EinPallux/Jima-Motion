@@ -4,6 +4,34 @@ import { TemplateCard } from "./TemplateCard";
 import { GROUPS, groupOf, type TemplateGroup } from "./groups";
 import type { PersistedProject } from "../state/persistence";
 
+// Concept keywords per category so natural searches match intent, not just the
+// literal name/tagline (e.g. "lower third", "caption", "background", "intro").
+const CATEGORY_KEYWORDS: Record<string, string> = {
+  overlay: "overlay lower third lower-third nametag name tag caption subtitle callout banner transparent alpha broadcast chyron",
+  intro: "intro opener stinger countdown logo reveal channel opening title card",
+  loop: "loop background backdrop seamless animated ambient texture gradient",
+  statement: "text title headline typography kinetic type quote words",
+  announcement: "announcement headline text title",
+  social: "social instagram tiktok youtube reel story follow like subscribe hashtag mention poll",
+  product: "product ecommerce shop store item price feature",
+  promo: "promo sale discount offer deal coupon price shipping",
+  stat: "stat data chart number percentage graph metric counter progress rating",
+  educational: "explainer steps how-to tutorial process timeline",
+  comparison: "compare comparison versus vs before after",
+  testimonial: "testimonial review quote rating stars customer",
+  brand: "brand logo end card thank you outro",
+  event: "event date invite save the date lineup schedule",
+  travel: "travel trip location postcard destination",
+  photo: "photo image picture gallery grid",
+  tech: "tech app device mockup screen phone",
+  showcase: "showcase gallery feature spotlight present",
+};
+
+/** Lowercased haystack for a template: name + tagline + category + group + keywords. */
+function searchText(t: TemplateDefinition): string {
+  return `${t.name} ${t.tagline} ${t.category} ${groupOf(t.category).label} ${CATEGORY_KEYWORDS[t.category] ?? ""}`.toLowerCase();
+}
+
 export function Gallery({
   templates,
   resume,
@@ -42,11 +70,14 @@ export function Gallery({
   );
 
   const q = query.trim().toLowerCase();
+  // Match on every whitespace-separated term (AND), against the concept haystack.
   const searchResults = useMemo(() => {
     if (!q) return null;
-    return templates.filter(
-      (t) => t.name.toLowerCase().includes(q) || t.tagline.toLowerCase().includes(q) || t.category.includes(q),
-    );
+    const terms = q.split(/\s+/).filter(Boolean);
+    return templates.filter((t) => {
+      const hay = searchText(t);
+      return terms.every((term) => hay.includes(term));
+    });
   }, [q, templates]);
 
   const shownGroups: TemplateGroup[] = group === "all" ? activeGroups : activeGroups.filter((g) => g.id === group);
@@ -87,14 +118,24 @@ export function Gallery({
             <h1 className="font-display text-3xl font-bold text-ink">Pick a template</h1>
             <span className="text-sm text-slate">{templates.length} templates</span>
           </div>
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search templates…"
-            aria-label="Search templates"
-            className="w-full max-w-sm rounded-[12px] border border-mist bg-paper px-4 py-2.5 text-[15px] outline-none focus:border-ember-text"
-          />
+          <div className="flex flex-wrap items-center gap-3">
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setQuery("");
+              }}
+              placeholder="Search templates… (name, style, or use-case)"
+              aria-label="Search templates"
+              className="w-full max-w-sm rounded-[12px] border border-mist bg-paper px-4 py-2.5 text-[15px] outline-none focus:border-ember-text"
+            />
+            {q && searchResults && (
+              <span className="text-sm text-slate" aria-live="polite">
+                {searchResults.length} {searchResults.length === 1 ? "result" : "results"}
+              </span>
+            )}
+          </div>
           {!q && (
             <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by use-case">
               <GroupPill label="All" active={group === "all"} onClick={() => setGroup("all")} />
