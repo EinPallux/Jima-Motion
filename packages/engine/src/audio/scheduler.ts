@@ -48,7 +48,10 @@ export class CueScheduler {
       this.fire(fromT, duration + EPS); // tail of the old lap
       this.fire(-EPS, toT); // head of the new lap
     } else if (toT > fromT) {
-      this.fire(fromT, toT);
+      // A fresh start/replay at t=0 sits *on* the opening beat rather than
+      // crossing it; include it (like a loop wrap's head) so a cue at exactly 0
+      // still fires on the first pass — matching the baked export track.
+      this.fire(fromT === 0 ? -EPS : fromT, toT);
     }
   }
 

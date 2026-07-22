@@ -52,8 +52,13 @@ async function encode(
 ): Promise<Uint8Array> {
   try {
     return await encodeInWorker(frames, opts);
-  } catch {
-    // Worker unavailable/failed — encode inline (still correct, just blocks).
+  } catch (err) {
+    // The worker path transfers the frame buffers into the worker; if it failed
+    // *after* that transfer (e.g. the module worker errored mid-encode), those
+    // buffers are now detached and inline encoding would read empty data and emit
+    // a corrupt GIF. Only fall back inline when the buffers are still intact — the
+    // usual "no Worker available" case, where nothing was ever transferred.
+    if (frames.length > 0 && frames[0]!.rgba.byteLength === 0) throw err;
     return encodeGif(frames, opts);
   }
 }
