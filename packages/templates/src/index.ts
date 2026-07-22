@@ -149,6 +149,17 @@ import { logoRevealMask } from "./logo-reveal-mask/index";
 import { introBars } from "./intro-bars/index";
 import { stickerPop } from "./sticker-pop/index";
 import { endScreen } from "./end-screen/index";
+// Social expansion (v1.7.2).
+import { profileCard } from "./profile-card/index";
+import { shareRepost } from "./share-repost/index";
+import { storyQuiz } from "./story-quiz/index";
+import { qaBox } from "./qa-box/index";
+import { emojiFloat } from "./emoji-float/index";
+import { dmChat } from "./dm-chat/index";
+import { linkInBio } from "./link-in-bio/index";
+import { verifiedPop } from "./verified-pop/index";
+import { giveaway } from "./giveaway/index";
+import { trendingNow } from "./trending-now/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -306,6 +317,17 @@ export const templates: TemplateDefinition[] = [
   thankYou,
   logoRevealMask,
   endScreen,
+  // Social expansion (v1.7.2).
+  profileCard,
+  shareRepost,
+  storyQuiz,
+  qaBox,
+  emojiFloat,
+  dmChat,
+  linkInBio,
+  verifiedPop,
+  giveaway,
+  trendingNow,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {

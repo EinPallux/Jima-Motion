@@ -11,6 +11,27 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.7.2] — 2026-07-21 · +10 social templates (145 → 155)
+
+Ten more **Social** templates (the category grows 14 → 24), all 9:16-first, deterministic, across
+all 4 aspects with ≥3 palettes, per-element colors and decorative on/off toggles:
+
+- **`profile-card`** — profile header: avatar (image or placeholder) + name/handle + Follow button +
+  a Posts/Followers/Following stat row that counts up.
+- **`share-repost`** — a post card + a share icon arcing into a "Reposted" check pill.
+- **`story-quiz`** — Instagram story quiz sticker; the correct option highlights with a check.
+- **`qa-box`** — "Ask me anything" sticker with a typewriter question + blinking caret.
+- **`emoji-float`** — a live-style rising stream of heart/star reactions over a label.
+- **`dm-chat`** — a DM conversation: alternating incoming/outgoing bubbles + a typing indicator.
+- **`link-in-bio`** — a "Link in bio" pill with a nudging pointer.
+- **`verified-pop`** — an account name + a verified checkmark badge that pops in with a ring flash.
+- **`giveaway`** — a gift badge + prize line + "how to enter" steps (per-aspect vertical scaling so
+  the gift stays in the safe area).
+- **`trending-now`** — a "Trending" header + a ranked #1/#2/#3 list, top row emphasized.
+
+### Changed
+- Golden suite now covers **155 templates** (155 determinism re-seek tests + 620 poster frames).
+
 ## [1.7.1] — 2026-07-21 · Gallery search upgrade + full bug sweep
 
 A smarter gallery search for the 145-template library, and a codebase-wide bug hunt (engine, Studio,

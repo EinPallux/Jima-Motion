@@ -501,6 +501,14 @@ degradation, per-element color fields.
 | T94 | Product Review | `product-review` | product | 4:5 | Product + star rating + customer quote |
 | T95 | Shop Grid | `shop-grid` | product | 4:5 | A shop collection grid with prices + CTA |
 
+## 12. Social expansion — 10 templates (2026-07-21, v1.7.2)
+
+Library 145 → **155**. Ten more **social** templates: `profile-card` (profile header + stat count-up),
+`share-repost`, `story-quiz` + `qa-box` (Instagram story stickers), `emoji-float` (live-style
+reaction stream), `dm-chat` (DM bubbles), `link-in-bio`, `verified-pop` (verified badge), `giveaway`
+(prize + entry steps), and `trending-now` (ranked list). All 9:16-first, deterministic, 4 aspects,
+≥3 palettes, per-element colors, decorative toggles. Social category: 14 → 24.
+
 ## 11. Overlays / openers / loops / more — 50 templates (2026-07-21)
 
 Library 95 → **145**, plus three new categories — **overlay** (lower-thirds/callouts, built to be

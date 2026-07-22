@@ -163,6 +163,17 @@ const TEMPLATES: T[] = [
   { id: "thank-you", palette: "cream-ink", poster: 3.0, duration: 4.2 },
   { id: "logo-reveal-mask", palette: "ink-white", poster: 2.8, duration: 4 },
   { id: "end-screen", palette: "signal-red", poster: 3.2, duration: 4.5 },
+  // Social expansion (v1.7.2).
+  { id: "profile-card", palette: "light", poster: 3.4, duration: 4.6 },
+  { id: "share-repost", palette: "light", poster: 2.8, duration: 4.0 },
+  { id: "story-quiz", palette: "sunny", poster: 3.4, duration: 4.4 },
+  { id: "qa-box", palette: "peach", poster: 3.0, duration: 4.2 },
+  { id: "emoji-float", palette: "midnight", poster: 2.8, duration: 4.4 },
+  { id: "dm-chat", palette: "daylight", poster: 3.6, duration: 4.6 },
+  { id: "link-in-bio", palette: "ember", poster: 2.6, duration: 4.0 },
+  { id: "verified-pop", palette: "sky", poster: 2.8, duration: 3.8 },
+  { id: "giveaway", palette: "confetti", poster: 3.8, duration: 5.0 },
+  { id: "trending-now", palette: "light", poster: 3.4, duration: 4.6 },
 ];
 
 const ASPECTS: Aspect[] = ["1:1", "4:5", "9:16", "16:9"];
