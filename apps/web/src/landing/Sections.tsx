@@ -1,22 +1,30 @@
 const STEPS = [
-  { n: "1", title: "Pick a template", body: "Start from one of 50+ professionally-animated templates." },
-  { n: "2", title: "Type your words, drop your images", body: "Edit text, colors and images in a simple form — no timeline." },
-  { n: "3", title: "Export MP4 or GIF", body: "Rendered on your device in seconds. Download and post." },
+  { n: "1", title: "Pick a template", body: "Start from one of 155 professionally-animated templates.", grad: "from-ember to-candy" },
+  { n: "2", title: "Type your words, drop your images", body: "Edit text, colors and images in a simple form — no timeline.", grad: "from-candy to-violet" },
+  { n: "3", title: "Export MP4, WebM or GIF", body: "Rendered on your device in seconds. Download and post.", grad: "from-violet to-sky" },
 ];
 
 export function HowItWorks() {
   return (
-    <section id="how" className="mx-auto max-w-6xl px-6 py-20">
-      <h2 className="font-display text-3xl font-bold text-ink sm:text-4xl">Three steps. About a minute.</h2>
-      <p className="mt-2 text-lg text-ink/70">No timeline. No keyframes. No tutorial needed.</p>
-      <div className="mt-10 grid gap-6 sm:grid-cols-3">
+    <section id="how" className="mx-auto max-w-6xl px-6 py-20 sm:py-24">
+      <h2 className="font-display text-3xl font-bold text-ink sm:text-4xl">
+        Three steps.{" "}
+        <span className="bg-gradient-to-r from-ember to-violet bg-clip-text text-transparent">About a minute.</span>
+      </h2>
+      <p className="mt-2 text-lg text-slate">No timeline. No keyframes. No tutorial needed.</p>
+      <div className="mt-10 grid gap-5 sm:grid-cols-3">
         {STEPS.map((s) => (
-          <div key={s.n} className="rounded-[20px] border border-mist bg-paper p-6 shadow-[var(--shadow-card)]">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-ember-tint font-display text-lg font-bold text-ember-text">
+          <div
+            key={s.n}
+            className="rounded-[24px] border border-mist bg-paper p-6 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-pop)]"
+          >
+            <span
+              className={`flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br ${s.grad} font-display text-lg font-bold text-white shadow-sm`}
+            >
               {s.n}
             </span>
             <h3 className="mt-4 font-display text-xl font-bold text-ink">{s.title}</h3>
-            <p className="mt-1.5 text-ink/70">{s.body}</p>
+            <p className="mt-1.5 text-slate">{s.body}</p>
           </div>
         ))}
       </div>
@@ -40,7 +48,10 @@ export function WhyFree() {
       <div className="mx-auto grid max-w-6xl gap-10 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div>
           <h2 className="font-display text-3xl font-bold text-ink sm:text-4xl">
-            Free forever. Here's why that's not a trick.
+            Free forever.{" "}
+            <span className="bg-gradient-to-r from-ember to-violet bg-clip-text text-transparent">
+              Here&rsquo;s why that&rsquo;s not a trick.
+            </span>
           </h2>
           <p className="mt-4 text-lg text-ink/75">
             Video tools charge because rendering on their servers costs them money. Jima renders on
@@ -82,25 +93,35 @@ export function WhyFree() {
 }
 
 const FEATURES = [
-  { icon: "✦", title: "Free forever", body: "No plans, no quotas, no upsell. Ever." },
-  { icon: "⛆", title: "No account, ever", body: "The Studio just opens. Nothing to sign up for." },
-  { icon: "◎", title: "1080p, no watermark", body: "Clean, full-resolution exports every time." },
-  { icon: "▶", title: "MP4 + GIF (+ WebM)", body: "The formats social feeds and emails actually want." },
-  { icon: "⚿", title: "Private by design", body: "Your text and images never leave your browser." },
-  { icon: "◱", title: "Every aspect ratio", body: "1:1, 4:5, 9:16 and 16:9 from one project." },
+  { icon: "✦", title: "Free forever", body: "No plans, no quotas, no upsell. Ever.", grad: "from-ember to-candy" },
+  { icon: "⛆", title: "No account, ever", body: "The Studio just opens. Nothing to sign up for.", grad: "from-candy to-violet" },
+  { icon: "◎", title: "1080p, no watermark", body: "Clean, full-resolution exports every time.", grad: "from-violet to-sky" },
+  { icon: "▶", title: "MP4 + GIF (+ WebM)", body: "The formats social feeds and emails actually want.", grad: "from-sky to-ember" },
+  { icon: "⚿", title: "Private by design", body: "Your text and images never leave your browser.", grad: "from-ember to-violet" },
+  { icon: "◱", title: "Every aspect ratio", body: "1:1, 4:5, 9:16 and 16:9 from one project.", grad: "from-candy to-sky" },
 ];
 
 export function Features() {
   return (
     <section className="mx-auto max-w-6xl px-6 py-20">
+      <h2 className="mb-10 font-display text-3xl font-bold text-ink sm:text-4xl">
+        Everything you need.{" "}
+        <span className="bg-gradient-to-r from-ember to-violet bg-clip-text text-transparent">Nothing you don&rsquo;t.</span>
+      </h2>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {FEATURES.map((f) => (
-          <div key={f.title} className="rounded-[20px] border border-mist bg-paper p-6 shadow-[var(--shadow-card)]">
-            <span className="text-2xl text-ember" aria-hidden>
+          <div
+            key={f.title}
+            className="rounded-[24px] border border-mist bg-paper p-6 shadow-[var(--shadow-card)] transition-shadow hover:shadow-[var(--shadow-pop)]"
+          >
+            <span
+              className={`flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br ${f.grad} text-lg text-white shadow-sm`}
+              aria-hidden
+            >
               {f.icon}
             </span>
-            <h3 className="mt-3 font-display text-lg font-bold text-ink">{f.title}</h3>
-            <p className="mt-1 text-ink/70">{f.body}</p>
+            <h3 className="mt-4 font-display text-lg font-bold text-ink">{f.title}</h3>
+            <p className="mt-1 text-slate">{f.body}</p>
           </div>
         ))}
       </div>

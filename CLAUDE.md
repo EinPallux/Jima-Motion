@@ -20,7 +20,8 @@ template's timeline beats, toggleable with 3 packs, baked into MP4/WebM exports;
 **editable animation speed/length (0.25×–3×) that the export honours**;
 **optional transparent (alpha) WebM export (ADR-013) for overlaying animations onto footage**;
 client-side MP4/WebM/GIF export; the full Jima Studio UI;
-the bold animated Three.js/WebGL landing page (3D "motion tile" hero); and Phase 6 hardening
+the bold animated Three.js/WebGL landing page (a bento hero with a glossy, iridescent liquid-metal
+3D blob — GPU simplex-noise displacement + a gradient reflection map, no external assets); and Phase 6 hardening
 (axe-core a11y sweep with zero serious/critical violations, engine-rendered OG image, German
 max-length audit, README polish). All golden, determinism, export-smoke, studio-, landing-integration
 and a11y tests pass; `pnpm check` green. Cross-browser QA here is Chromium-only (SwiftShader);

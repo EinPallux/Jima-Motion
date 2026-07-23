@@ -11,6 +11,29 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.8.0] — 2026-07-21 · Landing page makeover + new 3D hero
+
+A full visual refresh of the marketing landing page, led by a new hero.
+
+### Changed — Hero
+- Replaced the old orange "motion tile" WebGL hero with a **bento layout**: a copy column beside a
+  grid of rounded cards. The showpiece card holds a **glossy, iridescent liquid-metal 3D blob** — a
+  high-detail icosahedron morphed by GPU simplex-noise displacement (`onBeforeCompile`), finished
+  with a clearcoat + iridescence physical material and lit by a **gradient reflection map** in the
+  brand anchors. Pure three.js, **no drei, no external HDR/assets** (client-side + CSP + size-budget
+  safe; the lazy hero chunk is 192 kB brotli, under its 250 kB limit). Reduced-motion / no-WebGL
+  falls back to a soft CSS gradient orb.
+- Two supporting bento cards: a "155 templates" stat (lime→sky) and an "every size & format" card
+  (MP4/WebM/GIF + aspect chips).
+
+### Changed — rest of the page
+- **Navbar** is now a floating rounded-pill bar (frosted on scroll) with a dark primary CTA.
+- **How it works** and **Features** cards get gradient number/icon chips, larger radii and a hover
+  lift; section headings gain a brand gradient accent — tying the whole page to the hero's gradient
+  language.
+
+Landing smoke + axe-core a11y (zero serious/critical), `pnpm check` and both size budgets all green.
+
 ## [1.7.2] — 2026-07-21 · +10 social templates (145 → 155)
 
 Ten more **Social** templates (the category grows 14 → 24), all 9:16-first, deterministic, across

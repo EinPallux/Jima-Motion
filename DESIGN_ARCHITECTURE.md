@@ -105,14 +105,16 @@ Studio. Copy strings live in § 9.
 1. **Navbar** (sticky, white with 80 % opacity + blur, hairline mist bottom border on scroll):
    logo · Templates · How it works · Why it's free · FAQ · **[Open the Studio]** (primary button).
    Mobile: logo + CTA + sheet menu.
-2. **Hero** (full viewport, the only WebGL on the site — spec in `TECHNICAL_ARCHITECTURE.md` § 10):
-   a near-white canvas where soft pastel gradient blooms (brand anchors, heavily tinted toward
-   white) drift on shader noise; 5–8 floating glossy 3D pebbles/sparks parallax gently with the
-   pointer. Foreground: H1 + subline + trust chips ("100 % free" · "No account" · "No watermark" ·
-   "Private by design") + primary CTA **Open the Studio** + secondary "Browse templates ↓".
-   An inline live canvas element renders T01 Kinetic Headline playing "Say it with motion." —
-   the first thing visitors see moving is a real template. Reduced-motion/no-WebGL → static
-   gradient + poster frame (must look intentional).
+2. **Hero** (bento layout on white; the only WebGL on the site — spec in
+   `TECHNICAL_ARCHITECTURE.md` § 10). Left column: eyebrow chip, H1 + subline, primary CTA
+   **Open the Studio** + secondary "Browse templates →", and the trust chips ("100 % free" ·
+   "No account" · "No watermark" · "Private by design"). Right column: a bento of rounded cards —
+   a **showpiece card** on a deep-violet gradient holding a **glossy, iridescent liquid-metal 3D
+   blob** (a high-detail icosahedron morphed by GPU simplex-noise displacement, lit by a gradient
+   reflection map in the brand anchors — no external HDR/assets), plus a frosted label + arrow;
+   and two supporting cards (a "155 templates" stat on a lime→sky gradient, and an "every size &
+   format" card with MP4/WebM/GIF + aspect chips). Reduced-motion/no-WebGL → a soft CSS gradient
+   orb in the showpiece card (must look intentional).
 3. **Live template rail:** full-bleed marquee (two rows, opposite directions, slow) of template
    cards rendered live by the engine (shared renderer; posters off-screen). Hover pauses the rail
    and plays that card; click deep-links `/studio?t=<id>`. Caption: "12 templates at launch — all

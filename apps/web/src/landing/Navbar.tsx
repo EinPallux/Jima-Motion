@@ -18,23 +18,29 @@ export function Navbar() {
   }, []);
 
   return (
-    <header
-      className={`sticky top-0 z-40 transition-colors ${scrolled ? "border-b border-mist bg-paper/80 backdrop-blur" : "bg-transparent"}`}
-    >
-      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-3">
-        <a href="#top" className="font-display text-xl font-bold text-ink">
+    <header className="sticky top-0 z-40 px-3 pt-3 sm:px-5 sm:pt-4">
+      <nav
+        className={`mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all sm:px-5 ${
+          scrolled ? "border border-mist bg-paper/80 shadow-[var(--shadow-card)] backdrop-blur-md" : "border border-transparent"
+        }`}
+      >
+        <a href="#top" className="pl-1 font-display text-xl font-bold text-ink">
           jima <span className="text-ember">✦</span>
         </a>
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-1 md:flex">
           {LINKS.map((l) => (
-            <a key={l.href} href={l.href} className="text-sm font-medium text-ink/70 transition-colors hover:text-ink">
+            <a
+              key={l.href}
+              href={l.href}
+              className="rounded-full px-3.5 py-2 text-sm font-medium text-slate transition-colors hover:bg-porcelain hover:text-ink"
+            >
               {l.label}
             </a>
           ))}
         </div>
         <Link
           to="/studio"
-          className="rounded-[12px] bg-ember px-4 py-2 text-sm font-semibold text-ink shadow-[var(--shadow-pop)] transition-transform hover:scale-[1.03] active:scale-100"
+          className="rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-paper shadow-[0_8px_20px_rgba(16,16,20,0.18)] transition-transform hover:scale-[1.03] active:scale-100"
         >
           Open the Studio
         </Link>
