@@ -144,10 +144,14 @@ No SEO work — no sitemap, JSON-LD, or programmatic pages (ADR-011, personal de
 ## 7. Jima Studio UX specification (route `/studio`)
 
 ### 7.1 Gallery view (Studio home)
-- Header: "Pick a template" + search field + filter chips (All · Announcement · Promo · Product ·
-  Quote · Stat · Event · Photo · Brand · Tips · Comparison · Tech) + aspect filter (Any/1:1/4:5/9:16/16:9).
-- Card: poster (engine-rendered at `posterTime`), name, tagline, category chip, duration badge,
-  image-slot badge where relevant. Hover/focus = live preview (shared renderer). Click → editor.
+- "Pick a template" + a **sticky toolbar**: concept/synonym-aware search (Esc clears) + a horizontal
+  row of **use-case group chips with live counts** (All · Text & titles · Overlays & lower-thirds ·
+  Social · Product & ads · Showcase · Explainers & data · Brand & quotes · Openers & backgrounds ·
+  Events & travel) + a result count — filtering **one uniform grid** (no stacked sections).
+- Card: a **uniform 16:9 poster** (engine-rendered at `posterTime`, lazy via IntersectionObserver),
+  name, tagline, category chip. **Hover/focus plays the default animation live** (a short-lived
+  `LivePreview` runner — at most one live WebGL context at a time; `prefers-reduced-motion` → static
+  poster). Click → editor.
 - If a saved project exists: top banner "Continue where you left off — *Kinetic Headline*, edited
   2 h ago. [Resume] [Start fresh]".
 

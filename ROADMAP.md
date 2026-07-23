@@ -277,5 +277,6 @@ rendering, AI credits, dark mode.
 | +10 social templates | ✅ 2026-07-21 — **v1.7.2**, library 145 → 155 |
 | Landing makeover + new 3D blob hero | ✅ 2026-07-21 — **v1.8** |
 | +5 reference-style templates | ✅ 2026-07-21 — **v1.8.1**, library 155 → 160 |
+| Template Library overhaul (uniform 16:9, hover-play, filter) | ✅ 2026-07-21 — **v1.8.2** |
 
 *(Update this table + CHANGELOG.md at every phase transition.)*

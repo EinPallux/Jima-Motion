@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import type { TemplateDefinition } from "@jima/engine";
 import { TemplateCard } from "./TemplateCard";
-import { GROUPS, groupOf, type TemplateGroup } from "./groups";
+import { GROUPS, groupOf } from "./groups";
 import type { PersistedProject } from "../state/persistence";
 
 // Concept keywords per category so natural searches match intent, not just the
@@ -12,8 +12,8 @@ const CATEGORY_KEYWORDS: Record<string, string> = {
   loop: "loop background backdrop seamless animated ambient texture gradient",
   statement: "text title headline typography kinetic type quote words",
   announcement: "announcement headline text title",
-  social: "social instagram tiktok youtube reel story follow like subscribe hashtag mention poll",
-  product: "product ecommerce shop store item price feature",
+  social: "social instagram tiktok youtube reel story follow like subscribe hashtag mention poll comment chat dm search",
+  product: "product ecommerce shop store item price feature watermark",
   promo: "promo sale discount offer deal coupon price shipping",
   stat: "stat data chart number percentage graph metric counter progress rating",
   educational: "explainer steps how-to tutorial process timeline",
@@ -27,7 +27,6 @@ const CATEGORY_KEYWORDS: Record<string, string> = {
   showcase: "showcase gallery feature spotlight present",
 };
 
-/** Lowercased haystack for a template: name + tagline + category + group + keywords. */
 function searchText(t: TemplateDefinition): string {
   return `${t.name} ${t.tagline} ${t.category} ${groupOf(t.category).label} ${CATEGORY_KEYWORDS[t.category] ?? ""}`.toLowerCase();
 }
@@ -48,39 +47,29 @@ export function Gallery({
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<string>("all");
 
-  // Templates bucketed by group, preserving registry order within each.
-  const byGroup = useMemo(() => {
-    const map = new Map<string, TemplateDefinition[]>();
+  // Count templates per group (for the filter chips).
+  const counts = useMemo(() => {
+    const m = new Map<string, number>();
     for (const t of templates) {
       const id = groupOf(t.category).id;
-      let arr = map.get(id);
-      if (!arr) {
-        arr = [];
-        map.set(id, arr);
-      }
-      arr.push(t);
+      m.set(id, (m.get(id) ?? 0) + 1);
     }
-    return map;
+    return m;
   }, [templates]);
 
   // Only groups that actually have templates, in the curated order.
-  const activeGroups = useMemo(
-    () => GROUPS.filter((g) => (byGroup.get(g.id)?.length ?? 0) > 0),
-    [byGroup],
-  );
+  const activeGroups = useMemo(() => GROUPS.filter((g) => (counts.get(g.id) ?? 0) > 0), [counts]);
 
   const q = query.trim().toLowerCase();
-  // Match on every whitespace-separated term (AND), against the concept haystack.
-  const searchResults = useMemo(() => {
-    if (!q) return null;
-    const terms = q.split(/\s+/).filter(Boolean);
+  const filtered = useMemo(() => {
+    const terms = q ? q.split(/\s+/).filter(Boolean) : [];
     return templates.filter((t) => {
+      if (group !== "all" && groupOf(t.category).id !== group) return false;
+      if (terms.length === 0) return true;
       const hay = searchText(t);
       return terms.every((term) => hay.includes(term));
     });
-  }, [q, templates]);
-
-  const shownGroups: TemplateGroup[] = group === "all" ? activeGroups : activeGroups.filter((g) => g.id === group);
+  }, [templates, group, q]);
 
   const resumeDef = resume ? templates.find((t) => t.id === resume.templateId) : null;
 
@@ -95,9 +84,9 @@ export function Gallery({
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-8 sm:px-8">
+      <main className="mx-auto max-w-6xl px-4 pb-16 sm:px-8">
         {resumeDef && resume && (
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-[16px] border border-mist bg-paper p-4">
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-[16px] border border-mist bg-paper p-4">
             <p className="text-sm text-ink">
               Continue where you left off — <span className="font-semibold">{resumeDef.name}</span>
               <span className="text-slate"> · {timeAgo(resume.updatedAt)}</span>
@@ -113,60 +102,64 @@ export function Gallery({
           </div>
         )}
 
-        <div className="mb-6 flex flex-col gap-4">
-          <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h1 className="font-display text-3xl font-bold text-ink">Pick a template</h1>
-            <span className="text-sm text-slate">{templates.length} templates</span>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Escape") setQuery("");
-              }}
-              placeholder="Search templates… (name, style, or use-case)"
-              aria-label="Search templates"
-              className="w-full max-w-sm rounded-[12px] border border-mist bg-paper px-4 py-2.5 text-[15px] outline-none focus:border-ember-text"
-            />
-            {q && searchResults && (
-              <span className="text-sm text-slate" aria-live="polite">
-                {searchResults.length} {searchResults.length === 1 ? "result" : "results"}
-              </span>
-            )}
-          </div>
-          {!q && (
-            <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by use-case">
-              <GroupPill label="All" active={group === "all"} onClick={() => setGroup("all")} />
-              {activeGroups.map((g) => (
-                <GroupPill key={g.id} label={g.label} active={group === g.id} onClick={() => setGroup(g.id)} />
-              ))}
-            </div>
-          )}
+        <div className="pt-7">
+          <h1 className="font-display text-3xl font-bold text-ink">Pick a template</h1>
+          <p className="mt-1 text-slate">Hover any template to see it move. {templates.length} to choose from — all free.</p>
         </div>
 
-        {/* Search view: flat results across every group. */}
-        {q ? (
-          searchResults && searchResults.length > 0 ? (
-            <Grid items={searchResults} onOpen={onOpen} />
-          ) : (
-            <p className="py-12 text-center text-slate">No templates match “{query}”.</p>
-          )
+        {/* Sticky filter toolbar: search + category chips + result count. */}
+        <div className="sticky top-0 z-20 -mx-4 mt-5 border-b border-mist bg-porcelain/90 px-4 py-3 backdrop-blur sm:-mx-8 sm:px-8">
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="relative w-full max-w-sm">
+                <span aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate">⌕</span>
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Escape") setQuery("");
+                  }}
+                  placeholder="Search templates… (name, style, or use-case)"
+                  aria-label="Search templates"
+                  className="w-full rounded-full border border-mist bg-paper py-2.5 pl-9 pr-4 text-[15px] outline-none focus:border-ember-text"
+                />
+              </div>
+              <span className="text-sm text-slate" aria-live="polite">
+                {filtered.length} {filtered.length === 1 ? "template" : "templates"}
+              </span>
+            </div>
+
+            <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-0.5" role="group" aria-label="Filter by use-case">
+              <Chip label="All" count={templates.length} active={group === "all"} onClick={() => setGroup("all")} />
+              {activeGroups.map((g) => (
+                <Chip key={g.id} label={g.label} count={counts.get(g.id) ?? 0} active={group === g.id} onClick={() => setGroup(g.id)} />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {filtered.length > 0 ? (
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {filtered.map((t) => (
+              <TemplateCard key={t.id} def={t} onOpen={onOpen} />
+            ))}
+          </div>
         ) : (
-          <div className="flex flex-col gap-10">
-            {shownGroups.map((g) => {
-              const items = byGroup.get(g.id) ?? [];
-              return (
-                <section key={g.id} aria-label={g.label}>
-                  <div className="mb-3 flex items-baseline gap-3">
-                    <h2 className="font-display text-xl font-bold text-ink">{g.label}</h2>
-                    <span className="text-sm text-slate">{g.blurb}</span>
-                  </div>
-                  <Grid items={items} onOpen={onOpen} />
-                </section>
-              );
-            })}
+          <div className="py-20 text-center">
+            <p className="text-slate">
+              No templates match {q ? `“${query}”` : "this filter"}.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                setGroup("all");
+              }}
+              className="mt-3 rounded-full border border-mist bg-paper px-4 py-2 text-sm font-medium text-ink hover:bg-mist"
+            >
+              Clear filters
+            </button>
           </div>
         )}
       </main>
@@ -174,26 +167,19 @@ export function Gallery({
   );
 }
 
-function GroupPill({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) {
+function Chip({ label, count, active, onClick }: { label: string; count: number; active: boolean; onClick: () => void }) {
   return (
     <button
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${active ? "bg-ink text-paper" : "bg-paper text-slate hover:text-ink"}`}
+      className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
+        active ? "bg-ink text-paper" : "border border-mist bg-paper text-slate hover:text-ink"
+      }`}
     >
       {label}
+      <span className={`text-xs ${active ? "text-paper/80" : "text-slate"}`}>{count}</span>
     </button>
-  );
-}
-
-function Grid({ items, onOpen }: { items: TemplateDefinition[]; onOpen: (def: TemplateDefinition) => void }) {
-  return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {items.map((t) => (
-        <TemplateCard key={t.id} def={t} onOpen={onOpen} />
-      ))}
-    </div>
   );
 }
 

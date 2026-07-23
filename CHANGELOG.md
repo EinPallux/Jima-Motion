@@ -11,6 +11,25 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.8.2] — 2026-07-21 · Template Library (Studio gallery) overhaul
+
+A full rework of the Studio's template picker for browsing 160 templates.
+
+### Changed
+- **Uniform 16:9 previews.** Every card now renders its poster at 16:9, so the grid is even instead
+  of ragged (previously each card used the template's default aspect — mixed 9:16 / 1:1 / 16:9).
+- **Hover to preview.** Hovering (or keyboard-focusing) a card now plays the template's default
+  animation live, looping, via a new `LivePreview` (a short-lived on-hover runner, so at most one
+  live WebGL context exists at a time). Respects `prefers-reduced-motion` (static poster only), with
+  a "▶ Preview" hint and a small hover-intent delay so scanning the grid doesn't spin up a runner
+  per card.
+- **Cleaner filtering.** Replaced the stacked grouped sections with a **single sticky toolbar** —
+  concept/synonym-aware search (Esc to clear), a horizontal row of **use-case chips with live
+  counts** (All 160 · Text 33 · Overlays 7 · Social 28 · …), and a result count — over one uniform
+  grid. Empty state offers a one-click "Clear filters".
+
+Studio smoke + axe-core a11y (zero serious/critical) and `pnpm check` all green.
+
 ## [1.8.1] — 2026-07-21 · +5 reference-style templates (155 → 160)
 
 Five polished, modern templates modelled on high-quality reference animations (all deterministic,
