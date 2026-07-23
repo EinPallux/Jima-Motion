@@ -160,6 +160,52 @@ import { chatConvo } from "./chat-convo/index";
 import { searchType } from "./search-type/index";
 import { retroTv } from "./retro-tv/index";
 import { watermarkDrop } from "./watermark-drop/index";
+// v1.9 pack — 5 new templates per gallery section (Backgrounds removed).
+import { blurFocus } from "./blur-focus/index";
+import { maskWipe } from "./mask-wipe/index";
+import { stretchIn } from "./stretch-in/index";
+import { typeCursor } from "./type-cursor/index";
+import { tapeHighlight } from "./tape-highlight/index";
+import { cornerTag } from "./corner-tag/index";
+import { newsLowerThird } from "./news-lower-third/index";
+import { progressOverlay } from "./progress-overlay/index";
+import { sideLabel } from "./side-label/index";
+import { locationTag } from "./location-tag/index";
+import { reactionBar } from "./reaction-bar/index";
+import { storyProgress } from "./story-progress/index";
+import { duetSplit } from "./duet-split/index";
+import { replySticker } from "./reply-sticker/index";
+import { pollResults } from "./poll-results/index";
+import { specCallouts } from "./spec-callouts/index";
+import { swatchSwitch } from "./swatch-switch/index";
+import { addToCart } from "./add-to-cart/index";
+import { bundleStack } from "./bundle-stack/index";
+import { dealCountdown } from "./deal-countdown/index";
+import { appScreens } from "./app-screens/index";
+import { photoFan } from "./photo-fan/index";
+import { featureRotator } from "./feature-rotator/index";
+import { browserWindow } from "./browser-window/index";
+import { photoDevelop } from "./photo-develop/index";
+import { donutChart } from "./donut-chart/index";
+import { lineGraph } from "./line-graph/index";
+import { processArrows } from "./process-arrows/index";
+import { prosCons } from "./pros-cons/index";
+import { kpiTiles } from "./kpi-tiles/index";
+import { quoteMark } from "./quote-mark/index";
+import { logoDraw } from "./logo-draw/index";
+import { ratingReveal } from "./rating-reveal/index";
+import { brandLockup } from "./brand-lockup/index";
+import { signatureSign } from "./signature-sign/index";
+import { filmCountdown } from "./film-countdown/index";
+import { irisOpen } from "./iris-open/index";
+import { glitchIntro } from "./glitch-intro/index";
+import { zoomPunch } from "./zoom-punch/index";
+import { blindsOpen } from "./blinds-open/index";
+import { ticketStub } from "./ticket-stub/index";
+import { boardingPass } from "./boarding-pass/index";
+import { mapRoute } from "./map-route/index";
+import { calendarFlip } from "./calendar-flip/index";
+import { passportStamp } from "./passport-stamp/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -327,6 +373,61 @@ export const templates: TemplateDefinition[] = [
   searchType,
   retroTv,
   watermarkDrop,
+  // v1.9 pack — 5 new templates per gallery section.
+  // Text & titles
+  blurFocus,
+  maskWipe,
+  stretchIn,
+  typeCursor,
+  tapeHighlight,
+  // Overlays & lower-thirds
+  cornerTag,
+  newsLowerThird,
+  progressOverlay,
+  sideLabel,
+  locationTag,
+  // Social
+  reactionBar,
+  storyProgress,
+  duetSplit,
+  replySticker,
+  pollResults,
+  // Product & ads
+  specCallouts,
+  swatchSwitch,
+  addToCart,
+  bundleStack,
+  dealCountdown,
+  // Showcase
+  appScreens,
+  photoFan,
+  featureRotator,
+  browserWindow,
+  photoDevelop,
+  // Explainers & data
+  donutChart,
+  lineGraph,
+  processArrows,
+  prosCons,
+  kpiTiles,
+  // Brand & quotes
+  quoteMark,
+  logoDraw,
+  ratingReveal,
+  brandLockup,
+  signatureSign,
+  // Openers
+  filmCountdown,
+  irisOpen,
+  glitchIntro,
+  zoomPunch,
+  blindsOpen,
+  // Events & travel
+  ticketStub,
+  boardingPass,
+  mapRoute,
+  calendarFlip,
+  passportStamp,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {

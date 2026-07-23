@@ -278,5 +278,6 @@ rendering, AI credits, dark mode.
 | Landing makeover + new 3D blob hero | ✅ 2026-07-21 — **v1.8** |
 | +5 reference-style templates | ✅ 2026-07-21 — **v1.8.1**, library 155 → 160 |
 | Template Library overhaul (uniform 16:9, hover-play, filter) | ✅ 2026-07-21 — **v1.8.2** |
+| Remove Backgrounds category + 5 new templates per gallery section | ✅ 2026-07-23 — **v1.9.0**, library 160 → 199 |
 
 *(Update this table + CHANGELOG.md at every phase transition.)*

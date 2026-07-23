@@ -501,6 +501,24 @@ degradation, per-element color fields.
 | T94 | Product Review | `product-review` | product | 4:5 | Product + star rating + customer quote |
 | T95 | Shop Grid | `shop-grid` | product | 4:5 | A shop collection grid with prices + CTA |
 
+## 14. Backgrounds retired · +45 templates — 5 per gallery section (2026-07-23, v1.9.0)
+
+Library 160 → **199**. The **Backgrounds** (`loop`) category and its six templates (`bokeh-drift`,
+`confetti-loop`, `floating-shapes`, `gradient-flow`, `grid-pulse`, `wave-lines`) were retired, then
+every remaining gallery section gained five new templates:
+
+- **Text & titles** (`statement`): `blur-focus`, `mask-wipe`, `stretch-in`, `type-cursor`, `tape-highlight`.
+- **Overlays & lower-thirds** (`overlay`): `corner-tag`, `news-lower-third`, `progress-overlay`, `side-label`, `location-tag`.
+- **Social** (`social`): `reaction-bar`, `story-progress`, `duet-split`, `reply-sticker`, `poll-results`.
+- **Product & ads** (`product`/`promo`): `spec-callouts`, `swatch-switch`, `add-to-cart`, `bundle-stack`, `deal-countdown`.
+- **Showcase** (`tech`/`photo`/`showcase`): `app-screens`, `photo-fan`, `feature-rotator`, `browser-window`, `photo-develop`.
+- **Explainers & data** (`stat`/`educational`/`comparison`): `donut-chart`, `line-graph`, `process-arrows`, `pros-cons`, `kpi-tiles`.
+- **Brand & quotes** (`brand`/`testimonial`): `quote-mark`, `logo-draw`, `rating-reveal`, `brand-lockup`, `signature-sign`.
+- **Openers** (`intro`): `film-countdown`, `iris-open`, `glitch-intro`, `zoom-punch`, `blinds-open`.
+- **Events & travel** (`event`/`travel`): `ticket-stub`, `boarding-pass`, `map-route`, `calendar-flip`, `passport-stamp`.
+
+All deterministic, 4 aspects, ≥3 palettes, per-element colors, decorative toggles, ≥4.5:1 end-frame contrast.
+
 ## 13. Reference-style pack — 5 templates (2026-07-21, v1.8.1)
 
 Library 155 → **160**. Five polished templates modelled on high-quality reference animations:
