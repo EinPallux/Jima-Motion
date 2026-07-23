@@ -11,6 +11,26 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.8.1] — 2026-07-21 · +5 reference-style templates (155 → 160)
+
+Five polished, modern templates modelled on high-quality reference animations (all deterministic,
+4 aspects, ≥3 palettes, per-element colors, decorative toggles):
+
+- **`comment-thread`** (social) — a TikTok/IG comment section: stacked comment cards (avatar,
+  @username · timestamp, text, heart + like-count, Reply) spring in staggered, with a live
+  like-count tick and a bouncing green "NEW" badge.
+- **`chat-convo`** (social) — a named DM conversation on a dark backdrop: a pink "Sender" bubble and
+  a blue "Replier" bubble (with avatars + tails) pop in, and the last message types out with a caret.
+- **`search-type`** (social) — a sleek search bar on a dark glow/scanline background: a query types
+  in letter-by-letter with a caret and a nudging mouse cursor.
+- **`retro-tv`** (social) — a glowing retro-CRT / vlog frame that powers on, with a staggered row of
+  colorful app-icon tiles, a stamped caption pill, and a "Day N" counter.
+- **`watermark-drop`** (product) — a product floating (with a soft contact shadow) over a tiled,
+  diagonal brand-watermark backdrop that adapts its repeat to the watermark length.
+
+### Changed
+- Golden suite now covers **160 templates** (160 determinism re-seek tests + 640 poster frames).
+
 ## [1.8.0] — 2026-07-21 · Landing page makeover + new 3D hero
 
 A full visual refresh of the marketing landing page, led by a new hero.

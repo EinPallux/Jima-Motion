@@ -501,6 +501,15 @@ degradation, per-element color fields.
 | T94 | Product Review | `product-review` | product | 4:5 | Product + star rating + customer quote |
 | T95 | Shop Grid | `shop-grid` | product | 4:5 | A shop collection grid with prices + CTA |
 
+## 13. Reference-style pack — 5 templates (2026-07-21, v1.8.1)
+
+Library 155 → **160**. Five polished templates modelled on high-quality reference animations:
+`comment-thread` (TikTok/IG comment section + NEW badge, social), `chat-convo` (named Sender/Replier
+DM on dark, social), `search-type` (search-bar typewriter + cursor on dark, social), `retro-tv`
+(glowing CRT/vlog frame + app-icon row + caption stamp + Day N, social), and `watermark-drop`
+(product over a tiled diagonal brand-watermark backdrop, product). Deterministic, 4 aspects, ≥3
+palettes, per-element colors, decorative toggles.
+
 ## 12. Social expansion — 10 templates (2026-07-21, v1.7.2)
 
 Library 145 → **155**. Ten more **social** templates: `profile-card` (profile header + stat count-up),

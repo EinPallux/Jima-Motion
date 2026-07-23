@@ -276,5 +276,6 @@ rendering, AI credits, dark mode.
 | Gallery search upgrade + full bug sweep (11 fixes) | ✅ 2026-07-21 — **v1.7.1** |
 | +10 social templates | ✅ 2026-07-21 — **v1.7.2**, library 145 → 155 |
 | Landing makeover + new 3D blob hero | ✅ 2026-07-21 — **v1.8** |
+| +5 reference-style templates | ✅ 2026-07-21 — **v1.8.1**, library 155 → 160 |
 
 *(Update this table + CHANGELOG.md at every phase transition.)*

@@ -174,6 +174,12 @@ const TEMPLATES: T[] = [
   { id: "verified-pop", palette: "sky", poster: 2.8, duration: 3.8 },
   { id: "giveaway", palette: "confetti", poster: 3.8, duration: 5.0 },
   { id: "trending-now", palette: "light", poster: 3.4, duration: 4.6 },
+  // Reference-style pack (v1.8.1).
+  { id: "comment-thread", palette: "daylight", poster: 3.8, duration: 5.0 },
+  { id: "chat-convo", palette: "midnight", poster: 4.2, duration: 5.2 },
+  { id: "search-type", palette: "noir-cyan", poster: 3.4, duration: 4.6 },
+  { id: "retro-tv", palette: "crt-green", poster: 3.4, duration: 4.8 },
+  { id: "watermark-drop", palette: "paper-light", poster: 3.0, duration: 4.4 },
 ];
 
 const ASPECTS: Aspect[] = ["1:1", "4:5", "9:16", "16:9"];

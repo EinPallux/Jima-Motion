@@ -160,6 +160,12 @@ import { linkInBio } from "./link-in-bio/index";
 import { verifiedPop } from "./verified-pop/index";
 import { giveaway } from "./giveaway/index";
 import { trendingNow } from "./trending-now/index";
+// Reference-style pack (v1.8.1).
+import { commentThread } from "./comment-thread/index";
+import { chatConvo } from "./chat-convo/index";
+import { searchType } from "./search-type/index";
+import { retroTv } from "./retro-tv/index";
+import { watermarkDrop } from "./watermark-drop/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -328,6 +334,12 @@ export const templates: TemplateDefinition[] = [
   verifiedPop,
   giveaway,
   trendingNow,
+  // Reference-style pack (v1.8.1).
+  commentThread,
+  chatConvo,
+  searchType,
+  retroTv,
+  watermarkDrop,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {
