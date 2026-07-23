@@ -98,21 +98,16 @@ import { logoWall } from "./logo-wall/index";
 import { countdownTimer } from "./countdown-timer/index";
 import { ctaEndcard } from "./cta-endcard/index";
 import { saleBanner } from "./sale-banner/index";
-// v1.7 pack — overlays/lower-thirds, intros, background loops, and more text/social/product/stat.
+// v1.7 pack — overlays/lower-thirds, intros, and more text/social/product/stat.
 import { barRace } from "./bar-race/index";
-import { bokehDrift } from "./bokeh-drift/index";
 import { channelIntro } from "./channel-intro/index";
 import { clapIntro } from "./clap-intro/index";
-import { confettiLoop } from "./confetti-loop/index";
 import { countdownIntro } from "./countdown-intro/index";
 import { ctaBar } from "./cta-bar/index";
 import { discountBurst } from "./discount-burst/index";
 import { eventLineup } from "./event-lineup/index";
 import { featureTags } from "./feature-tags/index";
-import { floatingShapes } from "./floating-shapes/index";
 import { followersCount } from "./followers-count/index";
-import { gradientFlow } from "./gradient-flow/index";
-import { gridPulse } from "./grid-pulse/index";
 import { hashtagPop } from "./hashtag-pop/index";
 import { highlightSweep } from "./highlight-sweep/index";
 import { limitedStock } from "./limited-stock/index";
@@ -138,7 +133,6 @@ import { subtitleBar } from "./subtitle-bar/index";
 import { swipeUp } from "./swipe-up/index";
 import { testimonialSlide } from "./testimonial-slide/index";
 import { topicBug } from "./topic-bug/index";
-import { waveLines } from "./wave-lines/index";
 import { stampText } from "./stamp-text/index";
 import { rotatingHeadline } from "./rotating-headline/index";
 import { gradientText } from "./gradient-text/index";
@@ -280,13 +274,6 @@ export const templates: TemplateDefinition[] = [
   neonSign,
   clapIntro,
   introBars,
-  // Background loops
-  gradientFlow,
-  floatingShapes,
-  bokehDrift,
-  waveLines,
-  gridPulse,
-  confettiLoop,
   // Text
   highlightSweep,
   outlineFill,

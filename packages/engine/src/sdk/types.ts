@@ -24,8 +24,7 @@ export type TemplateCategory =
   | "showcase"
   // v1.7 additions
   | "overlay" // lower-thirds, name tags, callouts, subtitle bars (pair with alpha export)
-  | "intro" // channel/logo openers, stingers, countdown intros
-  | "loop"; // seamless animated backgrounds / textures
+  | "intro"; // channel/logo openers, stingers, countdown intros
 
 export type FieldType =
   | "text"

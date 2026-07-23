@@ -9,11 +9,11 @@ plus a v1.5 sound + editable-speed release, a v1.6 transparent-export release, a
 Workspace/CI/guardrails; deterministic motion engine + **160 templates** (12 launch + a 23-template
 expansion + a 20-template smooth-text pack + a 20-template explainer/showcase/product/ad pack + a
 20-template showcase & product-presentation pack + a 50-template pack adding overlays/lower-thirds,
-intros/openers, seamless background loops, and more text/social/product/stat/brand + a 10-template
+intros/openers, and more text/social/product/stat/brand + a 10-template
 social pack — profiles, reposts, story quiz/Q&A, live reactions, DMs, link-in-bio, verified,
 giveaways, trending + a 5-template reference pack — comment threads, named chat convos, search-bar
 typing, glowing retro-TV/vlog frames, tiled-watermark product drops);
-three added categories — **overlay** (lower-thirds), **intro** (openers), **loop** (backgrounds);
+two added categories — **overlay** (lower-thirds), **intro** (openers);
 **per-template toggles to switch off decorative accents** (accent bar/dot, badges, frames, glows…);
 editable headline fonts (7 OFL families), a use-case-grouped gallery, and per-element color pickers;
 **optional procedural, motion-matched sound (ADR-012) — synthesized SFX auto-cued from each

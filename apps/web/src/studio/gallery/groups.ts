@@ -15,7 +15,7 @@ export const GROUPS: TemplateGroup[] = [
   { id: "showcase", label: "Showcase", blurb: "Galleries, features, device mockups, photos", categories: ["showcase", "photo", "tech"] },
   { id: "explain", label: "Explainers & data", blurb: "Steps, timelines, comparisons, stats", categories: ["educational", "comparison", "stat"] },
   { id: "brand", label: "Brand & quotes", blurb: "Logos, badges, end cards, testimonials", categories: ["brand", "testimonial"] },
-  { id: "openers", label: "Openers & backgrounds", blurb: "Channel intros, stingers & seamless background loops", categories: ["intro", "loop"] },
+  { id: "openers", label: "Openers", blurb: "Channel intros, logo stingers & countdown openers", categories: ["intro"] },
   { id: "events", label: "Events & travel", blurb: "Save-the-dates, locations, trips", categories: ["event", "travel"] },
 ];
 

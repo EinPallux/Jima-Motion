@@ -9,7 +9,6 @@ import type { PersistedProject } from "../state/persistence";
 const CATEGORY_KEYWORDS: Record<string, string> = {
   overlay: "overlay lower third lower-third nametag name tag caption subtitle callout banner transparent alpha broadcast chyron",
   intro: "intro opener stinger countdown logo reveal channel opening title card",
-  loop: "loop background backdrop seamless animated ambient texture gradient",
   statement: "text title headline typography kinetic type quote words",
   announcement: "announcement headline text title",
   social: "social instagram tiktok youtube reel story follow like subscribe hashtag mention poll comment chat dm search",
