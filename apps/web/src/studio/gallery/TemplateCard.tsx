@@ -54,8 +54,8 @@ export function TemplateCard({ def, onOpen }: { def: TemplateDefinition; onOpen:
       onBlur={stop}
       className={cn(
         "group flex flex-col overflow-hidden rounded-card border border-mist bg-paper text-left shadow-xs transition-all duration-200",
-        "hover:-translate-y-0.5 hover:shadow-card",
-        "focus-visible:-translate-y-0.5 focus-visible:shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-ring focus-visible:ring-offset-2",
+        "hover:-translate-y-1 hover:border-ink/15 hover:shadow-bold",
+        "focus-visible:-translate-y-1 focus-visible:shadow-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-ring focus-visible:ring-offset-2",
       )}
     >
       {/* Uniform 16:9 preview — static poster, with a live loop on hover. */}

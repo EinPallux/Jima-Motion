@@ -46,7 +46,7 @@ export function Topbar({
               role="radio"
               aria-checked={active}
               onClick={() => setAspect(a)}
-              className={`rounded-lg px-2.5 py-1 text-sm font-medium tabular-nums transition-colors ${active ? "bg-paper text-ink shadow-xs" : "text-slate hover:text-ink"}`}
+              className={`rounded-lg px-3 py-1.5 text-sm font-semibold tabular-nums transition-colors ${active ? "bg-primary-strong text-white shadow-xs" : "text-slate hover:text-ink"}`}
             >
               {ASPECT_LABEL[a]}
             </button>

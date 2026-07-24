@@ -7,7 +7,7 @@ function RailCard({ def }: { def: TemplateDefinition }) {
   return (
     <Link
       to={`/studio?t=${def.id}`}
-      className="group/card block w-[190px] shrink-0 overflow-hidden rounded-card border border-mist bg-paper shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop sm:w-[220px]"
+      className="group/card block w-[190px] shrink-0 overflow-hidden rounded-bento border border-mist bg-paper shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-pop sm:w-[220px]"
     >
       <PosterThumb def={def} aspect="1:1" paletteId={def.palettes[0]?.id} alt={def.name} className="w-full" />
       <div className="px-3 py-2.5">
@@ -35,7 +35,7 @@ function Row({ items, direction }: { items: TemplateDefinition[]; direction: "le
 
 export function TemplateRail() {
   // Sample the library evenly for a varied, lighter marquee — rendering every
-  // one of the 249 posters would be hundreds of WebGL draws. This gives a
+  // one of the 274 posters would be hundreds of WebGL draws. This gives a
   // representative spread that scrolls at a calm, readable pace.
   const sample = templates.filter((_, i) => i % 5 === 0);
   const half = Math.ceil(sample.length / 2);
@@ -47,7 +47,7 @@ export function TemplateRail() {
         <Row items={rowA} direction="left" />
         <Row items={rowB} direction="right" />
       </div>
-      <p className="mt-8 text-center text-sm text-slate">
+      <p className="mt-8 text-center text-base font-bold text-graphite">
         {templates.length} templates and counting — all free, all yours.
       </p>
     </section>

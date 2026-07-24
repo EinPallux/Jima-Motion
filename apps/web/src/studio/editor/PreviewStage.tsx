@@ -18,7 +18,7 @@ export function PreviewStage({
       <div className="relative flex min-h-0 flex-1 items-center justify-center">
         <div
           ref={containerRef}
-          className="relative flex max-h-full max-w-full items-center justify-center overflow-hidden rounded-card bg-paper shadow-card"
+          className="relative flex max-h-full max-w-full items-center justify-center overflow-hidden rounded-bento bg-paper shadow-card ring-1 ring-mist"
           style={{ aspectRatio: aspect.replace(":", " / "), width: "min(100%, 720px)" }}
           aria-live="off"
         >

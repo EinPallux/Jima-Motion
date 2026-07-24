@@ -11,6 +11,33 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.13.0] — 2026-07-24 · Bold visual refresh — chunky type + vibrant color blocks
+
+A bolder, more modern evolution of the v2 UI across the landing page and Studio, inspired by
+contemporary bold-SaaS landing design. Still **fully light mode** and still **emerald-branded** — no
+dark theme, no dark-mode toggle. The template library and render engine are unchanged.
+
+### Changed
+- **Bolder foundation.** New vibrant color-block tokens (`coral`/`pink`/`amber`/`mint`/`indigo`, each
+  with a light `-tint`), a chunky `rounded-bento` radius and a punchy `shadow-bold`, plus tighter,
+  larger display type (`headline-xl`) — all added to `apps/web/src/styles/index.css`.
+- **Bolder primitives.** `Button` (heavier weight + press), `Card` (optional `tone` tint + `bold`
+  2px-ink-border treatment), `Badge` (vibrant tones), and a bigger/bolder `SectionHeading` with an
+  eyebrow pill (`apps/web/src/ui/`).
+- **Landing.** Oversized hero headline with a marker-highlight accent; "How it works" is now three
+  chunky color-block cards (mint/amber/coral); the "why it's free" comparison table leads with a bold
+  emerald column; feature cards get vibrant icon chips; the FAQ uses chunkier accordion cards; and a
+  new **bright-emerald final CTA band** ("It's time to make something move") closes the page. Every
+  existing section is kept (live hero showcase, template marquee, comparison, gallery teaser, FAQ).
+- **Studio.** Bigger/bolder gallery heading + chunkier chips and cards, emerald active states across
+  the aspect toggle / inspector segments / export options, a `rounded-bento` export modal and preview
+  frame — while the editing surface stays calm and neutral for focus.
+
+### Notes
+- axe-core: zero serious/critical violations on landing, gallery, editor, privacy and terms (the new
+  vibrant colors are used as light tints with dark ink text, or as accents — all ≥4.5:1). `pnpm
+  check`, size-limit, and the landing + Studio smoke suites are green.
+
 ## [1.12.0] — 2026-07-24 · +25 templates — 5 each for five sections (249 → 274)
 
 Five new templates apiece for **Lower-thirds, Social, Showcase, Explainers & data, and Events &

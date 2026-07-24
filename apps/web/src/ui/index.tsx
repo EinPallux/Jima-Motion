@@ -4,41 +4,77 @@ import { cn } from "./cn";
 export { cn } from "./cn";
 export { Button, type ButtonProps } from "./Button";
 
+/** Vibrant color-block tones shared by Card, Badge and section bands (v3 bold look). */
+export type Tone = "paper" | "emerald" | "coral" | "pink" | "amber" | "mint" | "indigo";
+
+/** Tint background + matching hairline border per tone (dark ink text always ≥7:1). */
+const CARD_TONES: Record<Tone, string> = {
+  paper: "bg-paper border-mist",
+  emerald: "bg-emerald-tint border-emerald/25",
+  coral: "bg-coral-tint border-coral/30",
+  pink: "bg-pink-tint border-pink/30",
+  amber: "bg-amber-tint border-amber/35",
+  mint: "bg-mint-tint border-mint/35",
+  indigo: "bg-indigo-tint border-indigo/30",
+};
+
 /** Centered max-width page container. */
 export function Container({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return <div className={cn("mx-auto w-full max-w-6xl px-5 sm:px-6", className)} {...props} />;
 }
 
-/** Elevated white surface. */
-export function Card({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
+/**
+ * Surface card. Defaults reproduce the old white card exactly; opt into a
+ * vibrant `tone` tint and/or a chunky `bold` treatment (2px ink border + stacked
+ * shadow) for the bold color-block look.
+ */
+export function Card({
+  tone = "paper",
+  bold = false,
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement> & { tone?: Tone; bold?: boolean }) {
   return (
     <div
-      className={cn("rounded-card border border-mist bg-paper shadow-card", className)}
+      className={cn(
+        "rounded-card border",
+        bold ? "border-2 border-ink shadow-bold" : cn(CARD_TONES[tone], "shadow-card"),
+        // When bold, keep the tone's background but let the ink border dominate.
+        bold && tone !== "paper" ? CARD_TONES[tone].split(" ")[0] : "",
+        className,
+      )}
       {...props}
     />
   );
 }
 
-/** Small status/label pill. Tones map to the emerald + neutral system. */
+const BADGE_TONES: Record<string, string> = {
+  emerald: "bg-emerald-tint text-primary-strong",
+  neutral: "bg-subtle text-graphite",
+  outline: "bg-paper text-slate ring-1 ring-inset ring-mist",
+  coral: "bg-coral-tint text-ink",
+  pink: "bg-pink-tint text-ink",
+  amber: "bg-amber-tint text-ink",
+  mint: "bg-mint-tint text-ink",
+  indigo: "bg-indigo-tint text-ink",
+  ink: "bg-ink text-white",
+};
+
+/** Small status/label pill. Tones map to the emerald + vibrant + neutral system. */
 export function Badge({
   tone = "neutral",
   className,
   children,
 }: {
-  tone?: "emerald" | "neutral" | "outline";
+  tone?: "emerald" | "neutral" | "outline" | "coral" | "pink" | "amber" | "mint" | "indigo" | "ink";
   className?: string;
   children: ReactNode;
 }) {
-  const tones: Record<string, string> = {
-    emerald: "bg-emerald-tint text-primary-strong",
-    neutral: "bg-subtle text-graphite",
-    outline: "bg-paper text-slate ring-1 ring-inset ring-mist",
-  };
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold",
-        tones[tone],
+        "inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold",
+        BADGE_TONES[tone],
         className,
       )}
     >
@@ -76,26 +112,57 @@ export function LeafMark({ className }: { className?: string }) {
   );
 }
 
-/** Section eyebrow + heading + optional lead, centered by default. */
+const EYEBROW_TONES: Record<string, string> = {
+  emerald: "bg-emerald-tint text-primary-strong",
+  coral: "bg-coral-tint text-ink",
+  pink: "bg-pink-tint text-ink",
+  amber: "bg-amber-tint text-ink",
+  mint: "bg-mint-tint text-ink",
+  indigo: "bg-indigo-tint text-ink",
+};
+
+/**
+ * Section eyebrow (a bold color pill) + oversized heading + optional lead.
+ * `size="lg"` bumps the heading for hero-adjacent sections.
+ */
 export function SectionHeading({
   eyebrow,
+  eyebrowTone = "emerald",
   title,
   lead,
   align = "center",
+  size = "md",
   className,
 }: {
   eyebrow?: string;
+  eyebrowTone?: "emerald" | "coral" | "pink" | "amber" | "mint" | "indigo";
   title: ReactNode;
   lead?: ReactNode;
   align?: "center" | "left";
+  size?: "md" | "lg";
   className?: string;
 }) {
   return (
-    <div className={cn(align === "center" ? "mx-auto max-w-2xl text-center" : "max-w-2xl", className)}>
+    <div className={cn(align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-3xl", className)}>
       {eyebrow && (
-        <div className="mb-3 text-sm font-bold uppercase tracking-[0.14em] text-primary-strong">{eyebrow}</div>
+        <span
+          className={cn(
+            "mb-4 inline-flex items-center rounded-full px-3 py-1 text-xs font-extrabold uppercase tracking-[0.16em]",
+            EYEBROW_TONES[eyebrowTone],
+            align === "center" ? "mx-auto" : "",
+          )}
+        >
+          {eyebrow}
+        </span>
       )}
-      <h2 className="text-3xl font-extrabold text-ink sm:text-4xl">{title}</h2>
+      <h2
+        className={cn(
+          "headline-xl font-extrabold text-ink",
+          size === "lg" ? "text-4xl sm:text-5xl lg:text-6xl" : "text-3xl sm:text-4xl lg:text-[2.75rem]",
+        )}
+      >
+        {title}
+      </h2>
       {lead && <p className="mt-4 text-lg leading-relaxed text-slate">{lead}</p>}
     </div>
   );

@@ -3,6 +3,7 @@ import { Navbar } from "../landing/Navbar";
 import { Hero } from "../landing/Hero";
 import { HowItWorks, WhyFree, Features } from "../landing/Sections";
 import { Faq } from "../landing/Faq";
+import { FinalCta } from "../landing/FinalCta";
 import { Footer } from "../landing/Footer";
 
 // Engine-backed sections load their own chunk (Pixi) after first paint.
@@ -24,6 +25,7 @@ export default function Landing() {
         <GalleryTeaser />
       </Suspense>
       <Faq />
+      <FinalCta />
       <Footer />
     </div>
   );

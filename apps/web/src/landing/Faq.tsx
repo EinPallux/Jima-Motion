@@ -35,19 +35,22 @@ export function Faq() {
     <section id="faq" className="bg-paper py-20 sm:py-24">
       <Container>
         <div className="mx-auto max-w-3xl">
-          <SectionHeading align="left" eyebrow="FAQ" title="Questions" />
+          <SectionHeading align="left" eyebrow="FAQ" eyebrowTone="amber" title="Questions" />
           <div className="mt-8 flex flex-col gap-3">
             {FAQ.map((item, i) => {
               const isOpen = open === i;
               return (
-                <div key={item.q} className="overflow-hidden rounded-card border border-mist bg-paper">
+                <div
+                  key={item.q}
+                  className={`overflow-hidden rounded-2xl border-2 bg-paper transition-colors ${isOpen ? "border-ink" : "border-mist"}`}
+                >
                   <button
                     type="button"
                     onClick={() => setOpen(isOpen ? null : i)}
                     aria-expanded={isOpen}
                     className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-canvas"
                   >
-                    <span className="font-display text-lg font-semibold text-ink">{item.q}</span>
+                    <span className="font-display text-lg font-bold text-ink">{item.q}</span>
                     <span
                       aria-hidden
                       className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-emerald-tint text-primary-strong transition-transform duration-200 ${
@@ -57,7 +60,7 @@ export function Faq() {
                       +
                     </span>
                   </button>
-                  {isOpen && <p className="px-5 pb-5 text-slate">{item.a}</p>}
+                  {isOpen && <p className="px-5 pb-5 font-medium text-slate">{item.a}</p>}
                 </div>
               );
             })}

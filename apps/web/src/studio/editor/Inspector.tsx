@@ -10,7 +10,7 @@ const CONTENT_TYPES = new Set(["text", "textarea", "textlist", "image"]);
 const MOTION_TYPES = new Set(["select", "slider", "toggle"]);
 
 /** Small uppercase group label used to break the inspector into labeled sections. */
-const groupLabelCls = "text-xs font-bold uppercase tracking-[0.08em] text-slate";
+const groupLabelCls = "text-[11px] font-bold uppercase tracking-[0.1em] text-graphite";
 
 export function Inspector({ def, baseDuration }: { def: TemplateDefinition; baseDuration: number }) {
   const [tab, setTab] = useState<Tab>("content");
@@ -56,7 +56,7 @@ function TabButton({ id, active, onSelect, label }: { id: Tab; active: Tab; onSe
       aria-selected={isActive}
       onClick={() => onSelect(id)}
       className={cn(
-        "rounded-t-lg border-b-2 px-3 py-2 text-sm font-semibold transition-colors",
+        "rounded-t-lg border-b-2 px-3 py-2.5 text-[15px] font-bold transition-colors",
         isActive ? "border-primary-strong text-ink" : "border-transparent text-slate hover:text-ink",
       )}
     >
@@ -118,7 +118,7 @@ function StyleTab({
                 onClick={() => setFont(f.id === "default" ? undefined : f.id)}
                 aria-pressed={active}
                 className={cn(
-                  "truncate rounded-xl border px-3 py-2.5 text-left text-[15px] transition-colors",
+                  "truncate rounded-xl border-2 px-3 py-2.5 text-left text-[15px] font-medium transition-colors",
                   active ? "border-primary-strong bg-emerald-tint text-ink" : "border-mist text-graphite hover:border-slate hover:bg-subtle",
                 )}
                 style={{ fontFamily: `"${f.family}"` }}
@@ -144,7 +144,7 @@ function StyleTab({
                 onClick={() => setPalette(p.id)}
                 aria-pressed={active}
                 className={cn(
-                  "flex items-center gap-2 rounded-xl border p-2 text-left transition-colors",
+                  "flex items-center gap-2 rounded-xl border-2 p-2 text-left transition-colors",
                   active ? "border-primary-strong bg-emerald-tint" : "border-mist hover:border-slate hover:bg-subtle",
                 )}
               >
@@ -251,7 +251,7 @@ function MotionTab({
                   onClick={() => setSoundPack(p.id)}
                   aria-pressed={active}
                   className={cn(
-                    "rounded-xl border px-3 py-2 text-sm font-medium transition-colors",
+                    "rounded-xl border-2 px-3 py-2 text-sm font-semibold transition-colors",
                     active ? "border-primary-strong bg-emerald-tint text-ink" : "border-mist text-graphite hover:border-slate",
                   )}
                 >

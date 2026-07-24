@@ -21,7 +21,7 @@ export function TemplateRail({
             onClick={() => onSelect(t)}
             aria-current={active}
             title={t.name}
-            className={`overflow-hidden rounded-xl border-2 transition-colors ${active ? "border-primary-strong" : "border-transparent hover:border-slate/30"}`}
+            className={`overflow-hidden rounded-xl border-2 transition-colors ${active ? "border-primary-strong shadow-xs" : "border-transparent hover:border-slate/30"}`}
           >
             <PosterThumb def={t} aspect={t.defaultAspect} paletteId={t.palettes[0]?.id} alt={t.name} className="w-full rounded-lg" />
           </button>

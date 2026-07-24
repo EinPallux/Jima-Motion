@@ -15,7 +15,7 @@ export function PlaybackBar({ preview }: { preview: PreviewApi }) {
         type="button"
         onClick={preview.toggle}
         aria-label={preview.playing ? "Pause" : "Play"}
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-strong text-white transition-colors hover:bg-primary-press active:bg-primary-press"
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-strong text-white shadow-xs transition-colors hover:bg-primary-press active:bg-primary-press"
       >
         {preview.playing ? <PauseIcon /> : <PlayIcon />}
       </button>

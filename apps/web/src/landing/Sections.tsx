@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
-import { Card, Container, SectionHeading } from "../ui";
+import type { ReactElement, ReactNode } from "react";
+import { Card, Container, SectionHeading, type Tone } from "../ui";
 
 /** Shared 24×24 stroke icon shell — every feature glyph composes this. */
 function IconBase({ className, children }: { className?: string | undefined; children: ReactNode }) {
@@ -10,7 +10,7 @@ function IconBase({ className, children }: { className?: string | undefined; chi
       aria-hidden
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="1.9"
       strokeLinecap="round"
       strokeLinejoin="round"
     >
@@ -70,10 +70,10 @@ function IconFrame({ className }: { className?: string | undefined }) {
   );
 }
 
-const STEPS = [
-  { n: "1", title: "Pick a template", body: "Start from one of 249 professionally-animated templates." },
-  { n: "2", title: "Type your words, drop your images", body: "Edit text, colors and images in a simple form — no timeline." },
-  { n: "3", title: "Export MP4, WebM or GIF", body: "Rendered on your device in seconds. Download and post." },
+const STEPS: { n: string; title: string; body: string; tone: Tone; chip: string }[] = [
+  { n: "1", title: "Pick a template", body: "Start from one of 274 professionally-animated templates.", tone: "mint", chip: "bg-mint" },
+  { n: "2", title: "Type your words, drop your images", body: "Edit text, colors and images in a simple form — no timeline.", tone: "amber", chip: "bg-amber" },
+  { n: "3", title: "Export MP4, WebM or GIF", body: "Rendered on your device in seconds. Download and post.", tone: "coral", chip: "bg-coral" },
 ];
 
 export function HowItWorks() {
@@ -83,17 +83,18 @@ export function HowItWorks() {
         <SectionHeading
           align="left"
           eyebrow="How it works"
+          eyebrowTone="mint"
           title="Three steps. About a minute."
           lead="No timeline. No keyframes. No tutorial needed."
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-3">
           {STEPS.map((s) => (
-            <Card key={s.n} className="p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-tint font-display text-lg font-bold text-primary-strong">
+            <Card key={s.n} tone={s.tone} bold className="p-7 transition-transform duration-200 hover:-translate-y-1">
+              <span className={`flex h-14 w-14 items-center justify-center rounded-2xl ${s.chip} font-display text-2xl font-extrabold text-ink`}>
                 {s.n}
               </span>
-              <h3 className="mt-4 font-display text-xl font-bold text-ink">{s.title}</h3>
-              <p className="mt-1.5 text-slate">{s.body}</p>
+              <h3 className="mt-5 font-display text-xl font-extrabold text-ink">{s.title}</h3>
+              <p className="mt-2 font-medium text-graphite">{s.body}</p>
             </Card>
           ))}
         </div>
@@ -119,6 +120,7 @@ export function WhyFree() {
         <SectionHeading
           align="left"
           eyebrow="Why it's free"
+          eyebrowTone="emerald"
           title="Free forever. Here's why that's not a trick."
           lead={
             <>
@@ -137,8 +139,8 @@ export function WhyFree() {
                 {COLS.map((c, i) => (
                   <th
                     key={c}
-                    className={`rounded-t-xl p-3 font-display text-base font-bold ${
-                      i === 0 ? "bg-emerald-tint text-primary-strong" : "text-slate"
+                    className={`p-3 font-display text-base font-extrabold ${
+                      i === 0 ? "rounded-t-2xl bg-primary-strong text-white" : "text-slate"
                     }`}
                   >
                     {c}
@@ -149,16 +151,16 @@ export function WhyFree() {
             <tbody>
               {ROWS.map(([label, a, b, c], ri) => (
                 <tr key={label} className="border-t border-mist">
-                  <td className="p-3 font-medium text-graphite">{label}</td>
+                  <td className="p-3 font-bold text-graphite">{label}</td>
                   <td
-                    className={`bg-emerald-tint p-3 font-semibold text-primary-strong ${
-                      ri === ROWS.length - 1 ? "rounded-b-xl" : ""
+                    className={`bg-emerald-tint p-3 font-extrabold text-primary-strong ${
+                      ri === ROWS.length - 1 ? "rounded-b-2xl" : ""
                     }`}
                   >
                     {a}
                   </td>
-                  <td className="p-3 text-slate">{b}</td>
-                  <td className="p-3 text-slate">{c}</td>
+                  <td className="p-3 font-medium text-slate">{b}</td>
+                  <td className="p-3 font-medium text-slate">{c}</td>
                 </tr>
               ))}
             </tbody>
@@ -169,28 +171,28 @@ export function WhyFree() {
   );
 }
 
-const FEATURES = [
-  { title: "Free forever", body: "No plans, no quotas, no upsell. Ever.", Icon: IconCheck },
-  { title: "No account, ever", body: "The Studio just opens. Nothing to sign up for.", Icon: IconBolt },
-  { title: "1080p, no watermark", body: "Clean, full-resolution exports every time.", Icon: IconBadge },
-  { title: "MP4 + GIF (+ WebM)", body: "The formats social feeds and emails actually want.", Icon: IconFilm },
-  { title: "Private by design", body: "Your text and images never leave your browser.", Icon: IconLock },
-  { title: "Every aspect ratio", body: "1:1, 4:5, 9:16 and 16:9 from one project.", Icon: IconFrame },
+const FEATURES: { title: string; body: string; Icon: (p: { className?: string }) => ReactElement; chip: string; icon: string }[] = [
+  { title: "Free forever", body: "No plans, no quotas, no upsell. Ever.", Icon: IconCheck, chip: "bg-emerald-tint", icon: "text-primary-strong" },
+  { title: "No account, ever", body: "The Studio just opens. Nothing to sign up for.", Icon: IconBolt, chip: "bg-amber-tint", icon: "text-ink" },
+  { title: "1080p, no watermark", body: "Clean, full-resolution exports every time.", Icon: IconBadge, chip: "bg-coral-tint", icon: "text-ink" },
+  { title: "MP4 + GIF (+ WebM)", body: "The formats social feeds and emails actually want.", Icon: IconFilm, chip: "bg-indigo-tint", icon: "text-indigo" },
+  { title: "Private by design", body: "Your text and images never leave your browser.", Icon: IconLock, chip: "bg-pink-tint", icon: "text-ink" },
+  { title: "Every aspect ratio", body: "1:1, 4:5, 9:16 and 16:9 from one project.", Icon: IconFrame, chip: "bg-mint-tint", icon: "text-ink" },
 ];
 
 export function Features() {
   return (
     <section className="bg-paper py-20 sm:py-24">
       <Container>
-        <SectionHeading align="left" eyebrow="Features" title="Everything you need. Nothing you don't." />
+        <SectionHeading align="left" eyebrow="Features" eyebrowTone="coral" title="Everything you need. Nothing you don't." />
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map(({ Icon, ...f }) => (
-            <Card key={f.title} className="p-6 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-tint text-primary-strong">
-                <Icon className="h-5 w-5" />
+            <Card key={f.title} className="p-7 transition-all duration-200 hover:-translate-y-1 hover:shadow-pop">
+              <span className={`flex h-12 w-12 items-center justify-center rounded-2xl ${f.chip} ${f.icon}`}>
+                <Icon className="h-6 w-6" />
               </span>
-              <h3 className="mt-4 font-display text-lg font-bold text-ink">{f.title}</h3>
-              <p className="mt-1 text-slate">{f.body}</p>
+              <h3 className="mt-5 font-display text-lg font-extrabold text-ink">{f.title}</h3>
+              <p className="mt-1.5 font-medium text-slate">{f.body}</p>
             </Card>
           ))}
         </div>

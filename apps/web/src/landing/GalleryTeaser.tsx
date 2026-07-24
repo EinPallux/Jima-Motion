@@ -11,7 +11,7 @@ const TEASER_LIMIT = 12;
 // primitive rather than a literal <Button> (role="link" + no
 // nested-interactive markup).
 const STUDIO_CTA =
-  "inline-flex h-12 select-none items-center justify-center gap-2 rounded-xl bg-primary-strong px-6 text-base font-semibold text-white shadow-xs transition-colors duration-150 hover:bg-primary-press active:bg-primary-press";
+  "inline-flex h-13 select-none items-center justify-center gap-2 rounded-xl bg-primary-strong px-7 text-base font-bold text-white shadow-xs transition-all duration-150 hover:bg-primary-press active:translate-y-px";
 
 export function GalleryTeaser() {
   const [group, setGroup] = useState("all");
@@ -29,10 +29,11 @@ export function GalleryTeaser() {
           <SectionHeading
             align="left"
             eyebrow="Templates"
+            eyebrowTone="indigo"
             title="Templates for every post"
             lead="Pick a starting point — every one is fully editable."
           />
-          <Link to="/studio" className="text-sm font-semibold text-primary-strong hover:underline">
+          <Link to="/studio" className="text-sm font-bold text-primary-strong hover:underline">
             Open the full gallery in the Studio →
           </Link>
         </div>
@@ -46,7 +47,7 @@ export function GalleryTeaser() {
                 type="button"
                 onClick={() => setGroup(g.id)}
                 aria-pressed={active}
-                className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
+                className={`rounded-full px-4 py-1.5 text-sm font-bold transition-colors ${
                   active ? "bg-ink text-paper" : "bg-paper text-slate ring-1 ring-inset ring-mist hover:text-ink"
                 }`}
               >
@@ -61,7 +62,7 @@ export function GalleryTeaser() {
             <Link
               key={def.id}
               to={`/studio?t=${def.id}`}
-              className="group block overflow-hidden rounded-card border border-mist bg-paper shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:shadow-pop"
+              className="group block overflow-hidden rounded-bento border border-mist bg-paper shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-pop"
             >
               <PosterThumb def={def} aspect="1:1" paletteId={def.palettes[0]?.id} alt={def.name} className="w-full" />
               <div className="px-3 py-2.5">

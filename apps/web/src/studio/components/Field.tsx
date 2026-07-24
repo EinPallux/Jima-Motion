@@ -13,7 +13,7 @@ interface FieldProps {
 const labelCls = "block text-sm font-semibold text-graphite";
 const helpCls = "mt-1 text-xs text-slate";
 const inputCls =
-  "w-full rounded-xl border border-mist bg-paper px-3 py-2 text-[15px] text-ink placeholder:text-muted transition-colors focus:border-primary-strong focus:ring-2 focus:ring-emerald-ring";
+  "w-full rounded-xl border border-mist bg-paper px-3 py-2.5 text-[15px] text-ink placeholder:text-muted transition-colors focus:border-primary-strong focus:ring-2 focus:ring-emerald-ring";
 
 export function Field({ field, value, onChange, blobKeyPrefix }: FieldProps) {
   const id = useId();
@@ -169,8 +169,8 @@ function SelectControl({ id, field, value, onChange }: { id: string; field: Temp
               role="radio"
               aria-checked={active}
               className={cn(
-                "rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
-                active ? "bg-paper text-ink shadow-xs" : "text-slate hover:text-ink",
+                "rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors",
+                active ? "bg-primary-strong text-white shadow-xs" : "text-slate hover:text-ink",
               )}
               onClick={() => onChange(opt.value)}
             >

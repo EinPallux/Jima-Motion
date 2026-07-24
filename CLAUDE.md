@@ -9,8 +9,9 @@ plus a v1.5 sound + editable-speed release, a v1.6 transparent-export release, a
 makeover (new 3D hero) + Template-Library overhaul, a v1.9 release that removed the Backgrounds
 category and added 45 templates (5 new per gallery section), a v1.10 release that added 50
 templates (10 new each for lower-thirds, social, showcase, explainers/data and events/travel), a
-v1.11 landing + Studio redesign (true light mode, emerald, Parkinsans), and a v1.12 release that
-added 25 templates (5 new each for the same five sections).**
+v1.11 landing + Studio redesign (true light mode, emerald, Parkinsans), a v1.12 release that
+added 25 templates (5 new each for the same five sections), and a v1.13 bold visual refresh (chunky
+oversized type + vibrant coral/pink/amber/mint/indigo color blocks, still fully light + emerald).**
 Workspace/CI/guardrails; deterministic motion engine + **274 templates** (12 launch + a 23-template
 expansion + a 20-template smooth-text pack + a 20-template explainer/showcase/product/ad pack + a
 20-template showcase & product-presentation pack + a 50-template pack adding overlays/lower-thirds,
@@ -36,7 +37,9 @@ template's timeline beats, toggleable with 3 packs, baked into MP4/WebM exports;
 client-side MP4/WebM/GIF export; the full Jima Studio UI;
 a modern, light-mode SaaS UI (v2 redesign: **true white** — no tint — with an **emerald** accent and
 **Parkinsans** UI type across landing + Studio; a live template-showcase hero replaced the retired
-3D/WebGL blob; in-repo shadcn-style Tailwind components in `apps/web/src/ui/`); and Phase 6 hardening
+3D/WebGL blob; in-repo shadcn-style Tailwind components in `apps/web/src/ui/`; **v1.13 bold refresh** —
+chunky oversized headlines + vibrant color-block sections, a bright-emerald final CTA band, still
+fully light + emerald); and Phase 6 hardening
 (axe-core a11y sweep with zero serious/critical violations, engine-rendered OG image, German
 max-length audit, README polish). All golden, determinism, export-smoke, studio-, landing-integration
 and a11y tests pass; `pnpm check` green. Cross-browser QA here is Chromium-only (SwiftShader);

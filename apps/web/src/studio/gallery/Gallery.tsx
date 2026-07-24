@@ -80,13 +80,13 @@ export function Gallery({
           <a href="/" aria-label="Jima Motion home">
             <Wordmark />
           </a>
-          <span className="text-sm text-slate">100% free · no account · nothing leaves your browser</span>
+          <span className="rounded-full bg-emerald-tint px-3 py-1.5 text-xs font-bold text-primary-strong">100% free · no account · nothing leaves your browser</span>
         </div>
       </header>
 
       <main className="mx-auto max-w-6xl px-4 pb-16 sm:px-8">
         {resumeDef && resume && (
-          <Card className="mt-6 flex flex-wrap items-center justify-between gap-3 p-4">
+          <Card tone="amber" className="mt-6 flex flex-wrap items-center justify-between gap-3 p-5">
             <p className="text-sm text-ink">
               Continue where you left off — <span className="font-semibold">{resumeDef.name}</span>
               <span className="text-slate"> · {timeAgo(resume.updatedAt)}</span>
@@ -103,8 +103,8 @@ export function Gallery({
         )}
 
         <div className="pt-7">
-          <h1 className="font-display text-3xl font-extrabold text-ink">Pick a template</h1>
-          <p className="mt-1 text-slate">Hover any template to see it move. {templates.length} to choose from — all free.</p>
+          <h1 className="headline-xl font-display text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">Pick a template</h1>
+          <p className="mt-2 text-base text-slate">Hover any template to see it move. {templates.length} to choose from — all free.</p>
         </div>
 
         {/* Sticky filter toolbar: search + category chips + result count. */}
@@ -112,7 +112,7 @@ export function Gallery({
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center gap-3">
               <div className="relative w-full max-w-sm">
-                <span aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted">
+                <span aria-hidden className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted">
                   ⌕
                 </span>
                 <input
@@ -124,7 +124,7 @@ export function Gallery({
                   }}
                   placeholder="Search templates… (name, style, or use-case)"
                   aria-label="Search templates"
-                  className="w-full rounded-full border border-mist bg-paper py-2.5 pl-9 pr-4 text-[15px] text-ink outline-none transition-colors focus:border-primary-strong"
+                  className="w-full rounded-full border border-mist bg-paper py-3 pl-10 pr-4 text-[15px] font-medium text-ink outline-none transition-colors focus:border-primary-strong focus:ring-2 focus:ring-emerald-ring"
                 />
               </div>
               <span className="text-sm text-slate" aria-live="polite">
@@ -142,14 +142,14 @@ export function Gallery({
         </div>
 
         {filtered.length > 0 ? (
-          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filtered.map((t) => (
               <TemplateCard key={t.id} def={t} onOpen={onOpen} />
             ))}
           </div>
         ) : (
-          <div className="py-20 text-center">
-            <p className="text-slate">No templates match {q ? `“${query}”` : "this filter"}.</p>
+          <div className="mt-6 rounded-bento border border-mist bg-indigo-tint/50 py-16 text-center">
+            <p className="text-base font-medium text-graphite">No templates match {q ? `“${query}”` : "this filter"}.</p>
             <Button
               variant="secondary"
               size="sm"
@@ -175,8 +175,8 @@ function Chip({ label, count, active, onClick }: { label: string; count: number;
       aria-pressed={active}
       onClick={onClick}
       className={cn(
-        "flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors",
-        active ? "bg-primary-strong text-white" : "border border-mist bg-paper text-slate hover:bg-canvas hover:text-ink",
+        "flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-colors",
+        active ? "bg-primary-strong text-white shadow-xs" : "border border-mist bg-paper text-slate hover:bg-canvas hover:text-ink",
       )}
     >
       {label}

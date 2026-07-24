@@ -10,17 +10,17 @@ const VARIANTS: Record<Variant, string> = {
     "bg-primary-strong text-white shadow-xs hover:bg-primary-press active:bg-primary-press",
   // Strong neutral CTA.
   ink: "bg-ink text-white shadow-xs hover:bg-graphite active:bg-graphite",
-  // Outline / secondary on white.
+  // Outline / secondary on white — chunkier 2px ring for the bold look.
   secondary:
-    "bg-paper text-ink ring-1 ring-inset ring-mist hover:bg-canvas hover:ring-slate/30",
+    "bg-paper text-ink ring-2 ring-inset ring-mist hover:bg-canvas hover:ring-ink/25",
   // Low-emphasis.
   ghost: "bg-transparent text-slate hover:bg-subtle hover:text-ink",
 };
 
 const SIZES: Record<Size, string> = {
-  sm: "h-9 gap-1.5 px-3.5 text-sm",
+  sm: "h-9 gap-1.5 px-4 text-sm",
   md: "h-11 gap-2 px-5 text-[15px]",
-  lg: "h-12 gap-2 px-6 text-base",
+  lg: "h-13 gap-2 px-7 text-base",
 };
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -37,7 +37,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ref={ref}
       type={type}
       className={cn(
-        "inline-flex select-none items-center justify-center rounded-xl font-semibold transition-colors duration-150 disabled:pointer-events-none disabled:opacity-45",
+        // Bolder weight + a subtle press for the v3 chunky look.
+        "inline-flex select-none items-center justify-center rounded-xl font-bold transition-all duration-150 active:translate-y-px disabled:pointer-events-none disabled:opacity-45",
         VARIANTS[variant],
         SIZES[size],
         className,

@@ -20,7 +20,7 @@ const RES = { "1080": 1, "720": 720 / 1080, "480": 480 / 1080 } as const;
 // Mirrors the <Button variant="primary" size="md"> look for the one spot that must
 // stay a real <a download> (native download semantics) instead of the <button>-only primitive.
 const downloadLinkCls =
-  "inline-flex h-11 select-none items-center justify-center gap-2 rounded-xl bg-primary-strong px-5 text-[15px] font-semibold text-white shadow-xs transition-colors duration-150 hover:bg-primary-press active:bg-primary-press";
+  "inline-flex h-11 select-none items-center justify-center gap-2 rounded-xl bg-primary-strong px-5 text-[15px] font-bold text-white shadow-xs transition-colors duration-150 hover:bg-primary-press active:bg-primary-press";
 
 export function ExportModal({
   def,
@@ -131,9 +131,9 @@ export function ExportModal({
         if (e.target === e.currentTarget && phase !== "rendering") onClose();
       }}
     >
-      <div className="w-full max-w-lg overflow-hidden rounded-modal bg-paper shadow-pop">
+      <div className="w-full max-w-lg overflow-hidden rounded-bento bg-paper shadow-bold">
         <div className="flex items-center justify-between border-b border-mist px-6 py-4">
-          <h2 className="font-display text-xl font-extrabold text-ink">Export</h2>
+          <h2 className="font-display text-2xl font-extrabold text-ink headline-xl">Export</h2>
           {phase !== "rendering" && (
             <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close">
               ✕
@@ -212,7 +212,7 @@ function Configure(props: {
               onClick={() => setFormat(f)}
               aria-pressed={active}
               className={cn(
-                "flex flex-col gap-1 rounded-xl border p-3 text-left transition-colors",
+                "flex flex-col gap-1 rounded-xl border-2 p-3 text-left transition-colors",
                 active ? "border-primary-strong bg-emerald-tint" : "border-mist hover:border-slate",
                 !enabled && "cursor-not-allowed opacity-45",
               )}
@@ -291,8 +291,8 @@ function Segment({ label, value, options, onChange }: { label: string; value: st
               aria-checked={active}
               onClick={() => onChange(val)}
               className={cn(
-                "rounded-lg px-3 py-1 text-sm font-medium transition-colors",
-                active ? "bg-paper text-ink shadow-xs" : "text-slate hover:text-ink",
+                "rounded-lg px-3 py-1.5 text-sm font-semibold transition-colors",
+                active ? "bg-primary-strong text-white shadow-xs" : "text-slate hover:text-ink",
               )}
             >
               {lbl}
@@ -314,7 +314,7 @@ function Rendering({ progress, onCancel }: { progress: ExportProgress | null; on
           {progress ? `${progress.frame} / ${progress.totalFrames} frames` : "starting…"}
         </span>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-mist">
+      <div className="h-2.5 overflow-hidden rounded-full bg-mist">
         <div className="h-full rounded-full bg-primary transition-[width] duration-150" style={{ width: `${Math.round(ratio * 100)}%` }} />
       </div>
       <Button variant="ghost" size="sm" className="self-start" onClick={onCancel}>

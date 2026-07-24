@@ -39,6 +39,22 @@
   --color-ember-text: #047857; /* also drives the focus ring — 5:1 on white */
   --color-ember-tint: #ecfdf5;
 
+  /* ---- Vibrant color blocks (v3 "bold" look) ----
+     Used as light TINT backgrounds for section bands + cards (always with dark
+     ink text — every tint is ≥7:1 on ink), and as SATURATED accents for icon
+     chips, dots, tags, borders and dark-ink-on-color labels (each saturated
+     value clears ≥4.5:1 with near-black ink). Never place white text on these. */
+  --color-coral: #ff6a45;
+  --color-coral-tint: #ffe9e2;
+  --color-pink: #ec4899;
+  --color-pink-tint: #fbe3f0;
+  --color-amber: #f5a524;
+  --color-amber-tint: #fdeecb;
+  --color-mint: #10c8a0;
+  --color-mint-tint: #dcfaf1;
+  --color-indigo: #6366f1;
+  --color-indigo-tint: #e8eafe;
+
   /* ---- Semantic ---- */
   --color-success: #059669;
   --color-warning: #b45309;
@@ -48,15 +64,18 @@
   --font-display: "Parkinsans Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Parkinsans Variable", ui-sans-serif, system-ui, sans-serif;
 
-  /* ---- Radii — crisp modern-SaaS scale ---- */
+  /* ---- Radii — crisp modern-SaaS scale + chunky "bento" for the bold look ---- */
   --radius-input: 10px;
   --radius-card: 16px;
   --radius-modal: 22px;
+  --radius-bento: 26px; /* oversized rounded blocks (hero tiles, CTA band, bento cards) */
 
-  /* ---- Elevation — soft, neutral (no warm tint) ---- */
+  /* ---- Elevation — soft, neutral (no warm tint) + a punchy "bold" tier ---- */
   --shadow-xs: 0 1px 2px rgb(10 10 13 / 5%);
   --shadow-card: 0 1px 2px rgb(10 10 13 / 4%), 0 8px 24px rgb(10 10 13 / 6%);
   --shadow-pop: 0 10px 20px rgb(10 10 13 / 6%), 0 30px 60px rgb(16 185 129 / 12%);
+  /* Bold, slightly "stacked" elevation for the chunky color-block cards. */
+  --shadow-bold: 0 2px 0 rgb(10 10 13 / 6%), 0 14px 30px rgb(10 10 13 / 10%);
 }
 
 :root {
@@ -81,11 +100,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Display type: Parkinsans, tighter tracking for headings. */
+/* Display type: Parkinsans, tight tracking + balanced wrap for the bold,
+   oversized headline look (v3). */
 h1, h2, h3, h4 {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
-  line-height: 1.08;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+/* Big impact headlines (hero, CTA band). Slightly negative tracking reads as
+   "chunky" at large sizes without needing a heavier font axis than Parkinsans
+   800. Pair with font-extrabold + a large text-* size. */
+.headline-xl {
+  letter-spacing: -0.04em;
+  line-height: 0.98;
 }
 
 /* Visible focus ring — a11y (DESIGN_ARCHITECTURE.md §8) */
