@@ -3,12 +3,13 @@
 Jima Motion is a **100 % free, no-account, browser-only motion-graphics tool for social media
 managers**: pick a template → type your text / drop images → export MP4/WebM/GIF, rendered
 entirely client-side. Brand = "Jima Motion"; the editor = "Jima Studio" ("the Studio").
-**Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 199,
+**Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 249,
 plus a v1.5 sound + editable-speed release, a v1.6 transparent-export release, a v1.7
 +50-template / editable-decorations release, a v1.7.2 +10-social-template release, a v1.8 landing
-makeover (new 3D hero) + Template-Library overhaul, and a v1.9 release that removed the Backgrounds
-category and added 45 templates (5 new per gallery section).**
-Workspace/CI/guardrails; deterministic motion engine + **199 templates** (12 launch + a 23-template
+makeover (new 3D hero) + Template-Library overhaul, a v1.9 release that removed the Backgrounds
+category and added 45 templates (5 new per gallery section), and a v1.10 release that added 50
+templates (10 new each for lower-thirds, social, showcase, explainers/data and events/travel).**
+Workspace/CI/guardrails; deterministic motion engine + **249 templates** (12 launch + a 23-template
 expansion + a 20-template smooth-text pack + a 20-template explainer/showcase/product/ad pack + a
 20-template showcase & product-presentation pack + a 50-template pack adding overlays/lower-thirds,
 intros/openers, and more text/social/product/stat/brand + a 10-template
@@ -16,7 +17,8 @@ social pack — profiles, reposts, story quiz/Q&A, live reactions, DMs, link-in-
 giveaways, trending + a 5-template reference pack — comment threads, named chat convos, search-bar
 typing, glowing retro-TV/vlog frames, tiled-watermark product drops + a 45-template v1.9 pack — 5
 new per gallery section spanning text, overlays, social, product/ads, showcase, data, brand,
-openers and events);
+openers and events + a 50-template v1.10 pack — 10 new each for lower-thirds, social, showcase,
+explainers & data, and events & travel);
 two added categories — **overlay** (lower-thirds), **intro** (openers);
 the seldom-used **loop/Backgrounds** category was retired in v1.9;
 **per-template toggles to switch off decorative accents** (accent bar/dot, badges, frames, glows…);

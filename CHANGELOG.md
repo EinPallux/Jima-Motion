@@ -11,6 +11,37 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.10.0] — 2026-07-23 · +50 templates — 10 each for five sections (199 → 249)
+
+Ten new templates apiece for **Lower-thirds, Social, Showcase, Explainers & data, and Events &
+Travel**, taking the library to **249**. All deterministic, all 4 aspects, ≥3 palettes (mostly 4),
+per-element color fields, decorative toggles, ≥4.5:1 end-frame contrast.
+
+### Added — 50 templates
+
+- **Lower-thirds** (`overlay`, transparent-export-friendly): `ticker-bar` (scrolling news ticker),
+  `handle-bar` (social @handle pill), `now-playing` (music overlay + progress + EQ), `caption-pop`
+  (karaoke word-by-word), `alert-banner` (drop-down alert), `speaker-card` (speaker intro + avatar),
+  `score-bug` (sports score), `logo-bug` (corner channel bug), `timer-badge` (count-up/down badge),
+  `topic-chips` (hashtag chips).
+- **Social**: `live-badge` (going-live + viewers), `stream-chat` (live chat + superchat),
+  `swipe-carousel` (IG carousel), `pinned-comment`, `music-sticker` (spinning disc + marquee + EQ),
+  `countdown-sticker`, `slider-sticker` (emoji slider), `new-follower` (toast stack), `tip-jar`
+  (super-thanks), `add-yours` (story chain).
+- **Showcase**: `laptop-mockup` (lid opens), `tablet-showcase`, `photo-stack-swipe` (swipe cards),
+  `grid-zoom` (tile → fullscreen), `spec-sheet`, `hotspot-tour` (numbered hotspots), `feature-tabs`
+  (tab switcher), `film-strip` (sprocketed strip), `masonry-reveal`, `orbit-showcase` (orbiting
+  features).
+- **Explainers & data**: `pie-chart`, `area-chart`, `gauge-meter` (needle + count-up),
+  `funnel-chart`, `venn-diagram`, `flowchart` (branching decision), `pyramid-levels`, `radial-bars`
+  (concentric rings), `comparison-table`, `growth-arrow` (+% count-up). All count-ups pure in `t`.
+- **Events & Travel**: `event-countdown`, `itinerary` (day timeline), `flight-board` (split-flap
+  departures), `luggage-tag` (pendulum swing), `weather-forecast`, `hotel-card`, `road-trip` (route
+  + travelling car), `rsvp-card`, `event-schedule`, `globe-spin` (spinning globe + pin).
+
+### Changed
+- Golden suite now covers **249 templates** (249 determinism re-seek tests + 996 poster frames).
+
 ## [1.9.0] — 2026-07-23 · Backgrounds category removed · +45 templates (160 → 199)
 
 Retired the seldom-used **Backgrounds** category and grew every other gallery section by five, for a

@@ -206,6 +206,57 @@ import { boardingPass } from "./boarding-pass/index";
 import { mapRoute } from "./map-route/index";
 import { calendarFlip } from "./calendar-flip/index";
 import { passportStamp } from "./passport-stamp/index";
+// v1.10 pack — 10 new templates each for Lower-thirds, Social, Showcase, Explainers & data, Events & Travel.
+import { tickerBar } from "./ticker-bar/index";
+import { handleBar } from "./handle-bar/index";
+import { nowPlaying } from "./now-playing/index";
+import { captionPop } from "./caption-pop/index";
+import { alertBanner } from "./alert-banner/index";
+import { speakerCard } from "./speaker-card/index";
+import { scoreBug } from "./score-bug/index";
+import { logoBug } from "./logo-bug/index";
+import { timerBadge } from "./timer-badge/index";
+import { topicChips } from "./topic-chips/index";
+import { liveBadge } from "./live-badge/index";
+import { streamChat } from "./stream-chat/index";
+import { swipeCarousel } from "./swipe-carousel/index";
+import { pinnedComment } from "./pinned-comment/index";
+import { musicSticker } from "./music-sticker/index";
+import { countdownSticker } from "./countdown-sticker/index";
+import { sliderSticker } from "./slider-sticker/index";
+import { newFollower } from "./new-follower/index";
+import { tipJar } from "./tip-jar/index";
+import { addYours } from "./add-yours/index";
+import { laptopMockup } from "./laptop-mockup/index";
+import { tabletShowcase } from "./tablet-showcase/index";
+import { photoStackSwipe } from "./photo-stack-swipe/index";
+import { gridZoom } from "./grid-zoom/index";
+import { specSheet } from "./spec-sheet/index";
+import { hotspotTour } from "./hotspot-tour/index";
+import { featureTabs } from "./feature-tabs/index";
+import { filmStrip } from "./film-strip/index";
+import { masonryReveal } from "./masonry-reveal/index";
+import { orbitShowcase } from "./orbit-showcase/index";
+import { pieChart } from "./pie-chart/index";
+import { areaChart } from "./area-chart/index";
+import { gaugeMeter } from "./gauge-meter/index";
+import { funnelChart } from "./funnel-chart/index";
+import { vennDiagram } from "./venn-diagram/index";
+import { flowchart } from "./flowchart/index";
+import { pyramidLevels } from "./pyramid-levels/index";
+import { radialBars } from "./radial-bars/index";
+import { comparisonTable } from "./comparison-table/index";
+import { growthArrow } from "./growth-arrow/index";
+import { eventCountdown } from "./event-countdown/index";
+import { itinerary } from "./itinerary/index";
+import { flightBoard } from "./flight-board/index";
+import { luggageTag } from "./luggage-tag/index";
+import { weatherForecast } from "./weather-forecast/index";
+import { hotelCard } from "./hotel-card/index";
+import { roadTrip } from "./road-trip/index";
+import { rsvpCard } from "./rsvp-card/index";
+import { eventSchedule } from "./event-schedule/index";
+import { globeSpin } from "./globe-spin/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -428,6 +479,62 @@ export const templates: TemplateDefinition[] = [
   mapRoute,
   calendarFlip,
   passportStamp,
+  // v1.10 pack — 10 new per section: Lower-thirds, Social, Showcase, Explainers & data, Events & Travel.
+  // Lower-thirds
+  tickerBar,
+  handleBar,
+  nowPlaying,
+  captionPop,
+  alertBanner,
+  speakerCard,
+  scoreBug,
+  logoBug,
+  timerBadge,
+  topicChips,
+  // Social
+  liveBadge,
+  streamChat,
+  swipeCarousel,
+  pinnedComment,
+  musicSticker,
+  countdownSticker,
+  sliderSticker,
+  newFollower,
+  tipJar,
+  addYours,
+  // Showcase
+  laptopMockup,
+  tabletShowcase,
+  photoStackSwipe,
+  gridZoom,
+  specSheet,
+  hotspotTour,
+  featureTabs,
+  filmStrip,
+  masonryReveal,
+  orbitShowcase,
+  // Explainers & data
+  pieChart,
+  areaChart,
+  gaugeMeter,
+  funnelChart,
+  vennDiagram,
+  flowchart,
+  pyramidLevels,
+  radialBars,
+  comparisonTable,
+  growthArrow,
+  // Events & Travel
+  eventCountdown,
+  itinerary,
+  flightBoard,
+  luggageTag,
+  weatherForecast,
+  hotelCard,
+  roadTrip,
+  rsvpCard,
+  eventSchedule,
+  globeSpin,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {

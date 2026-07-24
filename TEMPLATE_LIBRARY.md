@@ -501,6 +501,18 @@ degradation, per-element color fields.
 | T94 | Product Review | `product-review` | product | 4:5 | Product + star rating + customer quote |
 | T95 | Shop Grid | `shop-grid` | product | 4:5 | A shop collection grid with prices + CTA |
 
+## 15. +50 templates — 10 each for five sections (2026-07-23, v1.10.0)
+
+Library 199 → **249**. Ten new templates apiece for five gallery sections:
+
+- **Lower-thirds** (`overlay`): `ticker-bar`, `handle-bar`, `now-playing`, `caption-pop`, `alert-banner`, `speaker-card`, `score-bug`, `logo-bug`, `timer-badge`, `topic-chips`.
+- **Social** (`social`): `live-badge`, `stream-chat`, `swipe-carousel`, `pinned-comment`, `music-sticker`, `countdown-sticker`, `slider-sticker`, `new-follower`, `tip-jar`, `add-yours`.
+- **Showcase** (`tech`/`photo`/`showcase`): `laptop-mockup`, `tablet-showcase`, `photo-stack-swipe`, `grid-zoom`, `spec-sheet`, `hotspot-tour`, `feature-tabs`, `film-strip`, `masonry-reveal`, `orbit-showcase`.
+- **Explainers & data** (`stat`/`educational`/`comparison`): `pie-chart`, `area-chart`, `gauge-meter`, `funnel-chart`, `venn-diagram`, `flowchart`, `pyramid-levels`, `radial-bars`, `comparison-table`, `growth-arrow`.
+- **Events & Travel** (`event`/`travel`): `event-countdown`, `itinerary`, `flight-board`, `luggage-tag`, `weather-forecast`, `hotel-card`, `road-trip`, `rsvp-card`, `event-schedule`, `globe-spin`.
+
+All deterministic, 4 aspects, ≥3 palettes, per-element colors, decorative toggles, ≥4.5:1 end-frame contrast.
+
 ## 14. Backgrounds retired · +45 templates — 5 per gallery section (2026-07-23, v1.9.0)
 
 Library 160 → **199**. The **Backgrounds** (`loop`) category and its six templates (`bokeh-drift`,
