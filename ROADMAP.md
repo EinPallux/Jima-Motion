@@ -282,5 +282,8 @@ rendering, AI credits, dark mode.
 | +10 templates each for lower-thirds, social, showcase, explainers/data, events/travel | ✅ 2026-07-23 — **v1.10.0**, library 199 → 249 |
 | v2 UI redesign — true light mode, emerald accent, Parkinsans, live-showcase hero (3D hero retired) | ✅ 2026-07-24 — **v1.11.0** |
 | +5 templates each for lower-thirds, social, showcase, explainers/data, events/travel | ✅ 2026-07-24 — **v1.12.0**, library 249 → 274 |
+| Bold visual refresh — chunky type + vibrant color blocks | ✅ 2026-07-24 — **v1.13.0** (+ v1.13.1 QA hardening) |
+| Full re-layout — Jitter-level landing, app-shell library, three-pane editor | ✅ 2026-07-24 — **v1.14.0** |
+| +10 templates each for overlays, social, product/ads, showcase, explainers/data, brand/quotes, openers, events/travel | ✅ 2026-07-24 — **v1.15.0**, library 274 → 354 |
 
 *(Update this table + CHANGELOG.md at every phase transition.)*

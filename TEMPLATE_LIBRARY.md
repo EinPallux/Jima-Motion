@@ -501,6 +501,21 @@ degradation, per-element color fields.
 | T94 | Product Review | `product-review` | product | 4:5 | Product + star rating + customer quote |
 | T95 | Shop Grid | `shop-grid` | product | 4:5 | A shop collection grid with prices + CTA |
 
+## 17. +80 templates — 10 each for eight sections (2026-07-24, v1.15.0)
+
+Library 274 → **354**. Ten new templates apiece for every gallery section **except Text & titles**:
+
+- **Overlays & lower-thirds** (`overlay`): `weather-bug`, `breaking-banner`, `poll-bar`, `countdown-strip`, `now-speaking`, `stat-strip`, `donation-alert`, `dateline`, `key-point`, `subscribe-reminder`.
+- **Social** (`social`): `unmute-tap`, `screen-record`, `green-screen`, `pinned-post`, `close-friends`, `live-shopping`, `creator-like`, `use-this-sound`, `this-or-that`, `story-highlights`.
+- **Product & ads** (`product`/`promo`): `restock-alert`, `bogo-offer`, `ingredients`, `subscription-box`, `wishlist-add`, `limited-edition`, `cashback-offer`, `gift-card`, `bestseller-tag`, `app-promo`.
+- **Showcase** (`tech`/`showcase`/`photo`): `code-editor`, `terminal`, `dashboard`, `pricing-tiers`, `smartwatch-showcase`, `home-widgets`, `photo-mosaic`, `slideshow`, `photo-flip`, `magazine-spread`.
+- **Explainers & data** (`stat`/`educational`/`comparison`): `waterfall-chart`, `heatmap`, `leaderboard`, `cycle-diagram`, `org-chart`, `roadmap`, `word-cloud`, `quadrant`, `survey-results`, `radar-chart`.
+- **Brand & quotes** (`brand`/`testimonial`): `logo-assemble`, `award-laurels`, `logo-flip`, `coming-soon`, `social-endcard`, `brand-palette`, `logo-morph`, `review-stack`, `review-badge`, `video-testimonial`.
+- **Openers** (`intro`): `curtain-intro`, `light-sweep`, `ink-reveal`, `panel-slide`, `spotlight-reveal`, `countdown-ring`, `burst-intro`, `grid-intro`, `title-card`, `sparkle-reveal`.
+- **Events & travel** (`event`/`travel`): `wedding-invite`, `anniversary-card`, `speaker-lineup`, `holiday-card`, `grand-opening`, `graduation-card`, `packing-list`, `destination-reveal`, `currency-card`, `trip-map`.
+
+All deterministic, 4 aspects, 4 palettes, per-element colors, decorative toggles, ≥4.5:1 end-frame contrast. Overlay templates default to a transparent background (alpha-WebM ready).
+
 ## 16. +25 templates — 5 each for five sections (2026-07-24, v1.12.0)
 
 Library 249 → **274**. Five new templates apiece for the same five gallery sections:

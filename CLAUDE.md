@@ -3,16 +3,19 @@
 Jima Motion is a **100 % free, no-account, browser-only motion-graphics tool for social media
 managers**: pick a template → type your text / drop images → export MP4/WebM/GIF, rendered
 entirely client-side. Brand = "Jima Motion"; the editor = "Jima Studio" ("the Studio").
-**Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 274,
+**Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 354,
 plus a v1.5 sound + editable-speed release, a v1.6 transparent-export release, a v1.7
 +50-template / editable-decorations release, a v1.7.2 +10-social-template release, a v1.8 landing
 makeover (new 3D hero) + Template-Library overhaul, a v1.9 release that removed the Backgrounds
 category and added 45 templates (5 new per gallery section), a v1.10 release that added 50
 templates (10 new each for lower-thirds, social, showcase, explainers/data and events/travel), a
 v1.11 landing + Studio redesign (true light mode, emerald, Parkinsans), a v1.12 release that
-added 25 templates (5 new each for the same five sections), and a v1.13 bold visual refresh (chunky
-oversized type + vibrant coral/pink/amber/mint/indigo color blocks, still fully light + emerald).**
-Workspace/CI/guardrails; deterministic motion engine + **274 templates** (12 launch + a 23-template
+added 25 templates (5 new each for the same five sections), a v1.13 bold visual refresh (chunky
+oversized type + vibrant coral/pink/amber/mint/indigo color blocks, still fully light + emerald), a
+v1.14 full re-layout of the landing, library & editor to a Jitter-level pro-SaaS bar (still fully
+light + emerald), and a v1.15 release that added 80 templates (10 new each for overlays, social,
+product/ads, showcase, explainers/data, brand/quotes, openers and events/travel).**
+Workspace/CI/guardrails; deterministic motion engine + **354 templates** (12 launch + a 23-template
 expansion + a 20-template smooth-text pack + a 20-template explainer/showcase/product/ad pack + a
 20-template showcase & product-presentation pack + a 50-template pack adding overlays/lower-thirds,
 intros/openers, and more text/social/product/stat/brand + a 10-template
@@ -25,7 +28,18 @@ explainers & data, and events & travel + a 25-template v1.12 pack — 5 new each
 (chapter marker, KPI/QR/sponsor bars), social (save, share sheet, engagement rail, goal, notif
 stack), showcase (phone scroll, device family, coverflow, detail zoom, contact sheet), explainers &
 data (checklist, mind map, tier list, scatter plot, stacked bar) and events & travel (webinar,
-lanyard badge, birthday, city guide, world clocks));
+lanyard badge, birthday, city guide, world clocks) + an 80-template v1.15 pack — 10 new each for
+overlays (weather bug, breaking banner, poll/countdown/stat/donation/dateline/key-point/subscribe
+bars), social (unmute, screen-record, green-screen, pinned, close-friends, live-shopping,
+creator-like, use-this-sound, this-or-that, story highlights), product/ads (restock, BOGO,
+ingredients, subscription box, wishlist, limited edition, cashback, gift card, bestseller, app
+promo), showcase (code editor, terminal, dashboard, pricing tiers, smartwatch, home widgets, photo
+mosaic, slideshow, photo flip, magazine spread), explainers & data (waterfall, heatmap, leaderboard,
+cycle, org chart, roadmap, word cloud, quadrant, survey, radar), brand & quotes (logo
+assemble/flip/morph, award laurels, coming soon, social end card, brand palette, review stack/badge,
+video testimonial), openers (curtain, light sweep, ink, panel, spotlight, countdown ring, burst,
+grid, title card, sparkle) and events & travel (wedding, anniversary, speaker lineup, holiday, grand
+opening, graduation, packing list, destination reveal, currency, trip map));
 two added categories — **overlay** (lower-thirds), **intro** (openers);
 the seldom-used **loop/Backgrounds** category was retired in v1.9;
 **per-template toggles to switch off decorative accents** (accent bar/dot, badges, frames, glows…);
@@ -39,7 +53,10 @@ a modern, light-mode SaaS UI (v2 redesign: **true white** — no tint — with a
 **Parkinsans** UI type across landing + Studio; a live template-showcase hero replaced the retired
 3D/WebGL blob; in-repo shadcn-style Tailwind components in `apps/web/src/ui/`; **v1.13 bold refresh** —
 chunky oversized headlines + vibrant color-block sections, a bright-emerald final CTA band, still
-fully light + emerald); and Phase 6 hardening
+fully light + emerald; **v1.14 full re-layout** — a scroll-animated landing (live hero strip, editor
+mockup, bento sections), an app-shell template library with a persistent category rail, and a
+refined three-pane editor (segmented aspect switch, dotted stage, floating playback), still fully
+light + emerald); and Phase 6 hardening
 (axe-core a11y sweep with zero serious/critical violations, engine-rendered OG image, German
 max-length audit, README polish). All golden, determinism, export-smoke, studio-, landing-integration
 and a11y tests pass; `pnpm check` green. Cross-browser QA here is Chromium-only (SwiftShader);

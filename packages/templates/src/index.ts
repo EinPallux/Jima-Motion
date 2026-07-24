@@ -283,6 +283,86 @@ import { lanyardBadge } from "./lanyard-badge/index";
 import { birthdayCard } from "./birthday-card/index";
 import { cityGuide } from "./city-guide/index";
 import { timeZones } from "./time-zones/index";
+import { weatherBug } from "./weather-bug/index";
+import { breakingBanner } from "./breaking-banner/index";
+import { pollBar } from "./poll-bar/index";
+import { countdownStrip } from "./countdown-strip/index";
+import { nowSpeaking } from "./now-speaking/index";
+import { statStrip } from "./stat-strip/index";
+import { donationAlert } from "./donation-alert/index";
+import { dateline } from "./dateline/index";
+import { keyPoint } from "./key-point/index";
+import { subscribeReminder } from "./subscribe-reminder/index";
+import { unmuteTap } from "./unmute-tap/index";
+import { screenRecord } from "./screen-record/index";
+import { greenScreen } from "./green-screen/index";
+import { pinnedPost } from "./pinned-post/index";
+import { closeFriends } from "./close-friends/index";
+import { liveShopping } from "./live-shopping/index";
+import { creatorLike } from "./creator-like/index";
+import { useThisSound } from "./use-this-sound/index";
+import { thisOrThat } from "./this-or-that/index";
+import { storyHighlights } from "./story-highlights/index";
+import { restockAlert } from "./restock-alert/index";
+import { bogoOffer } from "./bogo-offer/index";
+import { ingredients } from "./ingredients/index";
+import { subscriptionBox } from "./subscription-box/index";
+import { wishlistAdd } from "./wishlist-add/index";
+import { limitedEdition } from "./limited-edition/index";
+import { cashbackOffer } from "./cashback-offer/index";
+import { giftCard } from "./gift-card/index";
+import { bestsellerTag } from "./bestseller-tag/index";
+import { appPromo } from "./app-promo/index";
+import { codeEditor } from "./code-editor/index";
+import { terminal } from "./terminal/index";
+import { dashboard } from "./dashboard/index";
+import { pricingTiers } from "./pricing-tiers/index";
+import { smartwatchShowcase } from "./smartwatch-showcase/index";
+import { homeWidgets } from "./home-widgets/index";
+import { photoMosaic } from "./photo-mosaic/index";
+import { slideshow } from "./slideshow/index";
+import { photoFlip } from "./photo-flip/index";
+import { magazineSpread } from "./magazine-spread/index";
+import { waterfallChart } from "./waterfall-chart/index";
+import { heatmap } from "./heatmap/index";
+import { leaderboard } from "./leaderboard/index";
+import { cycleDiagram } from "./cycle-diagram/index";
+import { orgChart } from "./org-chart/index";
+import { roadmap } from "./roadmap/index";
+import { wordCloud } from "./word-cloud/index";
+import { quadrant } from "./quadrant/index";
+import { surveyResults } from "./survey-results/index";
+import { radarChart } from "./radar-chart/index";
+import { logoAssemble } from "./logo-assemble/index";
+import { awardLaurels } from "./award-laurels/index";
+import { logoFlip } from "./logo-flip/index";
+import { comingSoon } from "./coming-soon/index";
+import { socialEndcard } from "./social-endcard/index";
+import { brandPalette } from "./brand-palette/index";
+import { logoMorph } from "./logo-morph/index";
+import { reviewStack } from "./review-stack/index";
+import { reviewBadge } from "./review-badge/index";
+import { videoTestimonial } from "./video-testimonial/index";
+import { curtainIntro } from "./curtain-intro/index";
+import { lightSweep } from "./light-sweep/index";
+import { inkReveal } from "./ink-reveal/index";
+import { panelSlide } from "./panel-slide/index";
+import { spotlightReveal } from "./spotlight-reveal/index";
+import { countdownRing } from "./countdown-ring/index";
+import { burstIntro } from "./burst-intro/index";
+import { gridIntro } from "./grid-intro/index";
+import { titleCard } from "./title-card/index";
+import { sparkleReveal } from "./sparkle-reveal/index";
+import { weddingInvite } from "./wedding-invite/index";
+import { anniversaryCard } from "./anniversary-card/index";
+import { speakerLineup } from "./speaker-lineup/index";
+import { holidayCard } from "./holiday-card/index";
+import { grandOpening } from "./grand-opening/index";
+import { graduationCard } from "./graduation-card/index";
+import { packingList } from "./packing-list/index";
+import { destinationReveal } from "./destination-reveal/index";
+import { currencyCard } from "./currency-card/index";
+import { tripMap } from "./trip-map/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -592,6 +672,95 @@ export const templates: TemplateDefinition[] = [
   birthdayCard,
   cityGuide,
   timeZones,
+  // v1.15 pack — +80 templates (10 per non-Text section).
+  // Overlays & lower-thirds
+  weatherBug,
+  breakingBanner,
+  pollBar,
+  countdownStrip,
+  nowSpeaking,
+  statStrip,
+  donationAlert,
+  dateline,
+  keyPoint,
+  subscribeReminder,
+  // Social
+  unmuteTap,
+  screenRecord,
+  greenScreen,
+  pinnedPost,
+  closeFriends,
+  liveShopping,
+  creatorLike,
+  useThisSound,
+  thisOrThat,
+  storyHighlights,
+  // Product & ads
+  restockAlert,
+  bogoOffer,
+  ingredients,
+  subscriptionBox,
+  wishlistAdd,
+  limitedEdition,
+  cashbackOffer,
+  giftCard,
+  bestsellerTag,
+  appPromo,
+  // Showcase
+  codeEditor,
+  terminal,
+  dashboard,
+  pricingTiers,
+  smartwatchShowcase,
+  homeWidgets,
+  photoMosaic,
+  slideshow,
+  photoFlip,
+  magazineSpread,
+  // Explainers & data
+  waterfallChart,
+  heatmap,
+  leaderboard,
+  cycleDiagram,
+  orgChart,
+  roadmap,
+  wordCloud,
+  quadrant,
+  surveyResults,
+  radarChart,
+  // Brand & quotes
+  logoAssemble,
+  awardLaurels,
+  logoFlip,
+  comingSoon,
+  socialEndcard,
+  brandPalette,
+  logoMorph,
+  reviewStack,
+  reviewBadge,
+  videoTestimonial,
+  // Openers
+  curtainIntro,
+  lightSweep,
+  inkReveal,
+  panelSlide,
+  spotlightReveal,
+  countdownRing,
+  burstIntro,
+  gridIntro,
+  titleCard,
+  sparkleReveal,
+  // Events & travel
+  weddingInvite,
+  anniversaryCard,
+  speakerLineup,
+  holidayCard,
+  grandOpening,
+  graduationCard,
+  packingList,
+  destinationReveal,
+  currencyCard,
+  tripMap,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {

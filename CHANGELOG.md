@@ -11,6 +11,36 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.15.0] — 2026-07-24 · +80 templates (10 per non-Text section) → 354
+
+Ten new templates for every gallery section **except Text & titles**, taking the library from 274 to
+**354**. Each is deterministic (pure `f(t)`, seeded RNG only), light-mode, ships all 4 aspects and 4
+palettes with ≥4.5:1 end-frame contrast, per-element colour fields, decorative toggles and a designed
+hold/poster frame — same contract as the rest of the library.
+
+### Added
+- **Overlays & lower-thirds (10):** weather bug, breaking banner, poll bar, countdown strip, now
+  speaking, stat strip, donation alert, dateline, key point, subscribe reminder.
+- **Social (10):** unmute tap, screen record, green screen, pinned post, close friends, live
+  shopping, creator like, use this sound, this-or-that, story highlights.
+- **Product & ads (10):** restock alert, BOGO offer, ingredients, subscription box, wishlist add,
+  limited edition, cashback offer, gift card, bestseller tag, app promo.
+- **Showcase (10):** code editor, terminal, dashboard, pricing tiers, smartwatch showcase, home
+  widgets, photo mosaic, slideshow, photo flip, magazine spread.
+- **Explainers & data (10):** waterfall chart, heatmap, leaderboard, cycle diagram, org chart,
+  roadmap, word cloud, quadrant, survey results, radar chart.
+- **Brand & quotes (10):** logo assemble, award laurels, logo flip, coming soon, social end card,
+  brand palette, logo morph, review stack, review badge, video testimonial.
+- **Openers (10):** curtain intro, light sweep, ink reveal, panel slide, spotlight reveal, countdown
+  ring, burst intro, grid intro, title card, sparkle reveal.
+- **Events & travel (10):** wedding invite, anniversary card, speaker lineup, holiday card, grand
+  opening, graduation card, packing list, destination reveal, currency card, trip map.
+
+### Notes
+- Golden-frame baselines + determinism entries added for all 80 (poster frames across every aspect);
+  existing 274 baselines unchanged. The overlay templates default to a transparent background so they
+  export as alpha WebM overlays.
+
 ## [1.14.0] — 2026-07-24 · Full re-layout — Jitter-level landing, library & editor
 
 A ground-up **re-layout** (not just a restyle) of all three surfaces, benchmarked against a
