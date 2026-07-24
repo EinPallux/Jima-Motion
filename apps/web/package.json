@@ -10,6 +10,7 @@
     "typecheck": "tsc -p tsconfig.json"
   },
   "dependencies": {
+    "@fontsource-variable/parkinsans": "^5.3.0",
     "@fontsource/archivo": "^5.3.0",
     "@fontsource/fraunces": "^5.3.0",
     "@fontsource/inter": "^5.3.0",
@@ -20,13 +21,11 @@
     "@fontsource/space-grotesk": "^5.3.0",
     "@jima/engine": "workspace:*",
     "@jima/templates": "workspace:*",
-    "@react-three/fiber": "^9.6.1",
     "mediabunny": "^1.50.9",
     "pixi.js": "^8.19.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1",
-    "three": "^0.185.1",
     "zustand": "^5.0.14"
   },
   "devDependencies": {
@@ -34,7 +33,6 @@
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
-    "@types/three": "^0.185.1",
     "@vitejs/plugin-react": "^6.0.3",
     "size-limit": "^11.1.6",
     "tailwindcss": "^4.3.3",
@@ -51,11 +49,11 @@
       "limit": "160 kB"
     },
     {
-      "name": "hero WebGL chunk (lazy three.js, loads after first paint)",
+      "name": "hero showcase chunk (lazy live-template preview, loads after first paint)",
       "path": [
-        "dist/assets/HeroBackground-*.js"
+        "dist/assets/HeroShowcase-*.js"
       ],
-      "limit": "250 kB"
+      "limit": "15 kB"
     }
   ]
 }

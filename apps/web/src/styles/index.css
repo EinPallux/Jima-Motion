@@ -1,46 +1,62 @@
 @import "tailwindcss";
 
 /*
- * Jima Motion design tokens — DESIGN_ARCHITECTURE.md §2-4.
+ * Jima Motion design tokens — v2 "true light" system (DESIGN_ARCHITECTURE.md §2-4).
  * Light/white-mode ONLY. No dark theme, no prefers-color-scheme:dark (CLAUDE.md rule 3).
+ *
+ * True light mode: neutral (un-tinted) whites/greys, a single emerald accent, and
+ * Parkinsans for all UI type. Legacy token names (ink/slate/paper/porcelain/mist/
+ * ember*) are repointed to the new values so every existing utility class restyles
+ * to the new look in one place.
  */
 @theme {
-  /* Surfaces & text */
-  --color-paper: #ffffff;
-  --color-porcelain: #faf9f7;
-  --color-mist: #ebeaf2;
-  --color-ink: #101014;
-  --color-slate: #5b5b68;
+  /* ---- Surfaces (neutral, no hue tint) ---- */
+  --color-paper: #ffffff; /* pure white — cards, main surface */
+  --color-porcelain: #ffffff; /* app background — fully white now (was tinted) */
+  --color-canvas: #fafafa; /* off-white for alternating bands */
+  --color-subtle: #f4f4f5; /* muted fill / hover */
+  --color-mist: #e9e9ee; /* hairline borders (neutral) */
+  --color-line: #e9e9ee;
 
-  /* Ember — the brand accent */
-  --color-ember: #ff4d1c;
-  --color-ember-deep: #e13d0e;
-  --color-ember-text: #b93000;
-  --color-ember-tint: #ffede6;
+  /* ---- Text ---- */
+  --color-ink: #0a0a0d; /* headings / near-black */
+  --color-graphite: #3f3f46; /* strong body */
+  --color-slate: #56565f; /* secondary body (neutral grey) */
+  --color-muted: #71717a; /* tertiary / captions / placeholders — ≥4.5:1 on white */
 
-  /* Gradient anchors */
-  --color-candy: #ff2e9e;
-  --color-violet: #7c5cff;
-  --color-sky: #38c7ff;
-  --color-lime-pop: #d8f34d;
+  /* ---- Emerald — the brand accent ---- */
+  --color-emerald: #10b981; /* 500 — brand mark, decorative fills, glows */
+  --color-emerald-bright: #34d399; /* 400 — gradient highlight */
+  --color-primary: #059669; /* 600 — solid fills backing white text on large/bold */
+  --color-primary-strong: #047857; /* 700 — interactive text on white (≥5:1), buttons */
+  --color-primary-press: #065f46; /* 800 — active/pressed */
+  --color-emerald-tint: #ecfdf5; /* 50 — subtle accent surface */
+  --color-emerald-ring: #a7f3d0; /* 200 — focus/glow ring */
 
-  /* Semantic */
-  --color-success: #17a34a;
-  --color-warning: #d97706;
+  /* ---- Legacy 'ember*' aliases → emerald (restyles existing classes) ---- */
+  --color-ember: #10b981;
+  --color-ember-deep: #059669;
+  --color-ember-text: #047857; /* also drives the focus ring — 5:1 on white */
+  --color-ember-tint: #ecfdf5;
+
+  /* ---- Semantic ---- */
+  --color-success: #059669;
+  --color-warning: #b45309;
   --color-error: #dc2626;
 
-  /* Typography */
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  /* ---- Typography — Parkinsans for the whole UI ---- */
+  --font-display: "Parkinsans Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Parkinsans Variable", ui-sans-serif, system-ui, sans-serif;
 
-  /* Radii (DESIGN_ARCHITECTURE.md §4) */
-  --radius-input: 12px;
-  --radius-card: 20px;
-  --radius-modal: 28px;
+  /* ---- Radii — crisp modern-SaaS scale ---- */
+  --radius-input: 10px;
+  --radius-card: 16px;
+  --radius-modal: 22px;
 
-  /* Elevation — soft, warm, never gray-muddy */
-  --shadow-card: 0 2px 8px rgb(16 16 20 / 4%), 0 12px 32px rgb(16 16 20 / 6%);
-  --shadow-pop: 0 8px 16px rgb(16 16 20 / 8%), 0 24px 56px rgb(255 77 28 / 10%);
+  /* ---- Elevation — soft, neutral (no warm tint) ---- */
+  --shadow-xs: 0 1px 2px rgb(10 10 13 / 5%);
+  --shadow-card: 0 1px 2px rgb(10 10 13 / 4%), 0 8px 24px rgb(10 10 13 / 6%);
+  --shadow-pop: 0 10px 20px rgb(10 10 13 / 6%), 0 30px 60px rgb(16 185 129 / 12%);
 }
 
 :root {
@@ -50,44 +66,48 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background: var(--color-paper);
+  background: var(--color-porcelain);
   color: var(--color-ink);
   font-family: var(--font-sans);
-  font-size: 1.0625rem;
-  line-height: 1.65;
+  font-size: 1rem;
+  line-height: 1.6;
+  font-feature-settings: "ss01", "cv01";
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Display type: Parkinsans, tighter tracking for headings. */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  line-height: 1.08;
 }
 
 /* Visible focus ring — a11y (DESIGN_ARCHITECTURE.md §8) */
 :focus-visible {
-  outline: 2px solid var(--color-ember-text);
+  outline: 2px solid var(--color-primary-strong);
   outline-offset: 2px;
-  border-radius: 4px;
-}
-
-html {
-  scroll-behavior: smooth;
+  border-radius: 6px;
 }
 
 @keyframes jima-marquee-left {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 @keyframes jima-marquee-right {
-  from {
-    transform: translateX(-50%);
-  }
-  to {
-    transform: translateX(0);
-  }
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+/* Soft accent aura used behind hero/section highlights. */
+@keyframes jima-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 @media (prefers-reduced-motion: reduce) {

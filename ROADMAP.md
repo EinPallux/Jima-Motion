@@ -280,5 +280,6 @@ rendering, AI credits, dark mode.
 | Template Library overhaul (uniform 16:9, hover-play, filter) | ✅ 2026-07-21 — **v1.8.2** |
 | Remove Backgrounds category + 5 new templates per gallery section | ✅ 2026-07-23 — **v1.9.0**, library 160 → 199 |
 | +10 templates each for lower-thirds, social, showcase, explainers/data, events/travel | ✅ 2026-07-23 — **v1.10.0**, library 199 → 249 |
+| v2 UI redesign — true light mode, emerald accent, Parkinsans, live-showcase hero (3D hero retired) | ✅ 2026-07-24 — **v1.11.0** |
 
 *(Update this table + CHANGELOG.md at every phase transition.)*

@@ -28,8 +28,9 @@ template's timeline beats, toggleable with 3 packs, baked into MP4/WebM exports;
 **editable animation speed/length (0.25×–3×) that the export honours**;
 **optional transparent (alpha) WebM export (ADR-013) for overlaying animations onto footage**;
 client-side MP4/WebM/GIF export; the full Jima Studio UI;
-the bold animated Three.js/WebGL landing page (a bento hero with a glossy, iridescent liquid-metal
-3D blob — GPU simplex-noise displacement + a gradient reflection map, no external assets); and Phase 6 hardening
+a modern, light-mode SaaS UI (v2 redesign: **true white** — no tint — with an **emerald** accent and
+**Parkinsans** UI type across landing + Studio; a live template-showcase hero replaced the retired
+3D/WebGL blob; in-repo shadcn-style Tailwind components in `apps/web/src/ui/`); and Phase 6 hardening
 (axe-core a11y sweep with zero serious/critical violations, engine-rendered OG image, German
 max-length audit, README polish). All golden, determinism, export-smoke, studio-, landing-integration
 and a11y tests pass; `pnpm check` green. Cross-browser QA here is Chromium-only (SwiftShader);
@@ -78,7 +79,8 @@ If you must deviate, add/amend an ADR in the same PR and note it in `CHANGELOG.m
 - Core stack (verified 2026-07, scaffolded on current majors): Vite 8 + React 19 SPA (React Router 7),
   Tailwind 4, TypeScript strict, Zustand, **PixiJS v8 (WebGL)** + custom `JimaTimeline`,
   **WebCodecs + Mediabunny** (MP4/WebM), **gifenc** worker (GIF), lazy ffmpeg.wasm fallback,
-  three + @react-three/fiber 9 + drei 10 (landing hero only), pnpm workspace, Vercel (static).
+  **Parkinsans** (variable) for UI type + in-repo shadcn-style Tailwind components (the old
+  three/@react-three landing hero was removed in the v2 redesign), pnpm workspace, Vercel (static).
 
 ## Workflow
 

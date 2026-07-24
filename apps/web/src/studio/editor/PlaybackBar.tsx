@@ -15,7 +15,7 @@ export function PlaybackBar({ preview }: { preview: PreviewApi }) {
         type="button"
         onClick={preview.toggle}
         aria-label={preview.playing ? "Pause" : "Play"}
-        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink text-paper transition-transform hover:scale-105 active:scale-100"
+        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-strong text-white transition-colors hover:bg-primary-press active:bg-primary-press"
       >
         {preview.playing ? <PauseIcon /> : <PlayIcon />}
       </button>
@@ -23,7 +23,7 @@ export function PlaybackBar({ preview }: { preview: PreviewApi }) {
       <input
         type="range"
         aria-label="Timeline"
-        className="h-1.5 flex-1 cursor-pointer accent-ember"
+        className="h-1.5 flex-1 cursor-pointer accent-emerald"
         min={0}
         max={Math.max(0.01, preview.duration)}
         step={0.01}
@@ -40,7 +40,7 @@ export function PlaybackBar({ preview }: { preview: PreviewApi }) {
         onClick={() => setLoop(!loop)}
         aria-pressed={loop}
         aria-label="Loop"
-        className={`shrink-0 rounded-[9px] px-2 py-1.5 text-sm transition-colors ${loop ? "bg-ember-tint text-ember-text" : "text-slate hover:bg-mist"}`}
+        className={`shrink-0 rounded-lg px-2 py-1.5 text-sm transition-colors ${loop ? "bg-emerald-tint text-primary-strong" : "text-slate hover:bg-subtle hover:text-ink"}`}
         title="Loop"
       >
         ⟳
@@ -49,7 +49,7 @@ export function PlaybackBar({ preview }: { preview: PreviewApi }) {
         type="button"
         onClick={preview.restart}
         aria-label="Restart"
-        className="shrink-0 rounded-[9px] px-2 py-1.5 text-sm text-slate transition-colors hover:bg-mist"
+        className="shrink-0 rounded-lg px-2 py-1.5 text-sm text-slate transition-colors hover:bg-subtle hover:text-ink"
         title="Restart"
       >
         ⟲

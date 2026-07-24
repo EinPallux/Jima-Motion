@@ -2,11 +2,15 @@ import { useState } from "react";
 import { FONT_CHOICES, SOUND_PACKS, type TemplateDefinition, type TemplateField } from "@jima/engine";
 import { useStudio } from "../state/store";
 import { Field } from "../components/Field";
+import { Button, cn } from "../../ui";
 
 type Tab = "content" | "style" | "motion";
 
 const CONTENT_TYPES = new Set(["text", "textarea", "textlist", "image"]);
 const MOTION_TYPES = new Set(["select", "slider", "toggle"]);
+
+/** Small uppercase group label used to break the inspector into labeled sections. */
+const groupLabelCls = "text-xs font-bold uppercase tracking-[0.08em] text-slate";
 
 export function Inspector({ def, baseDuration }: { def: TemplateDefinition; baseDuration: number }) {
   const [tab, setTab] = useState<Tab>("content");
@@ -19,14 +23,14 @@ export function Inspector({ def, baseDuration }: { def: TemplateDefinition; base
   const motion = def.fields.filter((f) => MOTION_TYPES.has(f.type));
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col bg-paper">
       <div role="tablist" aria-label="Editor panels" className="flex gap-1 border-b border-mist px-4 pt-3">
         <TabButton id="content" active={tab} onSelect={setTab} label="Content" />
         <TabButton id="style" active={tab} onSelect={setTab} label="Style" />
         <TabButton id="motion" active={tab} onSelect={setTab} label="Motion" />
       </div>
 
-      <div className="flex-1 overflow-y-auto px-4 py-5">
+      <div className="flex-1 overflow-y-auto px-4 py-6">
         {tab === "content" && (
           <FieldGroup fields={content} values={values} onChange={setValue} def={def} emptyHint="This template has no text fields." />
         )}
@@ -35,13 +39,9 @@ export function Inspector({ def, baseDuration }: { def: TemplateDefinition; base
       </div>
 
       <div className="border-t border-mist px-4 py-3">
-        <button
-          type="button"
-          onClick={reset}
-          className="text-sm font-medium text-slate hover:text-ember-text"
-        >
+        <Button variant="ghost" size="sm" onClick={reset}>
           ↺ Reset template
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -55,7 +55,10 @@ function TabButton({ id, active, onSelect, label }: { id: Tab; active: Tab; onSe
       role="tab"
       aria-selected={isActive}
       onClick={() => onSelect(id)}
-      className={`rounded-t-[10px] px-3 py-2 text-sm font-semibold transition-colors ${isActive ? "border-b-2 border-ember text-ink" : "text-slate hover:text-ink"}`}
+      className={cn(
+        "rounded-t-lg border-b-2 px-3 py-2 text-sm font-semibold transition-colors",
+        isActive ? "border-primary-strong text-ink" : "border-transparent text-slate hover:text-ink",
+      )}
     >
       {label}
     </button>
@@ -77,7 +80,7 @@ function FieldGroup({
 }) {
   if (fields.length === 0) return <p className="text-sm text-slate">{emptyHint}</p>;
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       {fields.map((f) => (
         <Field key={f.key} field={f} value={values[f.key]} onChange={(v) => onChange(f.key, v)} blobKeyPrefix={def.id} />
       ))}
@@ -102,10 +105,10 @@ function StyleTab({
   const setFont = useStudio((s) => s.setFont);
   const currentFont = font ?? "default";
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-7">
       <div>
-        <p className="mb-2 text-sm font-medium text-ink">Font</p>
-        <div className="grid grid-cols-2 gap-2">
+        <p className={groupLabelCls}>Font</p>
+        <div className="mt-3 grid grid-cols-2 gap-2">
           {FONT_CHOICES.map((f) => {
             const active = f.id === currentFont;
             return (
@@ -114,7 +117,10 @@ function StyleTab({
                 type="button"
                 onClick={() => setFont(f.id === "default" ? undefined : f.id)}
                 aria-pressed={active}
-                className={`truncate rounded-[12px] border px-3 py-2.5 text-left text-[15px] transition-colors ${active ? "border-ember-text bg-ember-tint text-ink" : "border-mist text-ink hover:border-slate"}`}
+                className={cn(
+                  "truncate rounded-xl border px-3 py-2.5 text-left text-[15px] transition-colors",
+                  active ? "border-primary-strong bg-emerald-tint text-ink" : "border-mist text-graphite hover:border-slate hover:bg-subtle",
+                )}
                 style={{ fontFamily: `"${f.family}"` }}
                 title={f.label}
               >
@@ -124,9 +130,10 @@ function StyleTab({
           })}
         </div>
       </div>
-      <div>
-        <p className="mb-2 text-sm font-medium text-ink">Palette</p>
-        <div className="grid grid-cols-2 gap-2">
+
+      <div className="border-t border-mist pt-6">
+        <p className={groupLabelCls}>Palette</p>
+        <div className="mt-3 grid grid-cols-2 gap-2">
           {def.palettes.map((p) => {
             const active = p.id === paletteId;
             const swatches = Object.values(p.colors);
@@ -136,23 +143,29 @@ function StyleTab({
                 type="button"
                 onClick={() => setPalette(p.id)}
                 aria-pressed={active}
-                className={`flex items-center gap-2 rounded-[12px] border p-2 text-left transition-colors ${active ? "border-ember-text bg-ember-tint" : "border-mist hover:border-slate"}`}
+                className={cn(
+                  "flex items-center gap-2 rounded-xl border p-2 text-left transition-colors",
+                  active ? "border-primary-strong bg-emerald-tint" : "border-mist hover:border-slate hover:bg-subtle",
+                )}
               >
-                <span className="flex overflow-hidden rounded-[6px] border border-mist">
+                <span className="flex overflow-hidden rounded-md border border-mist">
                   {swatches.map((c, i) => (
                     <span key={i} className="h-6 w-3" style={{ background: c }} />
                   ))}
                 </span>
-                <span className="min-w-0 flex-1 truncate text-xs font-medium text-ink">{p.name}</span>
+                <span className="min-w-0 flex-1 truncate text-xs font-medium text-graphite">{p.name}</span>
               </button>
             );
           })}
         </div>
       </div>
-      <div>
-        <p className="mb-1 text-sm font-medium text-ink">Colors</p>
-        <p className="mb-3 text-xs text-slate">Pick any color for the background, text and objects — palettes above are just quick presets.</p>
-        <FieldGroup fields={colors} values={values} onChange={onChange} def={def} emptyHint="This template has no color options." />
+
+      <div className="border-t border-mist pt-6">
+        <p className={groupLabelCls}>Colors</p>
+        <p className="mt-1.5 text-xs text-slate">Pick any color for the background, text and objects — palettes above are just quick presets.</p>
+        <div className="mt-3">
+          <FieldGroup fields={colors} values={values} onChange={onChange} def={def} emptyHint="This template has no color options." />
+        </div>
       </div>
     </div>
   );
@@ -181,17 +194,17 @@ function MotionTab({
   const setSoundPack = useStudio((s) => s.setSoundPack);
   const length = baseDuration > 0 ? baseDuration / speed : 0;
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-7">
       <div>
         <div className="flex items-baseline justify-between">
-          <span className="text-sm font-medium text-ink">Speed &amp; length</span>
+          <p className={groupLabelCls}>Speed &amp; length</p>
           <span className="text-sm tabular-nums text-slate">
             {speed.toFixed(2)}× · {length.toFixed(1)}s
           </span>
         </div>
         <input
           type="range"
-          className="mt-1.5 h-1.5 w-full cursor-pointer accent-ember"
+          className="mt-3 h-1.5 w-full cursor-pointer accent-emerald"
           min={0.25}
           max={3}
           step={0.05}
@@ -199,29 +212,34 @@ function MotionTab({
           aria-label="Playback speed and length"
           onChange={(e) => setSpeed(Number(e.target.value))}
         />
-        <div className="mt-1 flex justify-between text-[11px] text-slate">
+        <div className="mt-1.5 flex justify-between text-[11px] text-slate">
           <span>Slower / longer</span>
           <span>Faster / shorter</span>
         </div>
       </div>
 
-      <FieldGroup fields={motionFields} values={values} onChange={onChange} def={def} emptyHint="No motion options." />
+      <div className="border-t border-mist pt-6">
+        <p className={groupLabelCls}>Options</p>
+        <div className="mt-3">
+          <FieldGroup fields={motionFields} values={values} onChange={onChange} def={def} emptyHint="No motion options." />
+        </div>
+      </div>
 
-      <div className="border-t border-mist pt-4">
+      <div className="border-t border-mist pt-6">
         <label className="flex items-center justify-between">
-          <span className="text-sm font-medium text-ink">Sound effects</span>
+          <span className="text-sm font-semibold text-graphite">Sound effects</span>
           <button
             type="button"
             role="switch"
             aria-checked={sound}
             aria-label="Sound effects"
             onClick={() => setSound(!sound)}
-            className={`relative h-6 w-11 rounded-full transition-colors ${sound ? "bg-ember" : "bg-mist"}`}
+            className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors", sound ? "bg-primary" : "bg-mist")}
           >
-            <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow-sm transition-transform ${sound ? "translate-x-5" : "translate-x-0.5"}`} />
+            <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow-xs transition-transform", sound ? "translate-x-5" : "translate-x-0.5")} />
           </button>
         </label>
-        <p className="mt-1 text-xs text-slate">Auto-matched to the motion — plays in the preview and is baked into MP4/WebM exports.</p>
+        <p className="mt-1.5 text-xs text-slate">Auto-matched to the motion — plays in the preview and is baked into MP4/WebM exports.</p>
         {sound && (
           <div className="mt-3 grid grid-cols-3 gap-2" role="group" aria-label="Sound pack">
             {SOUND_PACKS.map((p) => {
@@ -232,7 +250,10 @@ function MotionTab({
                   type="button"
                   onClick={() => setSoundPack(p.id)}
                   aria-pressed={active}
-                  className={`rounded-[10px] border px-3 py-2 text-sm font-medium transition-colors ${active ? "border-ember-text bg-ember-tint text-ink" : "border-mist text-ink hover:border-slate"}`}
+                  className={cn(
+                    "rounded-xl border px-3 py-2 text-sm font-medium transition-colors",
+                    active ? "border-primary-strong bg-emerald-tint text-ink" : "border-mist text-graphite hover:border-slate",
+                  )}
                 >
                   {p.label}
                 </button>
@@ -243,18 +264,20 @@ function MotionTab({
       </div>
 
       {def.loopable && (
-        <label className="flex items-center justify-between">
-          <span className="text-sm font-medium text-ink">Loop</span>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={loop}
-            onClick={() => setLoop(!loop)}
-            className={`relative h-6 w-11 rounded-full transition-colors ${loop ? "bg-ember" : "bg-mist"}`}
-          >
-            <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow-sm transition-transform ${loop ? "translate-x-5" : "translate-x-0.5"}`} />
-          </button>
-        </label>
+        <div className="border-t border-mist pt-6">
+          <label className="flex items-center justify-between">
+            <span className="text-sm font-semibold text-graphite">Loop</span>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={loop}
+              onClick={() => setLoop(!loop)}
+              className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors", loop ? "bg-primary" : "bg-mist")}
+            >
+              <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow-xs transition-transform", loop ? "translate-x-5" : "translate-x-0.5")} />
+            </button>
+          </label>
+        </div>
       )}
     </div>
   );

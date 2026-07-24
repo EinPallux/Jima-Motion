@@ -3,6 +3,7 @@ import type { TemplateDefinition } from "@jima/engine";
 import { PosterThumb } from "../components/PosterThumb";
 import { LivePreview } from "../components/LivePreview";
 import { useReducedMotion } from "../hooks/useReducedMotion";
+import { Badge, cn } from "../../ui";
 
 const CATEGORY_LABEL: Record<string, string> = {
   announcement: "Announcement",
@@ -51,18 +52,23 @@ export function TemplateCard({ def, onOpen }: { def: TemplateDefinition; onOpen:
       onMouseLeave={stop}
       onFocus={start}
       onBlur={stop}
-      className="group flex flex-col overflow-hidden rounded-[18px] border border-mist bg-paper text-left shadow-[var(--shadow-card)] transition-all duration-200 hover:-translate-y-1 hover:border-transparent hover:shadow-[var(--shadow-pop)] focus-visible:-translate-y-1"
+      className={cn(
+        "group flex flex-col overflow-hidden rounded-card border border-mist bg-paper text-left shadow-xs transition-all duration-200",
+        "hover:-translate-y-0.5 hover:shadow-card",
+        "focus-visible:-translate-y-0.5 focus-visible:shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-ring focus-visible:ring-offset-2",
+      )}
     >
       {/* Uniform 16:9 preview — static poster, with a live loop on hover. */}
-      <div className="relative aspect-video w-full overflow-hidden bg-porcelain">
+      <div className="relative aspect-video w-full overflow-hidden bg-canvas">
         <PosterThumb def={def} aspect="16:9" paletteId={paletteId} alt={def.name} className="absolute inset-0 h-full w-full" />
         {live && <LivePreview def={def} paletteId={paletteId} />}
         {!reduced && (
           <span
             aria-hidden
-            className={`pointer-events-none absolute right-2.5 top-2.5 flex h-7 items-center gap-1 rounded-full bg-ink/70 px-2.5 text-[11px] font-semibold text-paper backdrop-blur-sm transition-opacity duration-200 ${
-              live ? "opacity-0" : "opacity-0 group-hover:opacity-100"
-            }`}
+            className={cn(
+              "pointer-events-none absolute right-2.5 top-2.5 flex h-7 items-center gap-1 rounded-full bg-ink/75 px-2.5 text-[11px] font-semibold text-white backdrop-blur-sm transition-opacity duration-200",
+              live ? "opacity-0" : "opacity-0 group-hover:opacity-100",
+            )}
           >
             ▶ Preview
           </span>
@@ -71,10 +77,10 @@ export function TemplateCard({ def, onOpen }: { def: TemplateDefinition; onOpen:
 
       <div className="flex flex-col gap-1 p-3.5">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="truncate font-display text-[15px] font-bold text-ink">{def.name}</h3>
-          <span className="shrink-0 rounded-full bg-porcelain px-2 py-0.5 text-[11px] font-medium text-slate ring-1 ring-mist">
+          <h3 className="min-w-0 truncate font-display text-[15px] font-bold text-ink">{def.name}</h3>
+          <Badge tone="neutral" className="shrink-0 px-2 py-0.5 text-[11px]">
             {CATEGORY_LABEL[def.category] ?? def.category}
-          </span>
+          </Badge>
         </div>
         <p className="line-clamp-2 text-[13px] leading-snug text-slate">{def.tagline}</p>
       </div>

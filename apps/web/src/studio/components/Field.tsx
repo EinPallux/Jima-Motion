@@ -1,6 +1,7 @@
 import { useId, useRef, type ChangeEvent } from "react";
 import type { TemplateField } from "@jima/engine";
 import { isImageValue, storeImageBlob, type ImageValue } from "../state/persistence";
+import { Button, cn } from "../../ui";
 
 interface FieldProps {
   field: TemplateField;
@@ -9,10 +10,10 @@ interface FieldProps {
   blobKeyPrefix: string;
 }
 
-const labelCls = "block text-sm font-medium text-ink";
-const helpCls = "mt-0.5 text-xs text-slate";
+const labelCls = "block text-sm font-semibold text-graphite";
+const helpCls = "mt-1 text-xs text-slate";
 const inputCls =
-  "w-full rounded-[12px] border border-mist bg-paper px-3 py-2 text-[15px] text-ink outline-none transition-colors focus:border-ember-text";
+  "w-full rounded-xl border border-mist bg-paper px-3 py-2 text-[15px] text-ink placeholder:text-muted transition-colors focus:border-primary-strong focus:ring-2 focus:ring-emerald-ring";
 
 export function Field({ field, value, onChange, blobKeyPrefix }: FieldProps) {
   const id = useId();
@@ -39,7 +40,7 @@ function CharCount({ value, max }: { value: unknown; max?: number | undefined })
   if (!max) return null;
   const len = typeof value === "string" ? value.length : 0;
   return (
-    <span className={`text-xs tabular-nums ${len > max ? "text-error" : "text-slate"}`}>
+    <span className={cn("text-xs tabular-nums", len > max ? "text-error" : "text-slate")}>
       {len}/{max}
     </span>
   );
@@ -68,7 +69,7 @@ function Control({
       return (
         <textarea
           id={id}
-          className={`${inputCls} min-h-20 resize-y`}
+          className={cn(inputCls, "min-h-20 resize-y")}
           value={typeof value === "string" ? value : ""}
           maxLength={field.maxLength}
           rows={3}
@@ -109,7 +110,7 @@ function TextList({ field, value, onChange }: { id: string; field: TemplateField
           />
           <button
             type="button"
-            className="shrink-0 rounded-[10px] px-2 py-2 text-slate hover:bg-mist disabled:opacity-40"
+            className="shrink-0 rounded-lg p-2 text-slate transition-colors hover:bg-subtle hover:text-graphite disabled:pointer-events-none disabled:opacity-40"
             disabled={items.length <= min}
             aria-label={`Remove item ${i + 1}`}
             onClick={() => set(items.filter((_, j) => j !== i))}
@@ -119,13 +120,9 @@ function TextList({ field, value, onChange }: { id: string; field: TemplateField
         </div>
       ))}
       {items.length < max ? (
-        <button
-          type="button"
-          className="self-start rounded-[10px] border border-mist px-3 py-1.5 text-sm font-medium text-ember-text hover:bg-ember-tint"
-          onClick={() => set([...items, ""])}
-        >
+        <Button variant="secondary" size="sm" className="self-start" onClick={() => set([...items, ""])}>
           + Add
-        </button>
+        </Button>
       ) : null}
     </div>
   );
@@ -133,9 +130,9 @@ function TextList({ field, value, onChange }: { id: string; field: TemplateField
 
 function ColorControl({ id, value, onChange }: { id: string; value: string; onChange: (v: unknown) => void }) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-3">
       <label
-        className="relative h-9 w-9 shrink-0 cursor-pointer overflow-hidden rounded-[10px] border border-mist"
+        className="relative h-10 w-10 shrink-0 cursor-pointer overflow-hidden rounded-xl border border-mist shadow-xs transition-colors hover:border-primary-strong"
         style={{ background: value }}
       >
         <input
@@ -148,7 +145,7 @@ function ColorControl({ id, value, onChange }: { id: string; value: string; onCh
       </label>
       <input
         type="text"
-        className={`${inputCls} font-mono uppercase`}
+        className={cn(inputCls, "font-mono uppercase")}
         value={value}
         aria-label="Hex color"
         onChange={(e) => onChange(e.target.value)}
@@ -162,7 +159,7 @@ function SelectControl({ id, field, value, onChange }: { id: string; field: Temp
   const current = typeof value === "string" ? value : options[0]?.value;
   if (options.length <= 4) {
     return (
-      <div id={id} role="radiogroup" aria-label={field.label} className="grid grid-flow-col gap-1 rounded-[12px] bg-porcelain p-1">
+      <div id={id} role="radiogroup" aria-label={field.label} className="grid grid-flow-col gap-1 rounded-xl bg-subtle p-1">
         {options.map((opt) => {
           const active = opt.value === current;
           return (
@@ -171,7 +168,10 @@ function SelectControl({ id, field, value, onChange }: { id: string; field: Temp
               type="button"
               role="radio"
               aria-checked={active}
-              className={`rounded-[9px] px-3 py-1.5 text-sm font-medium transition-colors ${active ? "bg-paper text-ink shadow-[0_1px_3px_rgba(16,16,20,0.1)]" : "text-slate hover:text-ink"}`}
+              className={cn(
+                "rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+                active ? "bg-paper text-ink shadow-xs" : "text-slate hover:text-ink",
+              )}
               onClick={() => onChange(opt.value)}
             >
               {opt.label}
@@ -202,7 +202,7 @@ function SliderControl({ id, field, value, onChange }: { id: string; field: Temp
       <input
         id={id}
         type="range"
-        className="h-1.5 flex-1 cursor-pointer accent-ember"
+        className="h-1.5 flex-1 cursor-pointer accent-emerald"
         min={min}
         max={max}
         step={step}
@@ -222,10 +222,13 @@ function ToggleControl({ id, value, onChange }: { id: string; value: boolean; on
       role="switch"
       aria-checked={value}
       onClick={() => onChange(!value)}
-      className={`relative h-6 w-11 rounded-full transition-colors ${value ? "bg-ember" : "bg-mist"}`}
+      className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors", value ? "bg-primary" : "bg-mist")}
     >
       <span
-        className={`absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow-sm transition-transform ${value ? "translate-x-5" : "translate-x-0.5"}`}
+        className={cn(
+          "absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow-xs transition-transform",
+          value ? "translate-x-5" : "translate-x-0.5",
+        )}
       />
     </button>
   );
@@ -259,18 +262,18 @@ function ImageControl({
 
   if (img) {
     return (
-      <div className="flex items-center gap-3 rounded-[12px] border border-mist p-2">
-        <img src={img.url} alt="" className="h-12 w-12 rounded-[8px] object-cover" />
-        <span className="min-w-0 flex-1 truncate text-sm text-slate">{img.name}</span>
-        <button type="button" className="rounded-[9px] px-2 py-1 text-sm text-ember-text hover:bg-ember-tint" onClick={() => onChange("")}>
+      <div className="flex items-center gap-3 rounded-xl border border-mist bg-paper p-2 shadow-xs">
+        <img src={img.url} alt="" className="h-12 w-12 rounded-lg object-cover" />
+        <span className="min-w-0 flex-1 truncate text-sm text-graphite">{img.name}</span>
+        <Button variant="ghost" size="sm" onClick={() => onChange("")}>
           Remove
-        </button>
+        </Button>
       </div>
     );
   }
   return (
-    <label className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-[12px] border border-dashed border-mist bg-porcelain px-4 py-6 text-center hover:border-ember-text">
-      <span className="text-sm font-medium text-ink">Drop an image or click</span>
+    <label className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-mist bg-subtle px-4 py-6 text-center transition-colors hover:border-primary-strong hover:bg-emerald-tint">
+      <span className="text-sm font-semibold text-ink">Drop an image or click</span>
       <span className="text-xs text-slate">Stays in your browser — never uploaded</span>
       <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={onInput} />
     </label>

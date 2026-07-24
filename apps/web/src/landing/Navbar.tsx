@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Container, Wordmark, cn } from "../ui";
 
 const LINKS = [
   { href: "#templates", label: "Templates" },
@@ -7,6 +8,14 @@ const LINKS = [
   { href: "#why-free", label: "Why it's free" },
   { href: "#faq", label: "FAQ" },
 ];
+
+// "Open the Studio" must stay a real <a> (role="link") — the landing smoke
+// test and screen readers both look it up as a link, and nesting a <button>
+// inside an <a> is invalid HTML besides. So it borrows the Button primitive's
+// visual language (see ui/Button.tsx: variant="primary" size="md") instead of
+// wrapping an actual <Button>.
+const STUDIO_CTA =
+  "inline-flex h-11 select-none items-center justify-center gap-2 rounded-xl bg-primary-strong px-5 text-[15px] font-semibold text-white shadow-xs transition-colors duration-150 hover:bg-primary-press active:bg-primary-press";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -18,33 +27,33 @@ export function Navbar() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 px-3 pt-3 sm:px-5 sm:pt-4">
-      <nav
-        className={`mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all sm:px-5 ${
-          scrolled ? "border border-mist bg-paper/80 shadow-[var(--shadow-card)] backdrop-blur-md" : "border border-transparent"
-        }`}
-      >
-        <a href="#top" className="pl-1 font-display text-xl font-bold text-ink">
-          jima <span className="text-ember">✦</span>
+    <header
+      className={cn(
+        "sticky top-0 z-40 border-b transition-all duration-200",
+        scrolled ? "border-mist bg-paper/80 shadow-card backdrop-blur-md" : "border-transparent bg-paper",
+      )}
+    >
+      <Container className="flex items-center justify-between gap-4 py-4">
+        <a href="#top" className="flex items-center">
+          <Wordmark className="text-xl" />
         </a>
-        <div className="hidden items-center gap-1 md:flex">
+
+        <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
           {LINKS.map((l) => (
             <a
               key={l.href}
               href={l.href}
-              className="rounded-full px-3.5 py-2 text-sm font-medium text-slate transition-colors hover:bg-porcelain hover:text-ink"
+              className="rounded-full px-3.5 py-2 text-sm font-medium text-slate transition-colors hover:bg-subtle hover:text-ink"
             >
               {l.label}
             </a>
           ))}
-        </div>
-        <Link
-          to="/studio"
-          className="rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-paper shadow-[0_8px_20px_rgba(16,16,20,0.18)] transition-transform hover:scale-[1.03] active:scale-100"
-        >
+        </nav>
+
+        <Link to="/studio" className={STUDIO_CTA}>
           Open the Studio
         </Link>
-      </nav>
+      </Container>
     </header>
   );
 }

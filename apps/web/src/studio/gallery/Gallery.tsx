@@ -3,6 +3,7 @@ import type { TemplateDefinition } from "@jima/engine";
 import { TemplateCard } from "./TemplateCard";
 import { GROUPS, groupOf } from "./groups";
 import type { PersistedProject } from "../state/persistence";
+import { Button, Card, Wordmark, cn } from "../../ui";
 
 // Concept keywords per category so natural searches match intent, not just the
 // literal name/tagline (e.g. "lower third", "caption", "background", "intro").
@@ -76,8 +77,8 @@ export function Gallery({
     <div className="min-h-[100dvh] bg-porcelain">
       <header className="border-b border-mist bg-paper/85 px-4 py-4 backdrop-blur sm:px-8">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
-          <a href="/" className="font-display text-xl font-bold text-ink">
-            jima <span className="text-ember">✦</span>
+          <a href="/" aria-label="Jima Motion home">
+            <Wordmark />
           </a>
           <span className="text-sm text-slate">100% free · no account · nothing leaves your browser</span>
         </div>
@@ -85,24 +86,24 @@ export function Gallery({
 
       <main className="mx-auto max-w-6xl px-4 pb-16 sm:px-8">
         {resumeDef && resume && (
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-[16px] border border-mist bg-paper p-4">
+          <Card className="mt-6 flex flex-wrap items-center justify-between gap-3 p-4">
             <p className="text-sm text-ink">
               Continue where you left off — <span className="font-semibold">{resumeDef.name}</span>
               <span className="text-slate"> · {timeAgo(resume.updatedAt)}</span>
             </p>
             <div className="flex gap-2">
-              <button type="button" onClick={onResume} className="rounded-[10px] bg-ember px-3 py-1.5 text-sm font-semibold text-ink">
+              <Button size="sm" onClick={onResume}>
                 Resume
-              </button>
-              <button type="button" onClick={onDismissResume} className="rounded-[10px] px-3 py-1.5 text-sm font-medium text-slate hover:bg-mist">
+              </Button>
+              <Button variant="ghost" size="sm" onClick={onDismissResume}>
                 Start fresh
-              </button>
+              </Button>
             </div>
-          </div>
+          </Card>
         )}
 
         <div className="pt-7">
-          <h1 className="font-display text-3xl font-bold text-ink">Pick a template</h1>
+          <h1 className="font-display text-3xl font-extrabold text-ink">Pick a template</h1>
           <p className="mt-1 text-slate">Hover any template to see it move. {templates.length} to choose from — all free.</p>
         </div>
 
@@ -111,7 +112,9 @@ export function Gallery({
           <div className="flex flex-col gap-3">
             <div className="flex flex-wrap items-center gap-3">
               <div className="relative w-full max-w-sm">
-                <span aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-slate">⌕</span>
+                <span aria-hidden className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted">
+                  ⌕
+                </span>
                 <input
                   type="search"
                   value={query}
@@ -121,7 +124,7 @@ export function Gallery({
                   }}
                   placeholder="Search templates… (name, style, or use-case)"
                   aria-label="Search templates"
-                  className="w-full rounded-full border border-mist bg-paper py-2.5 pl-9 pr-4 text-[15px] outline-none focus:border-ember-text"
+                  className="w-full rounded-full border border-mist bg-paper py-2.5 pl-9 pr-4 text-[15px] text-ink outline-none transition-colors focus:border-primary-strong"
                 />
               </div>
               <span className="text-sm text-slate" aria-live="polite">
@@ -146,19 +149,18 @@ export function Gallery({
           </div>
         ) : (
           <div className="py-20 text-center">
-            <p className="text-slate">
-              No templates match {q ? `“${query}”` : "this filter"}.
-            </p>
-            <button
-              type="button"
+            <p className="text-slate">No templates match {q ? `“${query}”` : "this filter"}.</p>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="mt-3"
               onClick={() => {
                 setQuery("");
                 setGroup("all");
               }}
-              className="mt-3 rounded-full border border-mist bg-paper px-4 py-2 text-sm font-medium text-ink hover:bg-mist"
             >
               Clear filters
-            </button>
+            </Button>
           </div>
         )}
       </main>
@@ -172,12 +174,13 @@ function Chip({ label, count, active, onClick }: { label: string; count: number;
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className={`flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
-        active ? "bg-ink text-paper" : "border border-mist bg-paper text-slate hover:text-ink"
-      }`}
+      className={cn(
+        "flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors",
+        active ? "bg-primary-strong text-white" : "border border-mist bg-paper text-slate hover:bg-canvas hover:text-ink",
+      )}
     >
       {label}
-      <span className={`text-xs ${active ? "text-paper/80" : "text-slate"}`}>{count}</span>
+      <span className={cn("text-xs", active ? "text-white" : "text-slate")}>{count}</span>
     </button>
   );
 }

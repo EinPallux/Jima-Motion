@@ -4,7 +4,10 @@
 // weights 400–700 are loaded for every swappable family so any template weight
 // resolves. Imported by both apps/web/src/main.tsx and apps/web/harness/main.ts.
 
-// Space Grotesk — default display.
+// Parkinsans — the UI/layout typeface (variable, weights 300–800). Drives all
+// app chrome (landing + Studio) via --font-display / --font-sans.
+import "@fontsource-variable/parkinsans";
+// Space Grotesk — default template display font (headline picker default).
 import "@fontsource/space-grotesk/400.css";
 import "@fontsource/space-grotesk/500.css";
 import "@fontsource/space-grotesk/600.css";

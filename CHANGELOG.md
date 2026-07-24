@@ -11,6 +11,35 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.11.0] — 2026-07-24 · v2 UI redesign — true light mode · emerald · Parkinsans
+
+A full ground-up redesign of the entire app UI (landing + Studio) into a modern-SaaS look. The
+template library and render engine are unchanged (all 249 templates render identically).
+
+### Changed
+- **True light mode.** Retired the tinted `porcelain`/`mist` surfaces and the ember/orange +
+  rainbow-gradient palette for a neutral, un-tinted white/grey system with a single **emerald**
+  accent (design tokens rebuilt in `apps/web/src/styles/index.css`; accent text uses emerald-700 for
+  ≥4.5:1 on white).
+- **Parkinsans** is now the UI/layout typeface across landing + Studio (self-hosted variable font,
+  `@fontsource-variable/parkinsans`).
+- **In-repo component primitives** (`apps/web/src/ui/`) — `Button`, `Card`, `Badge`, `Container`,
+  `SectionHeading`, `Wordmark`/`LeafMark` — shadcn-style, built on Tailwind, no new runtime deps.
+- **New landing page** on pure white: a hero with a **live template-showcase** (real animations
+  playing in a browser frame), a template marquee, a three-step "how it works", a "why it's free"
+  comparison table, a feature grid, a 249-template gallery teaser, an FAQ accordion, and a footer.
+- **New brand mark** — an emerald leaf/spark `LeafMark` + Parkinsans wordmark, replacing the ember ✦.
+- **Redesigned Studio** — gallery, editor shell (topbar / preview stage / playback bar), inspector +
+  field controls, and export modal all restyled to the new emerald/light system.
+
+### Removed
+- The three.js / `@react-three/fiber` **3D WebGL hero** and those dependencies — replaced by the
+  live template-showcase hero (landing initial + hero chunks both well under budget).
+
+### Notes
+- All flows/behaviour preserved. axe-core: zero serious/critical on landing, gallery + editor; the
+  landing + Studio smoke suites pass; `pnpm check`, size-limit, and the full golden suite are green.
+
 ## [1.10.0] — 2026-07-23 · +50 templates — 10 each for five sections (199 → 249)
 
 Ten new templates apiece for **Lower-thirds, Social, Showcase, Explainers & data, and Events &

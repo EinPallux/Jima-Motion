@@ -1,11 +1,19 @@
 # Jima Motion — Design Architecture
 
+> **v2 redesign (2026-07, v1.11.0) — this doc's brand/color/type sections below describe the
+> original "ember sticker" system and are partly historical.** The shipped UI is now a **modern-SaaS,
+> true-light-mode** system: neutral un-tinted white/grey surfaces, a single **emerald** accent
+> (`#10b981`; accent text/buttons use emerald-700 `#047857` for ≥4.5:1 on white), **Parkinsans**
+> (variable) as the UI/layout typeface, tighter radii, and soft neutral shadows. The **source of
+> truth for tokens is `apps/web/src/styles/index.css`** (`@theme`), with shadcn-style primitives in
+> `apps/web/src/ui/`. The landing hero is a **live template showcase** (the old 3D/WebGL blob was
+> retired). Template render fonts/palettes are unchanged. §§ below are kept for history + the
+> Studio-UX/copy/a11y guidance, which still applies.
+
 **Scope:** brand system, design tokens, landing-page spec, Studio UX spec, accessibility, and copy
 guidelines. Light/white-mode only — there is no dark theme anywhere, by product decision.
 Competitor design context is in `COMPETITOR_RESEARCH.md` (Jitter: light base, black type, site
-demos the product, Awwwards-grade motion — our differentiation is a warmer, chunkier, more playful
-"sticker energy" identity with an ember/coral signature, and a zero-server twist on "the site is
-the demo").
+demos the product, Awwwards-grade motion).
 
 ---
 

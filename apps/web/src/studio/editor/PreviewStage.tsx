@@ -14,11 +14,11 @@ export function PreviewStage({
   const [safeZone, setSafeZone] = useState(false);
 
   return (
-    <section className="flex min-h-0 flex-1 flex-col bg-porcelain px-4 py-4 sm:px-8 sm:py-6">
+    <section className="flex min-h-0 flex-1 flex-col bg-canvas px-4 py-4 sm:px-8 sm:py-6">
       <div className="relative flex min-h-0 flex-1 items-center justify-center">
         <div
           ref={containerRef}
-          className="relative flex max-h-full max-w-full items-center justify-center overflow-hidden rounded-[20px] bg-paper shadow-[var(--shadow-card)]"
+          className="relative flex max-h-full max-w-full items-center justify-center overflow-hidden rounded-card bg-paper shadow-card"
           style={{ aspectRatio: aspect.replace(":", " / "), width: "min(100%, 720px)" }}
           aria-live="off"
         >
@@ -31,7 +31,7 @@ export function PreviewStage({
         <PlaybackBar preview={preview} />
         {aspect === "9:16" && (
           <label className="flex items-center gap-2 px-1 pt-1 text-xs text-slate">
-            <input type="checkbox" checked={safeZone} onChange={(e) => setSafeZone(e.target.checked)} className="accent-ember" />
+            <input type="checkbox" checked={safeZone} onChange={(e) => setSafeZone(e.target.checked)} className="accent-emerald" />
             Show safe zones (keep text clear of platform UI)
           </label>
         )}

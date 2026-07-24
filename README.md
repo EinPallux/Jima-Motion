@@ -10,7 +10,7 @@ exactly why it can be free: there are no render servers, no accounts, and no pai
 there is nothing to meter.
 
 > **Status: v1.0 shipped** ✅ — the full Studio, **249 templates**, client-side MP4/WebM/GIF export,
-> and the animated WebGL landing page are all built and passing tests. See the
+> and a modern light-mode SaaS landing page are all built and passing tests. See the
 > [changelog](CHANGELOG.md) and [roadmap](ROADMAP.md).
 >
 > **Scope:** a personal project — built to the quality bar of a real Jitter/Ccleaf competitor,
@@ -32,7 +32,7 @@ text/images/colors in a simple form, **pick a font**, tweak speed — no timelin
 export MP4/WebM/GIF in 1:1, 4:5, 9:16 or 16:9.
 
 Principles: free means free · defaults are the product · form fields, not timelines · nothing
-leaves the device · fast is a feature · light-mode, bold, animated ([Three.js hero](DESIGN_ARCHITECTURE.md)).
+leaves the device · fast is a feature · true light-mode, modern-SaaS design in Parkinsans + emerald ([design](DESIGN_ARCHITECTURE.md)).
 
 ## How to use it (send this with the link)
 

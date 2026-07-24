@@ -21,9 +21,9 @@ export function TemplateRail({
             onClick={() => onSelect(t)}
             aria-current={active}
             title={t.name}
-            className={`overflow-hidden rounded-[12px] border-2 transition-colors ${active ? "border-ember" : "border-transparent hover:border-mist"}`}
+            className={`overflow-hidden rounded-xl border-2 transition-colors ${active ? "border-primary-strong" : "border-transparent hover:border-slate/30"}`}
           >
-            <PosterThumb def={t} aspect={t.defaultAspect} paletteId={t.palettes[0]?.id} alt={t.name} className="w-full rounded-[9px]" />
+            <PosterThumb def={t} aspect={t.defaultAspect} paletteId={t.palettes[0]?.id} alt={t.name} className="w-full rounded-lg" />
           </button>
         );
       })}

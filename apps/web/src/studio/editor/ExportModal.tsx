@@ -11,10 +11,16 @@ import {
 } from "@jima/engine";
 import { useStudio } from "../state/store";
 import { engineValues } from "../state/values";
+import { Button, cn } from "../../ui";
 
 type Phase = "configure" | "rendering" | "done" | "error";
 
 const RES = { "1080": 1, "720": 720 / 1080, "480": 480 / 1080 } as const;
+
+// Mirrors the <Button variant="primary" size="md"> look for the one spot that must
+// stay a real <a download> (native download semantics) instead of the <button>-only primitive.
+const downloadLinkCls =
+  "inline-flex h-11 select-none items-center justify-center gap-2 rounded-xl bg-primary-strong px-5 text-[15px] font-semibold text-white shadow-xs transition-colors duration-150 hover:bg-primary-press active:bg-primary-press";
 
 export function ExportModal({
   def,
@@ -117,7 +123,7 @@ export function ExportModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/30 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-label="Export"
@@ -125,17 +131,17 @@ export function ExportModal({
         if (e.target === e.currentTarget && phase !== "rendering") onClose();
       }}
     >
-      <div className="w-full max-w-lg overflow-hidden rounded-[28px] bg-paper shadow-[var(--shadow-pop)]">
+      <div className="w-full max-w-lg overflow-hidden rounded-modal bg-paper shadow-pop">
         <div className="flex items-center justify-between border-b border-mist px-6 py-4">
-          <h2 className="font-display text-xl font-bold text-ink">Export</h2>
+          <h2 className="font-display text-xl font-extrabold text-ink">Export</h2>
           {phase !== "rendering" && (
-            <button type="button" onClick={onClose} aria-label="Close" className="rounded-full px-2 py-1 text-slate hover:bg-mist">
+            <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close">
               ✕
-            </button>
+            </Button>
           )}
         </div>
 
-        <div className="px-6 py-5">
+        <div className="px-6 py-6">
           {phase === "configure" && (
             <Configure
               format={format}
@@ -193,7 +199,7 @@ function Configure(props: {
 }) {
   const { format, setFormat, available, caps, sound, transparent, onTransparentChange } = props;
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <div className="grid grid-cols-3 gap-2">
         {(["mp4", "webm", "gif"] as ExportFormat[]).map((f) => {
           const enabled = available[f];
@@ -205,7 +211,11 @@ function Configure(props: {
               disabled={!enabled}
               onClick={() => setFormat(f)}
               aria-pressed={active}
-              className={`flex flex-col gap-1 rounded-[14px] border p-3 text-left transition-colors ${active ? "border-ember-text bg-ember-tint" : "border-mist hover:border-slate"} ${!enabled ? "cursor-not-allowed opacity-45" : ""}`}
+              className={cn(
+                "flex flex-col gap-1 rounded-xl border p-3 text-left transition-colors",
+                active ? "border-primary-strong bg-emerald-tint" : "border-mist hover:border-slate",
+                !enabled && "cursor-not-allowed opacity-45",
+              )}
             >
               <span className="font-display text-base font-bold text-ink">{FORMAT_META[f].title}</span>
               <span className="text-xs leading-snug text-slate">
@@ -227,19 +237,19 @@ function Configure(props: {
 
       <div>
         <label className="flex items-center justify-between">
-          <span className="text-sm font-medium text-ink">Transparent background</span>
+          <span className="text-sm font-semibold text-graphite">Transparent background</span>
           <button
             type="button"
             role="switch"
             aria-checked={transparent}
             aria-label="Transparent background"
             onClick={() => onTransparentChange(!transparent)}
-            className={`relative h-6 w-11 rounded-full transition-colors ${transparent ? "bg-ember" : "bg-mist"}`}
+            className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors", transparent ? "bg-primary" : "bg-mist")}
           >
-            <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow-sm transition-transform ${transparent ? "translate-x-5" : "translate-x-0.5"}`} />
+            <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow-xs transition-transform", transparent ? "translate-x-5" : "translate-x-0.5")} />
           </button>
         </label>
-        <p className="mt-1 text-xs text-slate">
+        <p className="mt-1.5 text-xs text-slate">
           {transparent
             ? "Exports a WebM with an alpha channel — drop it over any footage. Works in After Effects, DaVinci Resolve, CapCut & the web. Premiere Pro may show it opaque."
             : "Off = solid background. Turn on to export the animation with no background (WebM only)."}
@@ -252,20 +262,16 @@ function Configure(props: {
       </p>
 
       {sound && (
-        <p className="rounded-[10px] bg-porcelain px-3 py-2 text-xs text-slate">
+        <p className="rounded-xl bg-subtle px-3 py-2 text-xs text-slate">
           {format === "gif"
             ? "🔇 GIF has no audio — export MP4 or WebM to include the sound."
             : "🔊 Sound is on — the matched sound effects are baked into the file."}
         </p>
       )}
 
-      <button
-        type="button"
-        onClick={props.onExport}
-        className="w-full rounded-[14px] bg-ember py-3 text-base font-semibold text-ink shadow-[var(--shadow-pop)] transition-transform hover:scale-[1.02] active:scale-100"
-      >
+      <Button size="lg" className="w-full" onClick={props.onExport}>
         Export {FORMAT_META[format].title}
-      </button>
+      </Button>
     </div>
   );
 }
@@ -273,8 +279,8 @@ function Configure(props: {
 function Segment({ label, value, options, onChange }: { label: string; value: string; options: [string, string][]; onChange: (v: string) => void }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-sm font-medium text-ink">{label}</span>
-      <div role="radiogroup" aria-label={label} className="flex gap-1 rounded-[12px] bg-porcelain p-1">
+      <span className="text-sm font-semibold text-graphite">{label}</span>
+      <div role="radiogroup" aria-label={label} className="flex gap-1 rounded-xl bg-subtle p-1">
         {options.map(([val, lbl]) => {
           const active = val === value;
           return (
@@ -284,7 +290,10 @@ function Segment({ label, value, options, onChange }: { label: string; value: st
               role="radio"
               aria-checked={active}
               onClick={() => onChange(val)}
-              className={`rounded-[9px] px-3 py-1 text-sm font-medium transition-colors ${active ? "bg-paper text-ink shadow-[0_1px_3px_rgba(16,16,20,0.1)]" : "text-slate hover:text-ink"}`}
+              className={cn(
+                "rounded-lg px-3 py-1 text-sm font-medium transition-colors",
+                active ? "bg-paper text-ink shadow-xs" : "text-slate hover:text-ink",
+              )}
             >
               {lbl}
             </button>
@@ -300,17 +309,17 @@ function Rendering({ progress, onCancel }: { progress: ExportProgress | null; on
   return (
     <div className="flex flex-col gap-4 py-2">
       <div className="flex items-center justify-between text-sm">
-        <span className="font-medium text-ink">Rendering…</span>
+        <span className="font-semibold text-ink">Rendering…</span>
         <span aria-live="polite" className="tabular-nums text-slate">
           {progress ? `${progress.frame} / ${progress.totalFrames} frames` : "starting…"}
         </span>
       </div>
       <div className="h-2 overflow-hidden rounded-full bg-mist">
-        <div className="h-full rounded-full bg-ember transition-[width] duration-150" style={{ width: `${Math.round(ratio * 100)}%` }} />
+        <div className="h-full rounded-full bg-primary transition-[width] duration-150" style={{ width: `${Math.round(ratio * 100)}%` }} />
       </div>
-      <button type="button" onClick={onCancel} className="self-start rounded-[10px] px-3 py-1.5 text-sm font-medium text-slate hover:bg-mist hover:text-ink">
+      <Button variant="ghost" size="sm" className="self-start" onClick={onCancel}>
         Cancel
-      </button>
+      </Button>
     </div>
   );
 }
@@ -328,32 +337,28 @@ function Done({ result, url, transparent, onAnother, onClose }: { result: Export
     : undefined;
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center justify-center overflow-hidden rounded-[16px] bg-porcelain p-3" style={checker}>
+      <div className="flex items-center justify-center overflow-hidden rounded-xl bg-subtle p-3" style={checker}>
         {url && (result.format === "gif" ? (
-          <img src={url} alt="Export preview" className="max-h-64 rounded-[8px]" />
+          <img src={url} alt="Export preview" className="max-h-64 rounded-lg" />
         ) : (
-          <video src={url} className="max-h-64 rounded-[8px]" autoPlay loop muted playsInline />
+          <video src={url} className="max-h-64 rounded-lg" autoPlay loop muted playsInline />
         ))}
       </div>
       <p className="text-sm text-slate">
-        Saved <span className="font-medium text-ink">{result.filename}</span> — {result.width}×{result.height}, {result.frames} frames.
+        Saved <span className="font-semibold text-ink">{result.filename}</span> — {result.width}×{result.height}, {result.frames} frames.
       </p>
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-center gap-2">
         {url && (
-          <a
-            href={url}
-            download={result.filename}
-            className="rounded-[12px] bg-ember px-4 py-2.5 text-sm font-semibold text-ink shadow-[var(--shadow-pop)] transition-transform hover:scale-[1.02]"
-          >
+          <a href={url} download={result.filename} className={downloadLinkCls}>
             Download again
           </a>
         )}
-        <button type="button" onClick={onAnother} className="rounded-[12px] border border-mist px-4 py-2.5 text-sm font-medium text-ink hover:bg-mist">
+        <Button variant="secondary" onClick={onAnother}>
           Export another
-        </button>
-        <button type="button" onClick={onClose} className="ml-auto rounded-[12px] px-4 py-2.5 text-sm font-medium text-slate hover:bg-mist">
+        </Button>
+        <Button variant="ghost" className="ml-auto" onClick={onClose}>
           Done
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -363,14 +368,12 @@ function ErrorState({ message, onRetry, onGif }: { message: string; onRetry: () 
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-ink">That export hit a snag on this device. Your work is safe.</p>
-      <p className="rounded-[12px] bg-porcelain px-3 py-2 text-xs text-slate">{message}</p>
+      <p className="rounded-xl bg-subtle px-3 py-2 text-xs text-slate">{message}</p>
       <div className="flex gap-2">
-        <button type="button" onClick={onGif} className="rounded-[12px] bg-ember px-4 py-2.5 text-sm font-semibold text-ink">
-          Try GIF instead
-        </button>
-        <button type="button" onClick={onRetry} className="rounded-[12px] border border-mist px-4 py-2.5 text-sm font-medium text-ink hover:bg-mist">
+        <Button onClick={onGif}>Try GIF instead</Button>
+        <Button variant="secondary" onClick={onRetry}>
           Back
-        </button>
+        </Button>
       </div>
     </div>
   );
