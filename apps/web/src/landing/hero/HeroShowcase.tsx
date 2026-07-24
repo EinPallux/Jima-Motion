@@ -4,19 +4,23 @@ import { LivePreview } from "../../studio/components/LivePreview";
 import { PosterThumb } from "../../studio/components/PosterThumb";
 import { useReducedMotion } from "../../studio/hooks/useReducedMotion";
 
-// A rotating set of real, visually-varied templates from the registry — the
-// big hero preview cycles through these so the showcase feels alive. Verified
-// to exist in @jima/templates.
-const SHOWCASE_IDS = ["gradient-text", "kinetic-headline", "reel-frame", "glow-promo", "stat-bars", "flash-sale"];
+// The "best of" — six of the most eye-catching, varied templates (text, social,
+// travel, data, promo, data-viz) that read well at 16:9. The big hero preview
+// cycles through these so the showcase feels alive. Verified to exist.
+const SHOWCASE_IDS = ["kinetic-headline", "subscribe-bell", "globe-spin", "progress-ring", "special-offer", "bar-race"];
 const SIDE_IDS = ["product-hero", "big-number"];
-const CYCLE_MS = 4200;
+const CYCLE_MS = 4600;
 
 /**
  * The hero's right column: one large preview in a faux-browser frame that
  * cycles through several looping template animations, plus two smaller static
  * poster cards. Lazy-loaded from Hero.tsx so the Pixi/template-registry chunk
- * stays out of the eager landing bundle (see Hero.tsx's lazy() boundary).
- * Reduced-motion: no cycling, a single static poster (no live WebGL preview).
+ * stays out of the eager landing bundle.
+ *
+ * All showcase posters stay mounted (each renders once) and cross-fade by
+ * opacity — so switching never flashes an un-rendered blank frame — while the
+ * live WebGL preview mounts only for the active template, over its poster.
+ * Reduced-motion: no cycling, a single static poster (no live preview).
  */
 export default function HeroShowcase() {
   const reduced = useReducedMotion();
@@ -36,54 +40,53 @@ export default function HeroShowcase() {
     return () => window.clearInterval(id);
   }, [reduced, defs.length]);
 
-  const current = defs[Math.min(i, Math.max(0, defs.length - 1))];
+  const active = Math.min(i, Math.max(0, defs.length - 1));
+  const current = defs[active];
+  if (!current) return <div className="w-full" />;
 
   return (
     <div className="w-full">
-      {current && (
-        <div className="overflow-hidden rounded-card border border-mist bg-paper shadow-pop">
-          {/* Faux browser topbar */}
-          <div className="flex items-center gap-1.5 border-b border-mist bg-canvas px-4 py-3" aria-hidden>
-            <span className="h-2.5 w-2.5 rounded-full bg-mist" />
-            <span className="h-2.5 w-2.5 rounded-full bg-mist" />
-            <span className="h-2.5 w-2.5 rounded-full bg-mist" />
-            <span className="ml-2 truncate rounded-full bg-paper px-3 py-1 text-xs font-medium text-slate ring-1 ring-inset ring-mist">
-              jima.app/studio
-            </span>
-          </div>
-
-          <div className="relative aspect-video w-full overflow-hidden bg-porcelain">
-            {/* Keyed by template id so each one cleanly remounts + fades in. */}
-            <div key={current.id} className="absolute inset-0 motion-safe:animate-[jima-fade-in_500ms_ease-out]">
-              <PosterThumb
-                def={current}
-                aspect="16:9"
-                paletteId={current.palettes[0]?.id}
-                alt={current.name}
-                className="absolute inset-0 h-full w-full"
-              />
-              {!reduced && <LivePreview def={current} paletteId={current.palettes[0]?.id} />}
-            </div>
-
-            {/* Live template name */}
-            <span className="absolute right-3 top-3 z-10 rounded-full bg-ink/80 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
-              {current.name}
-            </span>
-
-            {/* Rotation indicators */}
-            {defs.length > 1 && !reduced && (
-              <div className="absolute inset-x-0 bottom-3 z-10 flex items-center justify-center gap-1.5" aria-hidden>
-                {defs.map((d, n) => (
-                  <span
-                    key={d.id}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${n === i ? "w-5 bg-primary-strong" : "w-1.5 bg-ink/20"}`}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+      <div className="overflow-hidden rounded-card border border-mist bg-paper shadow-pop">
+        {/* Faux browser topbar */}
+        <div className="flex items-center gap-1.5 border-b border-mist bg-canvas px-4 py-3" aria-hidden>
+          <span className="h-2.5 w-2.5 rounded-full bg-mist" />
+          <span className="h-2.5 w-2.5 rounded-full bg-mist" />
+          <span className="h-2.5 w-2.5 rounded-full bg-mist" />
+          <span className="ml-2 truncate rounded-full bg-paper px-3 py-1 text-xs font-medium text-slate ring-1 ring-inset ring-mist">
+            jima.app/studio
+          </span>
         </div>
-      )}
+
+        <div className="relative aspect-video w-full overflow-hidden bg-porcelain">
+          {defs.map((d, n) => (
+            <div
+              key={d.id}
+              className={`absolute inset-0 transition-opacity duration-700 ${n === active ? "opacity-100" : "opacity-0"}`}
+              aria-hidden={n !== active}
+            >
+              <PosterThumb def={d} aspect="16:9" paletteId={d.palettes[0]?.id} alt={d.name} className="absolute inset-0 h-full w-full" />
+              {!reduced && n === active && <LivePreview def={d} paletteId={d.palettes[0]?.id} />}
+            </div>
+          ))}
+
+          {/* Live template name */}
+          <span className="absolute right-3 top-3 z-10 rounded-full bg-ink/80 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+            {current.name}
+          </span>
+
+          {/* Rotation indicators */}
+          {defs.length > 1 && !reduced && (
+            <div className="absolute inset-x-0 bottom-3 z-10 flex items-center justify-center gap-1.5" aria-hidden>
+              {defs.map((d, n) => (
+                <span
+                  key={d.id}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${n === active ? "w-5 bg-primary-strong" : "w-1.5 bg-ink/20"}`}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
 
       {sides.length > 0 && (
         <div className="mt-5 grid grid-cols-2 gap-4">

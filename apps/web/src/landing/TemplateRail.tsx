@@ -23,7 +23,7 @@ function Row({ items, direction }: { items: TemplateDefinition[]; direction: "le
     <div className="group flex overflow-hidden">
       <div
         className="flex shrink-0 gap-4 pr-4 group-hover:[animation-play-state:paused]"
-        style={{ animation: `jima-marquee-${direction} 42s linear infinite` }}
+        style={{ animation: `jima-marquee-${direction} 120s linear infinite` }}
       >
         {loop.map((def, i) => (
           <RailCard key={`${def.id}-${i}`} def={def} />
@@ -34,9 +34,13 @@ function Row({ items, direction }: { items: TemplateDefinition[]; direction: "le
 }
 
 export function TemplateRail() {
-  const half = Math.ceil(templates.length / 2);
-  const rowA = templates.slice(0, half);
-  const rowB = templates.slice(half);
+  // Sample the library evenly for a varied, lighter marquee — rendering every
+  // one of the 249 posters would be hundreds of WebGL draws. This gives a
+  // representative spread that scrolls at a calm, readable pace.
+  const sample = templates.filter((_, i) => i % 5 === 0);
+  const half = Math.ceil(sample.length / 2);
+  const rowA = sample.slice(0, half);
+  const rowB = sample.slice(half);
   return (
     <section className="overflow-hidden bg-canvas py-14 sm:py-16" aria-label="Template previews">
       <div className="flex flex-col gap-4">
