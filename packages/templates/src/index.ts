@@ -257,6 +257,32 @@ import { roadTrip } from "./road-trip/index";
 import { rsvpCard } from "./rsvp-card/index";
 import { eventSchedule } from "./event-schedule/index";
 import { globeSpin } from "./globe-spin/index";
+// v1.12 pack — 5 new templates each for Lower-thirds, Social, Showcase, Explainers & data, Events & Travel.
+import { chapterMarker } from "./chapter-marker/index";
+import { metricBar } from "./metric-bar/index";
+import { socialBar } from "./social-bar/index";
+import { qrCallout } from "./qr-callout/index";
+import { sponsorBar } from "./sponsor-bar/index";
+import { savePost } from "./save-post/index";
+import { shareSheet } from "./share-sheet/index";
+import { actionRail } from "./action-rail/index";
+import { goalTracker } from "./goal-tracker/index";
+import { notifStack } from "./notif-stack/index";
+import { phoneScroll } from "./phone-scroll/index";
+import { deviceFamily } from "./device-family/index";
+import { coverflow } from "./coverflow/index";
+import { detailZoom } from "./detail-zoom/index";
+import { contactSheet } from "./contact-sheet/index";
+import { checklist } from "./checklist/index";
+import { mindMap } from "./mind-map/index";
+import { tierList } from "./tier-list/index";
+import { scatterPlot } from "./scatter-plot/index";
+import { stackedBar } from "./stacked-bar/index";
+import { webinarInvite } from "./webinar-invite/index";
+import { lanyardBadge } from "./lanyard-badge/index";
+import { birthdayCard } from "./birthday-card/index";
+import { cityGuide } from "./city-guide/index";
+import { timeZones } from "./time-zones/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -535,6 +561,37 @@ export const templates: TemplateDefinition[] = [
   rsvpCard,
   eventSchedule,
   globeSpin,
+  // v1.12 pack — 5 new per section: Lower-thirds, Social, Showcase, Explainers & data, Events & Travel.
+  // Lower-thirds
+  chapterMarker,
+  metricBar,
+  socialBar,
+  qrCallout,
+  sponsorBar,
+  // Social
+  savePost,
+  shareSheet,
+  actionRail,
+  goalTracker,
+  notifStack,
+  // Showcase
+  phoneScroll,
+  deviceFamily,
+  coverflow,
+  detailZoom,
+  contactSheet,
+  // Explainers & data
+  checklist,
+  mindMap,
+  tierList,
+  scatterPlot,
+  stackedBar,
+  // Events & Travel
+  webinarInvite,
+  lanyardBadge,
+  birthdayCard,
+  cityGuide,
+  timeZones,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {

@@ -11,6 +11,35 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.12.0] — 2026-07-24 · +25 templates — 5 each for five sections (249 → 274)
+
+Five new templates apiece for **Lower-thirds, Social, Showcase, Explainers & data, and Events &
+Travel**, taking the library to **274**. All deterministic, all 4 aspects, ≥3 palettes (mostly 4),
+per-element color fields, decorative toggles, ≥4.5:1 end-frame contrast.
+
+### Added — 25 templates
+
+- **Lower-thirds** (`overlay`, transparent-export-friendly): `chapter-marker` (video-chapter kicker
+  + title + rule), `metric-bar` (one-KPI pill with count-up + delta chip), `social-bar` ("Follow
+  along" handle chips), `qr-callout` (faux-QR scan card), `sponsor-bar` ("Sponsored by" logo lockup).
+- **Social**: `save-post` (bookmark save + toast + count), `share-sheet` (native share tray),
+  `action-rail` (vertical Reels/TikTok engagement rail), `goal-tracker` (follower-goal progress bar),
+  `notif-stack` (cascading notification pills).
+- **Showcase**: `phone-scroll` (scrolling phone mockup), `device-family` (laptop + tablet + phone
+  responsive set), `coverflow` (perspective coverflow carousel), `detail-zoom` (guided ken-burns
+  with callouts), `contact-sheet` (photo contact sheet with a selected frame).
+- **Explainers & data**: `checklist` (ticking checkbox cascade), `mind-map` (central node + branch
+  spider), `tier-list` (S/A/B/C tier rows), `scatter-plot` (bubble scatter + trend line),
+  `stacked-bar` (100% segmented breakdown + legend).
+- **Events & Travel**: `webinar-invite` (register card + host avatars), `lanyard-badge` (swinging
+  conference badge), `birthday-card` (confetti celebration), `city-guide` (destination highlights),
+  `time-zones` ("meanwhile" world clocks).
+
+### Notes
+- Engine, export pipeline and the existing 249 templates are unchanged. `pnpm check` (typecheck +
+  lint + unit + build) and size-limit are green; the golden suite for the 25 new templates
+  (determinism re-seek + posters, all 4 aspects — 125 tests) passes.
+
 ## [1.11.0] — 2026-07-24 · v2 UI redesign — true light mode · emerald · Parkinsans
 
 A full ground-up redesign of the entire app UI (landing + Studio) into a modern-SaaS look. The

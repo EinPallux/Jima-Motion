@@ -501,6 +501,18 @@ degradation, per-element color fields.
 | T94 | Product Review | `product-review` | product | 4:5 | Product + star rating + customer quote |
 | T95 | Shop Grid | `shop-grid` | product | 4:5 | A shop collection grid with prices + CTA |
 
+## 16. +25 templates — 5 each for five sections (2026-07-24, v1.12.0)
+
+Library 249 → **274**. Five new templates apiece for the same five gallery sections:
+
+- **Lower-thirds** (`overlay`): `chapter-marker`, `metric-bar`, `social-bar`, `qr-callout`, `sponsor-bar`.
+- **Social** (`social`): `save-post`, `share-sheet`, `action-rail`, `goal-tracker`, `notif-stack`.
+- **Showcase** (`tech`/`photo`/`showcase`): `phone-scroll`, `device-family`, `coverflow`, `detail-zoom`, `contact-sheet`.
+- **Explainers & data** (`educational`/`comparison`/`stat`): `checklist`, `mind-map`, `tier-list`, `scatter-plot`, `stacked-bar`.
+- **Events & Travel** (`event`/`travel`): `webinar-invite`, `lanyard-badge`, `birthday-card`, `city-guide`, `time-zones`.
+
+All deterministic, 4 aspects, ≥3 palettes (mostly 4), per-element colors, decorative toggles, ≥4.5:1 end-frame contrast.
+
 ## 15. +50 templates — 10 each for five sections (2026-07-23, v1.10.0)
 
 Library 199 → **249**. Ten new templates apiece for five gallery sections:
