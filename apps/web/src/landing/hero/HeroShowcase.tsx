@@ -4,10 +4,22 @@ import { LivePreview } from "../../studio/components/LivePreview";
 import { PosterThumb } from "../../studio/components/PosterThumb";
 import { useReducedMotion } from "../../studio/hooks/useReducedMotion";
 
-// Six of the most eye-catching, varied NON-TEXT templates (social, travel,
-// data, promo, tech, flip-board) that read well at 16:9. The big hero preview
-// cycles through these so the showcase feels alive. Verified to exist.
-const SHOWCASE_IDS = ["subscribe-bell", "globe-spin", "gauge-meter", "special-offer", "laptop-mockup", "flight-board"];
+// Ten eye-catching, varied NON-TEXT templates — one per category (data,
+// comparison, tech, travel, social, promo, testimonial, product, showcase,
+// explainer) — that read well at 16:9. The big hero preview cycles through
+// these so the showcase feels alive. Verified to exist.
+const SHOWCASE_IDS = [
+  "donut-chart",
+  "comparison-table",
+  "browser-window",
+  "map-route",
+  "poll-results",
+  "deal-countdown",
+  "rating-reveal",
+  "product-pop",
+  "hotspot-tour",
+  "process-arrows",
+];
 const SIDE_IDS = ["product-hero", "big-number"];
 const CYCLE_MS = 4600;
 
