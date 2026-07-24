@@ -104,7 +104,11 @@ export const useStudio = create<StudioStore>((set, get) => ({
 
   openTemplate: (def, initial) => {
     const paletteId = initial?.paletteId ?? def.palettes[0]?.id;
-    const values = initial?.values ?? { ...resolveValues(def), ...paletteColorValues(def, paletteId) };
+    // Merge saved values OVER the full default base so a project saved before a
+    // template gained a new field still shows that field's default (not a blank
+    // control) in the inspector.
+    const base = { ...resolveValues(def), ...paletteColorValues(def, paletteId) };
+    const values = initial?.values ? { ...base, ...initial.values } : base;
     set({
       def,
       templateId: def.id,
@@ -204,6 +208,11 @@ export const useStudio = create<StudioStore>((set, get) => ({
       values: { ...resolveValues(s.def), ...paletteColorValues(s.def, paletteId) },
       paletteId,
       speed: 1,
+      // Also restore the other template-content defaults so "Reset" is complete
+      // and consistent (previously font + loop were left untouched). Aspect is a
+      // canvas/output choice and is intentionally preserved.
+      font: undefined,
+      loop: s.def.loopable,
       lastEditKey: null,
     });
   },

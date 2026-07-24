@@ -53,7 +53,7 @@ function RouteFallback() {
       }}
       aria-busy="true"
     >
-      Loading the Studio…
+      Loading…
     </div>
   );
 }

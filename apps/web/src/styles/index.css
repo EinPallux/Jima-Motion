@@ -40,10 +40,13 @@
   --color-ember-tint: #ecfdf5;
 
   /* ---- Vibrant color blocks (v3 "bold" look) ----
-     Used as light TINT backgrounds for section bands + cards (always with dark
-     ink text — every tint is ≥7:1 on ink), and as SATURATED accents for icon
-     chips, dots, tags, borders and dark-ink-on-color labels (each saturated
-     value clears ≥4.5:1 with near-black ink). Never place white text on these. */
+     TINTS are section/card backgrounds, always with dark ink text (every tint is
+     ≥15:1 on ink). The SATURATED values are accents — icon chips, dots, tags,
+     borders — meeting the ≥3:1 graphical/non-text bar. Dark-ink-on-color LABELS
+     are only used on the warm values (coral/amber/mint/pink), which clear 4.5:1
+     with ink; indigo is text/icon-on-tint only (it is a mid-luminance hue that
+     does not clear 4.5:1 as ink-on-saturated). NEVER place white text on any of
+     these — only emerald-700+ or ink take white text. */
   --color-coral: #ff6a45;
   --color-coral-tint: #ffe9e2;
   --color-pink: #ec4899;
@@ -52,7 +55,8 @@
   --color-amber-tint: #fdeecb;
   --color-mint: #10c8a0;
   --color-mint-tint: #dcfaf1;
-  --color-indigo: #6366f1;
+  /* indigo-600 — dark enough that `text-indigo` clears 4.5:1 on white too. */
+  --color-indigo: #4f46e5;
   --color-indigo-tint: #e8eafe;
 
   /* ---- Semantic ---- */

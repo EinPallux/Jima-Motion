@@ -78,7 +78,7 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
     void (async () => {
       const runner = await TemplateRunner.create(params.def!, {
         aspect: params.aspect,
-        values: engineValues(params.values),
+        values: engineValues(params.def!, params.values),
         ...(params.paletteId ? { paletteId: params.paletteId } : {}),
         fonts: createFontRegistry({ headline: params.font }),
         resolution: 1,
@@ -150,7 +150,7 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
     const player = playerRef.current;
     if (!runner) return;
     const id = setTimeout(() => {
-      runner.rebuildScene(engineValues(params.values), params.paletteId);
+      runner.rebuildScene(engineValues(runner.def, params.values), params.paletteId);
       setState((s) => ({ ...s, duration: runner.duration }));
       // Editing values can change the motion (and its timing) → refit the cues.
       schedulerRef.current?.setCues(cuesFromTimeline(runner.timeline, runner.duration));

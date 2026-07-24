@@ -21,7 +21,11 @@ export function hasWebGL2(): boolean {
   if (typeof document === "undefined") return true;
   try {
     const canvas = document.createElement("canvas");
-    return canvas.getContext("webgl2") != null;
+    const gl = canvas.getContext("webgl2");
+    // Release the probe context immediately rather than leaving it for GC to
+    // reclaim (browsers cap the number of live WebGL contexts).
+    gl?.getExtension("WEBGL_lose_context")?.loseContext();
+    return gl != null;
   } catch {
     return false;
   }

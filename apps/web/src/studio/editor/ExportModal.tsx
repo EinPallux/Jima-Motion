@@ -50,15 +50,21 @@ export function ExportModal({
   const [error, setError] = useState<string>("");
   const abortRef = useRef<AbortController | null>(null);
   const resultUrlRef = useRef<string | null>(null);
+  const userPickedFormat = useRef(false);
 
-  // Default to the best available format once caps are known.
+  // Default to the best available format once caps are known — but never
+  // overwrite a choice the user already made (detection can resolve slowly).
   useEffect(() => {
-    if (!caps) return;
+    if (!caps || userPickedFormat.current) return;
     setFormat(caps.mp4 === "native" ? "mp4" : "webm");
   }, [caps]);
 
   useEffect(() => {
     return () => {
+      // Closing the modal mid-render (e.g. via Escape) must abort the export —
+      // otherwise it runs to completion, downloads a file the user cancelled,
+      // and leaks the result blob URL.
+      abortRef.current?.abort();
       if (resultUrlRef.current) URL.revokeObjectURL(resultUrlRef.current);
     };
   }, []);
@@ -72,10 +78,12 @@ export function ExportModal({
   // Transparency needs an alpha-capable codec — only WebM/VP9 qualifies here.
   // Picking MP4/GIF clears it; enabling it snaps the format to WebM.
   function chooseFormat(f: ExportFormat) {
+    userPickedFormat.current = true;
     setFormat(f);
     if (f !== "webm") setTransparent(false);
   }
   function toggleTransparent(on: boolean) {
+    userPickedFormat.current = true;
     setTransparent(on);
     if (on) setFormat("webm");
   }
@@ -92,7 +100,7 @@ export function ExportModal({
     try {
       const res = await exportTemplate({
         def,
-        runner: { aspect, values: engineValues(values), ...(paletteId ? { paletteId } : {}), fonts: createFontRegistry({ headline: font }) },
+        runner: { aspect, values: engineValues(def, values), ...(paletteId ? { paletteId } : {}), fonts: createFontRegistry({ headline: font }) },
         profile,
         speed,
         sound,

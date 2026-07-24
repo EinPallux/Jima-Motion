@@ -1,7 +1,10 @@
 import { getFirstEncodableVideoCodec, getFirstEncodableAudioCodec } from "mediabunny";
 import type { Capabilities } from "./types";
 
-let cached: Capabilities | null = null;
+// Memoized per probe size — encoder support is resolution-dependent (a device
+// may encode 1080p H.264 but not 4K), so the smoke test must be keyed by the
+// dimensions it actually ran at, not shared across every caller.
+const cache = new Map<string, Capabilities>();
 
 /**
  * Probe what this browser can actually encode. Uses Mediabunny's real
@@ -13,7 +16,9 @@ let cached: Capabilities | null = null;
 export async function detectCapabilities(
   probe: { width: number; height: number } = { width: 1080, height: 1080 },
 ): Promise<Capabilities> {
-  if (cached) return cached;
+  const key = `${probe.width}x${probe.height}`;
+  const hit = cache.get(key);
+  if (hit) return hit;
 
   let mp4Codec: string | null = null;
   let webmCodec: string | null = null;
@@ -48,7 +53,7 @@ export async function detectCapabilities(
     }
   }
 
-  cached = {
+  const result: Capabilities = {
     mp4: mp4Codec ? "native" : "none",
     webm: webmCodec ? "native" : "none",
     gif: "always",
@@ -57,10 +62,11 @@ export async function detectCapabilities(
     mp4AudioCodec,
     webmAudioCodec,
   };
-  return cached;
+  cache.set(key, result);
+  return result;
 }
 
-/** Test hook — clears the memoized probe. */
+/** Test hook — clears the memoized probes. */
 export function _resetCapabilities(): void {
-  cached = null;
+  cache.clear();
 }

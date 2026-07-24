@@ -11,6 +11,39 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.13.1] — 2026-07-24 · QA hardening pass (bug fixes from a full code review)
+
+A round of fixes from a full QA/code review (no CRITICALs found; the high-risk export/determinism
+paths were verified clean). No template or golden-frame changes.
+
+### Fixed
+- **Live preview no longer breaks on a malformed hex color.** `engineValues` now blanks an invalid
+  hex (e.g. a half-typed `#3` or `red`) → the template falls back to its palette color, and
+  `TemplateRunner.rebuildScene` builds the new scene before destroying the old one, so a throwing
+  build can never tear down the live root. (HIGH)
+- **Keyboard operability in the Studio.** Space / arrows / Home no longer hijack a focused button,
+  radio (aspect), switch (sound/loop) or slider; and Cmd/Ctrl+Z yields to native undo inside text
+  fields. (HIGH)
+- **Export cancels properly.** Closing the export modal mid-render (e.g. Escape) now aborts the
+  export — no surprise download, no leaked blob URL. Capability detection no longer clobbers a format
+  the user already picked.
+- **Image handling.** Picked-image object URLs are revoked on replace/remove/unmount (were leaking);
+  upload failures (e.g. storage full) surface an error and are size-guarded (≤20 MB).
+- **Counters parse correctly.** `parseTargetNumber` now understands decimals and K/M/B/T suffixes
+  (`1.2M` → 1,200,000 instead of 12); `groupThousands` handles very large magnitudes.
+- **Engine robustness.** Capability probe is memoized per export resolution (not shared); image
+  bitmaps/textures are freed on runner teardown; `fps=0` and GIF palette (256) guards added.
+- **Reset / resume.** "Reset template" also restores font + loop; resuming a project merges current
+  template defaults so newly-added fields aren't blank in the inspector.
+- **A11y / polish.** FinalCta focus ring is now ink (≥6:1 on the emerald band); the template marquee
+  hides its duplicated row from assistive tech and pauses on keyboard focus; cross-page `/#…` links
+  scroll to their section; route-loading copy is generic; `indigo` token darkened for text contrast.
+
+### Changed (guardrails)
+- Determinism ESLint guard broadened to also ban `Intl`/`crypto`/`navigator`/`localStorage`/
+  `sessionStorage`/`XMLHttpRequest`/`WebSocket` in engine + templates. The CI license-checker step is
+  now blocking (was warn-only).
+
 ## [1.13.0] — 2026-07-24 · Bold visual refresh — chunky type + vibrant color blocks
 
 A bolder, more modern evolution of the v2 UI across the landing page and Studio, inspired by

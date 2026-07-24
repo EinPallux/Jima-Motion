@@ -165,6 +165,11 @@ export function makeIcon(name: IconName, size: number, opts: IconOptions): Graph
       g.circle(0, -0.2 * S, 0.24 * S).fill(c); // head
       g.roundRect(-0.34 * S, 0.12 * S, 0.68 * S, 0.44 * S, 0.22 * S).fill(c); // shoulders
       break;
+    default:
+      // Unknown name (only reachable if the IconName union is bypassed) — draw a
+      // visible dot placeholder rather than returning an empty, invisible glyph.
+      g.circle(0, 0, 0.3 * S).fill(c);
+      break;
   }
   return g;
 }

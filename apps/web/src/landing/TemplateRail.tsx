@@ -3,10 +3,14 @@ import { templates } from "@jima/templates";
 import type { TemplateDefinition } from "@jima/engine";
 import { PosterThumb } from "../studio/components/PosterThumb";
 
-function RailCard({ def }: { def: TemplateDefinition }) {
+function RailCard({ def, duplicate }: { def: TemplateDefinition; duplicate?: boolean }) {
   return (
     <Link
       to={`/studio?t=${def.id}`}
+      // The marquee renders each row twice for a seamless loop; the second copy
+      // is decorative — hide it from AT and the tab order to avoid double
+      // announcements and tabbing onto moving targets.
+      {...(duplicate ? { "aria-hidden": true, tabIndex: -1 } : {})}
       className="group/card block w-[190px] shrink-0 overflow-hidden rounded-bento border border-mist bg-paper shadow-card transition-all duration-200 hover:-translate-y-1 hover:shadow-pop sm:w-[220px]"
     >
       <PosterThumb def={def} aspect="1:1" paletteId={def.palettes[0]?.id} alt={def.name} className="w-full" />
@@ -18,15 +22,17 @@ function RailCard({ def }: { def: TemplateDefinition }) {
 }
 
 function Row({ items, direction }: { items: TemplateDefinition[]; direction: "left" | "right" }) {
-  const loop = [...items, ...items];
   return (
     <div className="group flex overflow-hidden">
       <div
-        className="flex shrink-0 gap-4 pr-4 group-hover:[animation-play-state:paused]"
+        className="flex shrink-0 gap-4 pr-4 group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused]"
         style={{ animation: `jima-marquee-${direction} 120s linear infinite` }}
       >
-        {loop.map((def, i) => (
-          <RailCard key={`${def.id}-${i}`} def={def} />
+        {items.map((def, i) => (
+          <RailCard key={`a-${def.id}-${i}`} def={def} />
+        ))}
+        {items.map((def, i) => (
+          <RailCard key={`b-${def.id}-${i}`} def={def} duplicate />
         ))}
       </div>
     </div>

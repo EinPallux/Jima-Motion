@@ -14,18 +14,25 @@ function open(): Promise<IDBDatabase> {
     };
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error ?? new Error("indexedDB open failed"));
+    req.onblocked = () => reject(new Error("indexedDB open blocked"));
   });
 }
 
 async function tx<T>(mode: IDBTransactionMode, run: (store: IDBObjectStore) => IDBRequest<T>): Promise<T> {
   const db = await open();
-  return new Promise<T>((resolve, reject) => {
-    const t = db.transaction(STORE, mode);
-    const req = run(t.objectStore(STORE));
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error ?? new Error("indexedDB tx failed"));
-    t.oncomplete = () => db.close();
-  });
+  try {
+    return await new Promise<T>((resolve, reject) => {
+      const t = db.transaction(STORE, mode);
+      const req = run(t.objectStore(STORE));
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error ?? new Error("indexedDB tx failed"));
+      // On abort (e.g. quota exceeded) `oncomplete` never fires; reject so the
+      // caller can handle it, and always close the connection in `finally`.
+      t.onabort = () => reject(t.error ?? new Error("indexedDB tx aborted"));
+    });
+  } finally {
+    db.close();
+  }
 }
 
 export async function putBlob(key: string, blob: Blob): Promise<void> {

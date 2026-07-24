@@ -33,10 +33,15 @@ export function TemplateCard({ def, onOpen }: { def: TemplateDefinition; onOpen:
   const timer = useRef<number | null>(null);
 
   const start = () => {
-    if (reduced || live) return;
+    // Bail if a timer is already pending (mouseenter + focus can both fire) so
+    // the first one isn't orphaned and left to mount a stray live preview.
+    if (reduced || live || timer.current) return;
     // A short intent delay so scanning across the grid doesn't spin up a runner
     // for every card the pointer passes over.
-    timer.current = window.setTimeout(() => setLive(true), 130);
+    timer.current = window.setTimeout(() => {
+      timer.current = null;
+      setLive(true);
+    }, 130);
   };
   const stop = () => {
     if (timer.current) window.clearTimeout(timer.current);

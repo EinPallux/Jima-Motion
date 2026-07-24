@@ -4,10 +4,12 @@ import { Container } from "../ui";
 // A bold, vibrant closing band — a bright emerald color block (not a dark
 // section; ink text on #10b981 is ≥6:1) with an oversized headline, echoing the
 // bold "upgrade" bands of modern SaaS landing pages while staying fully light.
+// focus-visible:outline-ink overrides the global emerald focus ring, which on
+// this bright-emerald band is only 2.16:1 — ink gives a ≥6:1 visible ring.
 const CTA_DARK =
-  "inline-flex h-13 select-none items-center justify-center gap-2 rounded-xl bg-ink px-7 text-base font-bold text-white shadow-xs transition-all duration-150 hover:bg-graphite active:translate-y-px";
+  "inline-flex h-13 select-none items-center justify-center gap-2 rounded-xl bg-ink px-7 text-base font-bold text-white shadow-xs transition-all duration-150 hover:bg-graphite active:translate-y-px focus-visible:outline-ink";
 const CTA_OUTLINE =
-  "inline-flex h-13 select-none items-center justify-center gap-2 rounded-xl border-2 border-ink bg-transparent px-7 text-base font-bold text-ink transition-all duration-150 hover:bg-ink/5 active:translate-y-px";
+  "inline-flex h-13 select-none items-center justify-center gap-2 rounded-xl border-2 border-ink bg-transparent px-7 text-base font-bold text-ink transition-all duration-150 hover:bg-ink/5 active:translate-y-px focus-visible:outline-ink";
 
 export function FinalCta() {
   return (

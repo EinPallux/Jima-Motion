@@ -20,6 +20,22 @@ const determinismRules = {
     "error",
     { selector: "NewExpression[callee.name='Date'][arguments.length=0]", message: "Determinism: argless `new Date()` reads the wall clock. Pass an explicit timestamp." },
   ],
+  // Broaden the determinism/purity net beyond wall-clock + Math.random: these
+  // globals are locale-dependent, unseeded-random, environment-reading or
+  // network, none of which belong in the pure f(t) render path (CLAUDE.md rule
+  // 6). They have zero legitimate use in engine/templates today; the legit
+  // browser APIs (document/fetch/requestAnimationFrame for fonts, image loading
+  // and preview) are deliberately not restricted.
+  "no-restricted-globals": [
+    "error",
+    { name: "Intl", message: "Determinism: locale-dependent formatting varies by environment — use the deterministic helpers in shared/format.ts." },
+    { name: "crypto", message: "Determinism: use the seeded RNG from template context, not crypto." },
+    { name: "navigator", message: "Purity: no environment reads in the pure render path." },
+    { name: "localStorage", message: "Purity: no storage reads in engine/templates." },
+    { name: "sessionStorage", message: "Purity: no storage reads in engine/templates." },
+    { name: "XMLHttpRequest", message: "Purity: no network in the render path." },
+    { name: "WebSocket", message: "Purity: no network in the render path." },
+  ],
 };
 
 const noGsap = {

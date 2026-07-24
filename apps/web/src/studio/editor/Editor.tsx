@@ -53,12 +53,18 @@ export function Editor({
         return;
       }
       if (mod && e.key.toLowerCase() === "z") {
+        // Inside a text field, let the browser's native per-character undo win.
+        if (editable) return;
         e.preventDefault();
         if (e.shiftKey) redo();
         else undo();
         return;
       }
       if (editable) return;
+      // Don't hijack Space/Arrows/Home destined for a focused interactive control
+      // (buttons, radios, switches, sliders, links activate/navigate with these
+      // keys themselves) — only drive playback when focus is elsewhere.
+      if (el.closest('button, a, [role="radio"], [role="switch"], [role="slider"], [role="tab"], [role="menuitem"], summary')) return;
       if (e.key === " ") {
         e.preventDefault();
         preview.toggle();

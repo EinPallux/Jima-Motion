@@ -22,11 +22,12 @@ const GIF_FORMAT = "rgb565" as const;
  */
 export function encodeGif(frames: GifFrameData[], opts: GifEncodeOptions): Uint8Array {
   if (frames.length === 0) throw new Error("encodeGif: no frames");
-  const maxColors = Math.max(2, Math.min(255, opts.maxColors ?? 256));
+  const maxColors = Math.max(2, Math.min(256, opts.maxColors ?? 256));
   const palette = quantize(buildSample(frames), maxColors, { format: GIF_FORMAT });
 
   const gif = GIFEncoder();
-  const delay = Math.max(1, Math.round(1000 / opts.fps));
+  // Guard fps=0 (Infinity delay → corrupt GIF); the Studio only sends 12/30/60.
+  const delay = Math.max(1, Math.round(1000 / Math.max(1, opts.fps)));
   for (const frame of frames) {
     const index = applyPalette(frame.rgba, palette, GIF_FORMAT);
     gif.writeFrame(index, opts.width, opts.height, { palette, delay });

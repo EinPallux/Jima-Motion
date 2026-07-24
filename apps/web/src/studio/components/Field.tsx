@@ -1,7 +1,10 @@
-import { useId, useRef, type ChangeEvent } from "react";
+import { useEffect, useId, useRef, useState, type ChangeEvent } from "react";
 import type { TemplateField } from "@jima/engine";
 import { isImageValue, storeImageBlob, type ImageValue } from "../state/persistence";
 import { Button, cn } from "../../ui";
+
+/** Reject very large images before they hit IndexedDB (rough quota safety). */
+const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
 
 interface FieldProps {
   field: TemplateField;
@@ -248,11 +251,35 @@ function ImageControl({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const img = isImageValue(value) ? (value as ImageValue) : null;
+  const [error, setError] = useState<string | null>(null);
+  // Track the object URL we created so it can be revoked when replaced/removed
+  // or when the field unmounts — otherwise each pick leaks its image Blob.
+  const urlRef = useRef<string | null>(null);
+
+  useEffect(() => () => {
+    if (urlRef.current) URL.revokeObjectURL(urlRef.current);
+  }, []);
+
+  const setImage = (next: ImageValue | "") => {
+    if (urlRef.current) URL.revokeObjectURL(urlRef.current);
+    urlRef.current = typeof next === "object" ? next.url : null;
+    onChange(next);
+  };
 
   const handleFile = async (file: File) => {
+    setError(null);
+    if (file.size > MAX_IMAGE_BYTES) {
+      setError("That image is too large (max 20 MB).");
+      return;
+    }
     const key = `${blobKeyPrefix}:${fieldKey}`;
-    await storeImageBlob(key, file);
-    onChange({ __img: true, key, name: file.name, url: URL.createObjectURL(file) } satisfies ImageValue);
+    try {
+      await storeImageBlob(key, file);
+    } catch {
+      setError("Couldn't save that image — your browser storage may be full.");
+      return;
+    }
+    setImage({ __img: true, key, name: file.name, url: URL.createObjectURL(file) });
   };
 
   const onInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -265,7 +292,7 @@ function ImageControl({
       <div className="flex items-center gap-3 rounded-xl border border-mist bg-paper p-2 shadow-xs">
         <img src={img.url} alt="" className="h-12 w-12 rounded-lg object-cover" />
         <span className="min-w-0 flex-1 truncate text-sm text-graphite">{img.name}</span>
-        <Button variant="ghost" size="sm" onClick={() => onChange("")}>
+        <Button variant="ghost" size="sm" onClick={() => setImage("")}>
           Remove
         </Button>
       </div>
@@ -275,6 +302,7 @@ function ImageControl({
     <label className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-mist bg-subtle px-4 py-6 text-center transition-colors hover:border-primary-strong hover:bg-emerald-tint">
       <span className="text-sm font-semibold text-ink">Drop an image or click</span>
       <span className="text-xs text-slate">Stays in your browser — never uploaded</span>
+      {error && <span className="mt-1 text-xs font-semibold text-error">{error}</span>}
       <input ref={inputRef} type="file" accept="image/*" className="hidden" onChange={onInput} />
     </label>
   );

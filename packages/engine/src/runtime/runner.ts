@@ -10,8 +10,12 @@ import { SceneRenderer, createRoot } from "./stage";
 
 type ImageMap = Record<string, Texture | null>;
 
-async function loadImages(def: TemplateDefinition, values: Values): Promise<ImageMap> {
+async function loadImages(
+  def: TemplateDefinition,
+  values: Values,
+): Promise<{ map: ImageMap; bitmaps: ImageBitmap[] }> {
   const map: ImageMap = {};
+  const bitmaps: ImageBitmap[] = [];
   const jobs = def.fields
     .filter((f) => f.type === "image")
     .map(async (f) => {
@@ -20,6 +24,7 @@ async function loadImages(def: TemplateDefinition, values: Values): Promise<Imag
         try {
           const res = await fetch(v.url);
           const bmp = await createImageBitmap(await res.blob());
+          bitmaps.push(bmp);
           map[f.key] = Texture.from(bmp);
         } catch {
           map[f.key] = null;
@@ -29,7 +34,7 @@ async function loadImages(def: TemplateDefinition, values: Values): Promise<Imag
       }
     });
   await Promise.all(jobs);
-  return map;
+  return { map, bitmaps };
 }
 
 export interface RunnerConfig {
@@ -70,6 +75,7 @@ export class TemplateRunner {
   duration: number;
   private update: ((t: number) => void) | undefined;
   private images: ImageMap;
+  private readonly imageBitmaps: ImageBitmap[];
   private readonly scene: SceneRenderer;
   private readonly fonts: FontRegistry;
   private readonly seed: number;
@@ -84,6 +90,7 @@ export class TemplateRunner {
     duration: number;
     update: ((t: number) => void) | undefined;
     images: ImageMap;
+    imageBitmaps: ImageBitmap[];
     scene: SceneRenderer;
     fonts: FontRegistry;
     seed: number;
@@ -96,6 +103,7 @@ export class TemplateRunner {
     this.duration = args.duration;
     this.update = args.update;
     this.images = args.images;
+    this.imageBitmaps = args.imageBitmaps;
     this.scene = args.scene;
     this.fonts = args.fonts;
     this.seed = args.seed;
@@ -108,7 +116,7 @@ export class TemplateRunner {
     await fonts.ensureAll();
 
     const seed = config.seed ?? 0x1a1a;
-    const images = await loadImages(def, resolveValues(def, config.values));
+    const { map: images, bitmaps: imageBitmaps } = await loadImages(def, resolveValues(def, config.values));
     const built = buildScene(def, {
       size,
       aspect,
@@ -135,6 +143,7 @@ export class TemplateRunner {
       duration: built.duration,
       update: built.update,
       images,
+      imageBitmaps,
       scene,
       fonts,
       seed,
@@ -153,7 +162,10 @@ export class TemplateRunner {
    * through a full recreate (the Studio keys the preview on image changes).
    */
   rebuildScene(values?: Values, paletteId?: string): void {
-    this.root.destroy({ children: true });
+    // Build the new scene BEFORE tearing down the current one. If buildScene
+    // throws on a transient bad value (e.g. a half-typed hex color reaching a
+    // template's .fill()), the live root is left intact showing the last good
+    // frame instead of being destroyed — the error propagates to the caller.
     const built = buildScene(this.def, {
       size: this.size,
       aspect: this.aspect,
@@ -163,6 +175,7 @@ export class TemplateRunner {
       seed: this.seed,
       images: this.images,
     });
+    this.root.destroy({ children: true });
     this.root = built.root;
     this.timeline = built.timeline;
     this.duration = built.duration;
@@ -187,6 +200,11 @@ export class TemplateRunner {
   destroy(): void {
     this.scene.destroy();
     this.root.destroy({ children: true });
+    // Free decoded image resources: destroy the image textures (their sources
+    // aren't freed by root.destroy) and close the ImageBitmaps so a long Studio
+    // session that repeatedly rebuilds image templates doesn't accumulate them.
+    for (const key of Object.keys(this.images)) this.images[key]?.destroy(true);
+    for (const bmp of this.imageBitmaps) bmp.close();
   }
 }
 

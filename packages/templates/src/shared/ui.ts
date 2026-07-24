@@ -20,6 +20,7 @@ export interface DashOptions {
  */
 export function dashedPath(g: Graphics, pts: number[], opts: DashOptions): void {
   const period = opts.dash + opts.gap;
+  if (period <= 0) return; // avoid NaN phase from `% 0`
   let carry = 0; // distance already consumed within the current period
   for (let i = 0; i + 3 < pts.length; i += 2) {
     const x0 = pts[i]!;
