@@ -2,13 +2,16 @@ import { lazy, Suspense, useEffect } from "react";
 import { Navbar } from "../landing/Navbar";
 import { Hero } from "../landing/Hero";
 import { HowItWorks, WhyFree, Features } from "../landing/Sections";
+import { PullQuote } from "../landing/PullQuote";
 import { Faq } from "../landing/Faq";
 import { FinalCta } from "../landing/FinalCta";
 import { Footer } from "../landing/Footer";
+import { Marker } from "../ui";
 
 // Engine-backed sections load their own chunk (Pixi) after first paint.
 const TemplateRail = lazy(() => import("../landing/TemplateRail").then((m) => ({ default: m.TemplateRail })));
 const GalleryTeaser = lazy(() => import("../landing/GalleryTeaser").then((m) => ({ default: m.GalleryTeaser })));
+const EditorShowcase = lazy(() => import("../landing/EditorShowcase"));
 
 export default function Landing() {
   // Scroll to a fragment on load (e.g. arriving at "/#templates" from a legal
@@ -45,11 +48,20 @@ export default function Landing() {
         <TemplateRail />
       </Suspense>
       <HowItWorks />
-      <WhyFree />
+      <Suspense fallback={<div className="min-h-[40vh]" />}>
+        <EditorShowcase />
+      </Suspense>
+      <PullQuote cite="Why social teams pick Jima">
+        You&rsquo;ve got no excuse to skip <Marker tone="amber">motion</Marker> anymore.
+      </PullQuote>
       <Features />
+      <WhyFree />
       <Suspense fallback={<div className="min-h-[40vh]" />}>
         <GalleryTeaser />
       </Suspense>
+      <PullQuote cite="What it feels like">
+        Polished animations, in <Marker tone="coral">no time at all</Marker>.
+      </PullQuote>
       <Faq />
       <FinalCta />
       <Footer />

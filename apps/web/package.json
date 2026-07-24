@@ -49,9 +49,9 @@
       "limit": "160 kB"
     },
     {
-      "name": "hero showcase chunk (lazy live-template preview, loads after first paint)",
+      "name": "hero strip chunk (lazy live-template preview row, loads after first paint)",
       "path": [
-        "dist/assets/HeroShowcase-*.js"
+        "dist/assets/HeroStrip-*.js"
       ],
       "limit": "15 kB"
     }

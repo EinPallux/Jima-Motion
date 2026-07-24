@@ -3,28 +3,8 @@ import type { TemplateDefinition } from "@jima/engine";
 import { PosterThumb } from "../components/PosterThumb";
 import { LivePreview } from "../components/LivePreview";
 import { useReducedMotion } from "../hooks/useReducedMotion";
+import { categoryLabel } from "./groups";
 import { Badge, cn } from "../../ui";
-
-const CATEGORY_LABEL: Record<string, string> = {
-  announcement: "Announcement",
-  statement: "Text",
-  promo: "Promo",
-  product: "Product",
-  tech: "Tech",
-  photo: "Photo",
-  stat: "Data",
-  testimonial: "Quote",
-  brand: "Brand",
-  event: "Event",
-  educational: "Explainer",
-  comparison: "Compare",
-  social: "Social",
-  travel: "Travel",
-  showcase: "Showcase",
-  overlay: "Overlay",
-  intro: "Opener",
-  loop: "Background",
-};
 
 export function TemplateCard({ def, onOpen }: { def: TemplateDefinition; onOpen: (def: TemplateDefinition) => void }) {
   const reduced = useReducedMotion();
@@ -84,7 +64,7 @@ export function TemplateCard({ def, onOpen }: { def: TemplateDefinition; onOpen:
         <div className="flex items-center justify-between gap-2">
           <h3 className="min-w-0 truncate font-display text-[15px] font-bold text-ink">{def.name}</h3>
           <Badge tone="neutral" className="shrink-0 px-2 py-0.5 text-[11px]">
-            {CATEGORY_LABEL[def.category] ?? def.category}
+            {categoryLabel(def.category)}
           </Badge>
         </div>
         <p className="line-clamp-2 text-[13px] leading-snug text-slate">{def.tagline}</p>

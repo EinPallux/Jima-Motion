@@ -15,7 +15,7 @@ const LINKS = [
 // visual language (see ui/Button.tsx: variant="primary" size="md") instead of
 // wrapping an actual <Button>.
 const STUDIO_CTA =
-  "inline-flex h-11 select-none items-center justify-center gap-2 rounded-xl bg-primary-strong px-5 text-[15px] font-bold text-white shadow-xs transition-all duration-150 hover:bg-primary-press active:translate-y-px";
+  "inline-flex h-11 select-none items-center justify-center gap-2 rounded-full bg-primary-strong px-6 text-[15px] font-bold text-white shadow-xs transition-all duration-150 hover:bg-primary-press active:translate-y-px";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);

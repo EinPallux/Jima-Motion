@@ -35,7 +35,7 @@ export function Faq() {
     <section id="faq" className="bg-paper py-20 sm:py-24">
       <Container>
         <div className="mx-auto max-w-3xl">
-          <SectionHeading align="left" eyebrow="FAQ" eyebrowTone="amber" title="Questions" />
+          <SectionHeading align="center" eyebrow="FAQ" eyebrowTone="amber" size="lg" title="Questions? Answered." />
           <div className="mt-8 flex flex-col gap-3">
             {FAQ.map((item, i) => {
               const isOpen = open === i;

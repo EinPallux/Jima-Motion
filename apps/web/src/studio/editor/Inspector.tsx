@@ -2,7 +2,8 @@ import { useState } from "react";
 import { FONT_CHOICES, SOUND_PACKS, type TemplateDefinition, type TemplateField } from "@jima/engine";
 import { useStudio } from "../state/store";
 import { Field } from "../components/Field";
-import { Button, cn } from "../../ui";
+import { categoryLabel } from "../gallery/groups";
+import { Badge, Button, cn } from "../../ui";
 
 type Tab = "content" | "style" | "motion";
 
@@ -24,7 +25,17 @@ export function Inspector({ def, baseDuration }: { def: TemplateDefinition; base
 
   return (
     <div className="flex h-full flex-col bg-paper">
-      <div role="tablist" aria-label="Editor panels" className="flex gap-1 border-b border-mist px-4 pt-3">
+      <div className="px-4 pb-3 pt-4">
+        <p className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-muted">Editing</p>
+        <div className="mt-1 flex items-center gap-2">
+          <h2 className="min-w-0 flex-1 truncate font-display text-lg font-extrabold text-ink">{def.name}</h2>
+          <Badge tone="emerald" className="shrink-0 px-2 py-0.5 text-[11px]">
+            {categoryLabel(def.category)}
+          </Badge>
+        </div>
+      </div>
+
+      <div role="tablist" aria-label="Editor panels" className="flex gap-1 border-b border-mist px-4">
         <TabButton id="content" active={tab} onSelect={setTab} label="Content" />
         <TabButton id="style" active={tab} onSelect={setTab} label="Style" />
         <TabButton id="motion" active={tab} onSelect={setTab} label="Motion" />

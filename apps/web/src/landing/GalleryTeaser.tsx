@@ -30,8 +30,9 @@ export function GalleryTeaser() {
             align="left"
             eyebrow="Templates"
             eyebrowTone="indigo"
-            title="Templates for every post"
-            lead="Pick a starting point — every one is fully editable."
+            size="lg"
+            title="Never start from scratch."
+            lead="A template for every kind of post — pick a starting point, every one is fully editable."
           />
           <Link to="/studio" className="text-sm font-bold text-primary-strong hover:underline">
             Open the full gallery in the Studio →

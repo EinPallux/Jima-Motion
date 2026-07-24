@@ -11,6 +11,39 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.14.0] — 2026-07-24 · Full re-layout — Jitter-level landing, library & editor
+
+A ground-up **re-layout** (not just a restyle) of all three surfaces, benchmarked against a
+professional motion-SaaS bar. Still **fully light mode**, still **emerald-branded**, still 100% free /
+client-side / no-account — no product rules touched. The render engine and template library are
+unchanged; this is chrome only.
+
+### Added
+- **Scroll-motion foundation.** A reusable `Reveal` component + `useInView` (IntersectionObserver)
+  hook drive staggered scroll-reveal across the landing; a `.marker-hl` animated highlighter swipe
+  (`Marker`), floaty idle transforms, and shimmer keyframes. Everything collapses to static under
+  `prefers-reduced-motion`.
+- **New landing primitives.** `MockupFrame` (faux app window), `BentoCard` (vibrant hover-lift tile),
+  and a `LivePreview` that now accepts an `aspect` prop so previews render in their native ratio.
+- **New landing sections.** A mixed-aspect floating live-template **hero strip** (replaces the single
+  showcase), a faux-Studio **EditorShowcase** mockup, two animated **pull-quotes**, a bento **Features**
+  grid, and a richer multi-column footer.
+
+### Changed
+- **Landing — full re-layout.** Centered marker-underlined hero + CTA pills → live hero strip →
+  labelled template marquee ("Templates for every post") → "From idea to export" bento → editor
+  mockup → pull-quote → Features bento → "not a trick" comparison → gallery teaser → pull-quote → FAQ
+  → emerald final CTA → footer.
+- **Library — app-shell re-layout.** The gallery is now a true app layout: a persistent left
+  **category rail** (colour-dotted, counted, sticky full-height) + a sticky search header + a wider
+  responsive grid. Category chips remain on mobile where the rail is hidden.
+- **Editor — pro three-pane re-layout.** Cleaner top bar (app mark + template name + category badge +
+  segmented aspect switch + grouped actions), a labelled left **Library** thumbnail rail, a dotted
+  **stage** backdrop with the artboard on a floating card + a floating playback pill, and a titled
+  Inspector panel header. All roles, labels, keyboard behaviour and autosave are unchanged.
+- Centralised the category-label map in `gallery/groups.ts` (`categoryLabel`), shared by the card,
+  editor top bar and inspector.
+
 ## [1.13.1] — 2026-07-24 · QA hardening pass (bug fixes from a full code review)
 
 A round of fixes from a full QA/code review (no CRITICALs found; the high-risk export/determinism

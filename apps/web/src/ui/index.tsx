@@ -1,8 +1,11 @@
 import type { HTMLAttributes, ReactNode } from "react";
 import { cn } from "./cn";
+import { useInView } from "./useInView";
 
 export { cn } from "./cn";
 export { Button, type ButtonProps } from "./Button";
+export { Reveal } from "./Reveal";
+export { useInView } from "./useInView";
 
 /** Vibrant color-block tones shared by Card, Badge and section bands (v3 bold look). */
 export type Tone = "paper" | "emerald" | "coral" | "pink" | "amber" | "mint" | "indigo";
@@ -164,6 +167,81 @@ export function SectionHeading({
         {title}
       </h2>
       {lead && <p className="mt-4 text-lg leading-relaxed text-slate">{lead}</p>}
+    </div>
+  );
+}
+
+type MarkerTone = "emerald" | "amber" | "coral" | "pink" | "mint" | "indigo";
+const MARKER_BG: Record<MarkerTone, string> = {
+  emerald: "bg-emerald",
+  amber: "bg-amber",
+  coral: "bg-coral",
+  pink: "bg-pink",
+  mint: "bg-mint",
+  indigo: "bg-indigo",
+};
+
+/**
+ * A word with an animated highlighter swipe behind it — the signature bold
+ * accent. The colored bar wipes in the first time it scrolls into view. Dark
+ * ink text stays ≥5:1 over every marker tone (they only cover the lower half).
+ */
+export function Marker({ children, tone = "emerald", className }: { children: ReactNode; tone?: MarkerTone; className?: string }) {
+  const { ref, inView } = useInView<HTMLSpanElement>({ threshold: 0.6 });
+  return (
+    <span ref={ref} className={cn("relative inline-block whitespace-nowrap", className)}>
+      <span aria-hidden className={cn("marker-hl -rotate-1", MARKER_BG[tone], inView && "is-in")} />
+      <span className="relative z-10">{children}</span>
+    </span>
+  );
+}
+
+/** A faux browser/app window frame with a traffic-light top bar. */
+export function MockupFrame({
+  url,
+  children,
+  className,
+  barClassName,
+}: {
+  url?: string;
+  children: ReactNode;
+  className?: string;
+  barClassName?: string;
+}) {
+  return (
+    <div className={cn("overflow-hidden rounded-bento border border-mist bg-paper shadow-pop", className)}>
+      <div className={cn("flex items-center gap-1.5 border-b border-mist bg-canvas px-4 py-3", barClassName)} aria-hidden>
+        <span className="h-2.5 w-2.5 rounded-full bg-mist" />
+        <span className="h-2.5 w-2.5 rounded-full bg-mist" />
+        <span className="h-2.5 w-2.5 rounded-full bg-mist" />
+        {url && (
+          <span className="ml-2 truncate rounded-full bg-paper px-3 py-1 text-xs font-medium text-slate ring-1 ring-inset ring-mist">
+            {url}
+          </span>
+        )}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+/** A chunky bento tile — vibrant tint, oversized radius, hover-lift. */
+export function BentoCard({
+  tone = "paper",
+  className,
+  children,
+  ...props
+}: HTMLAttributes<HTMLDivElement> & { tone?: Tone }) {
+  return (
+    <div
+      className={cn(
+        "group/bento relative overflow-hidden rounded-bento border p-7 shadow-card transition-all duration-300 hover:-translate-y-1 hover:shadow-bold",
+        CARD_TONES[tone],
+        className,
+      )}
+      {...props}
+    >
+      {children}
     </div>
   );
 }

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { templates } from "@jima/templates";
 import type { TemplateDefinition } from "@jima/engine";
 import { PosterThumb } from "../studio/components/PosterThumb";
+import { Container, SectionHeading } from "../ui";
 
 function RailCard({ def, duplicate }: { def: TemplateDefinition; duplicate?: boolean }) {
   return (
@@ -48,8 +49,17 @@ export function TemplateRail() {
   const rowA = sample.slice(0, half);
   const rowB = sample.slice(half);
   return (
-    <section className="overflow-hidden bg-canvas py-14 sm:py-16" aria-label="Template previews">
-      <div className="flex flex-col gap-4">
+    <section className="overflow-hidden bg-canvas py-16 sm:py-20" aria-label="Template previews">
+      <Container>
+        <SectionHeading
+          align="center"
+          eyebrow="Template library"
+          eyebrowTone="indigo"
+          title="Templates for every post"
+          lead="Product drops, reels, quotes, sales, lower-thirds, openers — a ready-to-edit starting point for whatever you're posting."
+        />
+      </Container>
+      <div className="mt-12 flex flex-col gap-4">
         <Row items={rowA} direction="left" />
         <Row items={rowB} direction="right" />
       </div>

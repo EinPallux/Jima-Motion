@@ -21,6 +21,32 @@ export const GROUPS: TemplateGroup[] = [
 
 const OTHER: TemplateGroup = { id: "other", label: "More", blurb: "", categories: [] };
 
+/** Short, human-friendly label per fine-grained template category (badges/chips). */
+export const CATEGORY_LABEL: Record<string, string> = {
+  announcement: "Announcement",
+  statement: "Text",
+  promo: "Promo",
+  product: "Product",
+  tech: "Tech",
+  photo: "Photo",
+  stat: "Data",
+  testimonial: "Quote",
+  brand: "Brand",
+  event: "Event",
+  educational: "Explainer",
+  comparison: "Compare",
+  social: "Social",
+  travel: "Travel",
+  showcase: "Showcase",
+  overlay: "Overlay",
+  intro: "Opener",
+  loop: "Background",
+};
+
+export function categoryLabel(category: string): string {
+  return CATEGORY_LABEL[category] ?? category;
+}
+
 const BY_CATEGORY = new Map<string, TemplateGroup>();
 for (const g of GROUPS) for (const c of g.categories) BY_CATEGORY.set(c, g);
 
