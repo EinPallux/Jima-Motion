@@ -18,12 +18,20 @@ export function Footer() {
             <Link to="/studio" className="font-medium text-ink hover:text-primary-strong">
               Open the Studio
             </Link>
-            <a href="#templates" className="text-slate hover:text-ink">
+            <a href="/#templates" className="text-slate hover:text-ink">
               Templates
             </a>
-            <a href="#faq" className="text-slate hover:text-ink">
+            <a href="/#faq" className="text-slate hover:text-ink">
               FAQ
             </a>
+          </nav>
+          <nav className="flex flex-col gap-2" aria-label="Legal">
+            <Link to="/privacy" className="text-slate hover:text-ink">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="text-slate hover:text-ink">
+              Terms of Service
+            </Link>
           </nav>
           <div className="flex flex-col gap-2">
             <span className="text-slate">Your work stays in your browser.</span>

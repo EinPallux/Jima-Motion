@@ -4,6 +4,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 // Landing and Studio are separate lazy route chunks (TECHNICAL_ARCHITECTURE.md §3, §10).
 const Landing = lazy(() => import("./routes/Landing"));
 const Studio = lazy(() => import("./routes/Studio"));
+const Privacy = lazy(() => import("./routes/Privacy"));
+const Terms = lazy(() => import("./routes/Terms"));
 
 const router = createBrowserRouter([
   {
@@ -19,6 +21,22 @@ const router = createBrowserRouter([
     element: (
       <Suspense fallback={<RouteFallback />}>
         <Studio />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/privacy",
+    element: (
+      <Suspense fallback={<RouteFallback />}>
+        <Privacy />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/terms",
+    element: (
+      <Suspense fallback={<RouteFallback />}>
+        <Terms />
       </Suspense>
     ),
   },

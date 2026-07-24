@@ -31,3 +31,16 @@ test("studio editor has no serious a11y violations", async ({ page }) => {
   const serious = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
   expect(serious, JSON.stringify(serious.map((v) => ({ id: v.id, nodes: v.nodes.length })), null, 2)).toEqual([]);
 });
+
+for (const [path, heading] of [
+  ["/privacy", "Privacy Policy"],
+  ["/terms", "Terms of Service"],
+] as const) {
+  test(`${path} has no serious a11y violations`, async ({ page }) => {
+    await page.goto(path);
+    await page.getByRole("heading", { name: heading }).waitFor({ timeout: 20000 });
+    const results = await analyze(page);
+    const serious = results.violations.filter((v) => v.impact === "serious" || v.impact === "critical");
+    expect(serious, JSON.stringify(serious.map((v) => ({ id: v.id, nodes: v.nodes.length })), null, 2)).toEqual([]);
+  });
+}

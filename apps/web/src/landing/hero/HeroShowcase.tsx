@@ -4,10 +4,10 @@ import { LivePreview } from "../../studio/components/LivePreview";
 import { PosterThumb } from "../../studio/components/PosterThumb";
 import { useReducedMotion } from "../../studio/hooks/useReducedMotion";
 
-// The "best of" — six of the most eye-catching, varied templates (text, social,
-// travel, data, promo, data-viz) that read well at 16:9. The big hero preview
+// Six of the most eye-catching, varied NON-TEXT templates (social, travel,
+// data, promo, tech, flip-board) that read well at 16:9. The big hero preview
 // cycles through these so the showcase feels alive. Verified to exist.
-const SHOWCASE_IDS = ["kinetic-headline", "subscribe-bell", "globe-spin", "progress-ring", "special-offer", "bar-race"];
+const SHOWCASE_IDS = ["subscribe-bell", "globe-spin", "gauge-meter", "special-offer", "laptop-mockup", "flight-board"];
 const SIDE_IDS = ["product-hero", "big-number"];
 const CYCLE_MS = 4600;
 
