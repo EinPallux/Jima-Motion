@@ -137,6 +137,31 @@ h1, h2, h3, h4 {
   to { transform: translateX(0); }
 }
 
+/**
+ * Horizontal edge fade for rails that are wider than their container (the
+ * template marquee, the hero strip). A mask rather than two opaque gradient
+ * overlays: the content genuinely dissolves, so it works over any background
+ * and needs no colour matching. The fade width scales with the rail but stays
+ * sane on phones and doesn't swallow the middle on ultrawide.
+ */
+.edge-fade-x {
+  --edge-fade: clamp(28px, 7%, 96px);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--edge-fade),
+    #000 calc(100% - var(--edge-fade)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--edge-fade),
+    #000 calc(100% - var(--edge-fade)),
+    transparent 100%
+  );
+}
+
 /* Soft accent aura used behind hero/section highlights. */
 @keyframes jima-float {
   0%, 100% { transform: translateY(0); }

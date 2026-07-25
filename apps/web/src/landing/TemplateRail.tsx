@@ -59,10 +59,15 @@ export function TemplateRail() {
           lead="Product drops, reels, quotes, sales, lower-thirds, openers — a ready-to-edit starting point for whatever you're posting."
         />
       </Container>
-      <div className="mt-12 flex flex-col gap-4">
-        <Row items={rowA} direction="left" />
-        <Row items={rowB} direction="right" />
-      </div>
+      {/* Same width as the rest of the page — the rows still scroll past that
+          width, but dissolve at the content edges rather than hard-cutting at
+          the viewport. */}
+      <Container className="mt-12">
+        <div className="edge-fade-x flex flex-col gap-4">
+          <Row items={rowA} direction="left" />
+          <Row items={rowB} direction="right" />
+        </div>
+      </Container>
       <p className="mt-8 text-center text-base font-bold text-graphite">
         {templates.length} templates and counting — all free, all yours.
       </p>
