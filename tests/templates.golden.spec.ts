@@ -438,6 +438,61 @@ const TEMPLATES: T[] = [
   { id: "event-menu", palette: "ivory", poster: 3.5, duration: 4.2 },
   { id: "sunrise-scene", palette: "dawn-blue", poster: 3.6, duration: 4.4 },
   { id: "race-bib", palette: "classic-red", poster: 4.0, duration: 4.4 },
+  // v1.18 pack — +45 templates (5 per gallery section; clean/modern/smooth brief).
+  // Text & titles
+  { id: "liquid-headline", palette: "porcelain", poster: 3.4, duration: 4.4 },
+  { id: "weight-shift", palette: "paper", poster: 3.8, duration: 4.4 },
+  { id: "slow-pan-type", palette: "editorial", poster: 4.1, duration: 4.6 },
+  { id: "depth-stack-text", palette: "chalk", poster: 3.6, duration: 4.3 },
+  { id: "unfold-line", palette: "bone", poster: 3.5, duration: 4.3 },
+  // Overlays & lower-thirds
+  { id: "glass-bar", palette: "smoke", poster: 3.0, duration: 4.4 },
+  { id: "hairline-third", palette: "ink", poster: 2.6, duration: 4.0 },
+  { id: "pill-expand", palette: "ink", poster: 2.6, duration: 4.0 },
+  { id: "side-rail", palette: "ink", poster: 2.8, duration: 3.78 },
+  { id: "soft-scrim", palette: "ink", poster: 2.8, duration: 4.2 },
+  // Social
+  { id: "collab-post", palette: "porcelain", poster: 3.6, duration: 4.4 },
+  { id: "profile-grid", palette: "porcelain", poster: 3.4, duration: 4.2 },
+  { id: "scroll-stop", palette: "porcelain", poster: 3.6, duration: 4.6 },
+  { id: "quote-reel", palette: "porcelain", poster: 3.8, duration: 4.6 },
+  { id: "feed-scroll", palette: "porcelain", poster: 4.1, duration: 4.8 },
+  // Product & ads
+  { id: "studio-pedestal", palette: "studio-linen", poster: 3.6, duration: 4.8 },
+  { id: "float-product", palette: "studio-linen", poster: 3.4, duration: 5.0 },
+  { id: "swatch-fan", palette: "studio-linen", poster: 4.2, duration: 5.0 },
+  { id: "value-stack", palette: "studio-linen", poster: 4.6, duration: 5.2 },
+  { id: "product-story", palette: "studio-linen", poster: 5.2, duration: 5.4 },
+  // Showcase
+  { id: "image-morph", palette: "dune", poster: 4.2, duration: 4.6 },
+  { id: "split-scroll", palette: "studio", poster: 4.4, duration: 4.8 },
+  { id: "color-grade", palette: "studio-light", poster: 4.4, duration: 4.8 },
+  { id: "ui-states", palette: "daylight", poster: 4.6, duration: 5.0 },
+  { id: "grid-to-hero", palette: "gallery", poster: 4.6, duration: 5.0 },
+  // Explainers & data
+  { id: "sankey-flow", palette: "ink", poster: 3.2, duration: 3.95 },
+  { id: "treemap", palette: "ink", poster: 3.2, duration: 3.9 },
+  { id: "bell-curve", palette: "ink", poster: 3.5, duration: 4.05 },
+  { id: "journey-map", palette: "ink", poster: 3.7, duration: 4.3 },
+  { id: "stat-morph", palette: "ink", poster: 4.3, duration: 4.88 },
+  // Brand & quotes
+  { id: "brand-gradient", palette: "aurora", poster: 3.4, duration: 4.8 },
+  { id: "manifesto", palette: "paper", poster: 4.6, duration: 4.8 },
+  { id: "brand-values", palette: "chalk", poster: 4.95, duration: 5.2 },
+  { id: "quote-portrait", palette: "linen", poster: 3.6, duration: 4.6 },
+  { id: "logo-orbit", palette: "cloud", poster: 4.35, duration: 4.7 },
+  // Openers
+  { id: "gradient-wash", palette: "porcelain", poster: 3.4, duration: 4.4 },
+  { id: "hairline-intro", palette: "bone", poster: 3.0, duration: 4.0 },
+  { id: "column-rise", palette: "paper", poster: 3.4, duration: 4.4 },
+  { id: "zoom-through", palette: "frost", poster: 3.6, duration: 4.6 },
+  { id: "liquid-intro", palette: "mist", poster: 3.8, duration: 4.8 },
+  // Events & travel
+  { id: "seat-map", palette: "cabin-light", poster: 3.6, duration: 4.2 },
+  { id: "compass-bearing", palette: "bone-navy", poster: 4.2, duration: 4.6 },
+  { id: "season-shift", palette: "nordic-day", poster: 4.7, duration: 5.0 },
+  { id: "skyline-build", palette: "dusk-indigo", poster: 4.2, duration: 4.5 },
+  { id: "horizon-pan", palette: "alpine-dawn", poster: 4.0, duration: 4.4 },
 ];
 
 const ASPECTS: Aspect[] = ["1:1", "4:5", "9:16", "16:9"];

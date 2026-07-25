@@ -501,6 +501,37 @@ degradation, per-element color fields.
 | T94 | Product Review | `product-review` | product | 4:5 | Product + star rating + customer quote |
 | T95 | Shop Grid | `shop-grid` | product | 4:5 | A shop collection grid with prices + CTA |
 
+## 19. +45 templates — clean/modern/smooth, 5 each for all nine sections (2026-07-25, v1.18.0)
+
+Library 399 → **444**. A deliberately calmer pack: the brief was **clean, modern, unique and
+smooth**, so these favour long eased moves (`outExpo`/`inOutCubic`, 0.7–1.4 s heroes, 60–120 ms
+staggers), generous negative space, hairlines over heavy rules, and muted palettes with a single
+confident accent. No bounces, overshoots or strobes anywhere in the pack.
+
+- **Text & titles** (`statement`): `liquid-headline` (organic wave-edge mask), `weight-shift`
+  (light→bold typographic morph), `slow-pan-type`, `depth-stack-text` (parallax convergence),
+  `unfold-line`.
+- **Overlays** (`overlay`): `glass-bar`, `hairline-third`, `pill-expand`, `side-rail` (the library's
+  first vertical lower-third), `soft-scrim`.
+- **Social** (`social`): `collab-post`, `profile-grid`, `scroll-stop`, `quote-reel`, `feed-scroll`.
+- **Product & ads** (`product`/`promo`): `studio-pedestal`, `float-product`, `swatch-fan`,
+  `value-stack`, `product-story` (a 3-beat narrative).
+- **Showcase** (`photo`/`showcase`/`tech`): `image-morph`, `split-scroll`, `color-grade`,
+  `ui-states`, `grid-to-hero`.
+- **Explainers & data** (`stat`/`educational`): `sankey-flow`, `treemap`, `bell-curve`,
+  `journey-map`, `stat-morph`.
+- **Brand & quotes** (`brand`/`testimonial`): `brand-gradient`, `manifesto`, `brand-values`,
+  `quote-portrait`, `logo-orbit`.
+- **Openers** (`intro`): `gradient-wash`, `hairline-intro`, `column-rise`, `zoom-through`,
+  `liquid-intro`.
+- **Events & travel** (`travel`): `seat-map`, `compass-bearing`, `season-shift`, `skyline-build`,
+  `horizon-pan`.
+
+All 45 had their duration read back off a live `TemplateRunner` and their re-seek verified
+pixel-identical before baselines were written. 4 aspects, 4 palettes, per-element colours,
+decorative toggles, ≥4.5:1 end-frame contrast throughout; `treemap` carries an adaptive contrast
+ramp because mid-tone tints are the case where neither a light nor a dark ink clears 4.5:1.
+
 ## 18. +45 templates — 5 each for all nine sections (2026-07-25, v1.16.0)
 
 Library 354 → **399**. Five new templates apiece for **every** gallery section, Text & titles included:

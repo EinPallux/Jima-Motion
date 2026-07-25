@@ -3,7 +3,7 @@
 Jima Motion is a **100 % free, no-account, browser-only motion-graphics tool for social media
 managers**: pick a template → type your text / drop images → export MP4/WebM/GIF, rendered
 entirely client-side. Brand = "Jima Motion"; the editor = "Jima Studio" ("the Studio").
-**Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 399,
+**Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 444,
 plus a v1.5 sound + editable-speed release, a v1.6 transparent-export release, a v1.7
 +50-template / editable-decorations release, a v1.7.2 +10-social-template release, a v1.8 landing
 makeover (new 3D hero) + Template-Library overhaul, a v1.9 release that removed the Backgrounds
@@ -15,8 +15,10 @@ oversized type + vibrant coral/pink/amber/mint/indigo color blocks, still fully 
 v1.14 full re-layout of the landing, library & editor to a Jitter-level pro-SaaS bar (still fully
 light + emerald), a v1.15 release that added 80 templates (10 new each for overlays, social,
 product/ads, showcase, explainers/data, brand/quotes, openers and events/travel), and a v1.16
-release that added 45 templates (5 new for **every** gallery section, Text & titles included).**
-Workspace/CI/guardrails; deterministic motion engine + **399 templates** (12 launch + a 23-template
+release that added 45 templates (5 new for **every** gallery section, Text & titles included), a
+v1.17 release (official Jima logo, +3 fonts, body-font picker, 18 theme presets, brand kit), and a
+v1.18 release that added 45 clean/modern/smooth templates (5 new for every gallery section).**
+Workspace/CI/guardrails; deterministic motion engine + **444 templates** (12 launch + a 23-template
 expansion + a 20-template smooth-text pack + a 20-template explainer/showcase/product/ad pack + a
 20-template showcase & product-presentation pack + a 50-template pack adding overlays/lower-thirds,
 intros/openers, and more text/social/product/stat/brand + a 10-template
@@ -48,7 +50,15 @@ confirmed, exploded view, waitlist), showcase (blueprint, parallax layers, cube 
 cascade, iso layers), explainers/data (bubble chart, slope graph, gantt, dot stats, iceberg),
 brand/quotes (crest monogram, ribbon banner, foil card, trophy shelf, press clipping), openers (page
 turn, marquee bulbs, shatter, unfold, flash cut) and events/travel (metro map, airmail envelope,
-event menu, sunrise scene, race bib));
+event menu, sunrise scene, race bib) + a 45-template v1.18 pack built to a deliberately calm
+clean/modern/smooth brief — 5 new for every section: text (liquid headline, weight shift, slow pan,
+depth stack, unfold line), overlays (glass bar, hairline, pill, side rail, soft scrim), social
+(collab post, profile grid, scroll stop, quote reel, feed scroll), product/ads (studio pedestal,
+float, swatch fan, value stack, product story), showcase (image morph, split scroll, colour grade,
+UI states, grid to hero), explainers/data (sankey, treemap, bell curve, journey map, stat morph),
+brand/quotes (brand gradient, manifesto, brand values, quote portrait, logo orbit), openers
+(gradient wash, hairline, column rise, zoom through, liquid) and events/travel (seat map, compass,
+season shift, skyline, horizon pan));
 two added categories — **overlay** (lower-thirds), **intro** (openers);
 the seldom-used **loop/Backgrounds** category was retired in v1.9;
 **per-template toggles to switch off decorative accents** (accent bar/dot, badges, frames, glows…);
@@ -169,3 +179,18 @@ SwiftShader headless.
 - Close every `VideoFrame`; respect `encodeQueueSize` backpressure or long exports OOM on mobile.
 - Templates must end on a designed hold/loop frame; poster frames come from `posterTime`, rendered
   by the engine in CI (never hand-made screenshots).
+- Pixi `Text.style.dropShadow` bleeds neighbouring glyph fragments as a ghost row at sub-1×
+  rasterisation — which is exactly how the Studio preview and gallery posters render (~0.4–0.55×).
+  Use an offset low-alpha twin `Text` behind the real one instead.
+- Soft shadows on floating surfaces need many (7–8) very low-alpha passes; one or two thick layers
+  band into a visible grey outline on white.
+- A Pixi `Text` box centres on its **line** box, so glyphs descend ~0.6em below centre (not 0.5em) —
+  accent rules placed at 0.5em collide with descenders.
+- Pixi `Graphics` masks are **binary stencils**. A soft-edged travelling reveal needs either a baked
+  gradient `Sprite` mask or (cleaner) one wavefront `f(t)` driving several properties at once.
+- Long continuous moves (>1.5s) need a velocity-matched multi-leg ease (ease-in → linear cruise →
+  ease-to-rest). A lone `outQuint`/`outExpo` finishes the travel in the first second, then creeps
+  invisibly — three separate template authors hit this independently.
+- Optional text fields: `str(values.x, "<default>")` makes a **cleared** field silently revert to the
+  default, so the user can never remove it. Use `str(values.x, "")` and declare the real default on
+  the field.

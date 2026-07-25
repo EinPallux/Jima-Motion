@@ -11,6 +11,40 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.18.0] — 2026-07-25 · +45 clean/modern/smooth templates → 444
+
+Five new templates for every gallery section, built to a deliberately calmer brief than the earlier
+packs: **clean, modern, unique, smooth**. Long eased moves (`outExpo`/`inOutCubic`, 0.7–1.4 s heroes,
+60–120 ms staggers), generous negative space, hairlines over heavy rules, muted palettes with one
+confident accent — and no bounces, overshoots or strobes anywhere in the pack.
+
+### Added
+- **Text & titles (5):** liquid headline (organic wave-edge mask), weight shift (light→bold
+  typographic morph), slow pan, depth stack (parallax convergence), unfold line.
+- **Overlays (5):** glass bar, hairline, pill, side rail (the library's first *vertical*
+  lower-third), soft scrim.
+- **Social (5):** collab post, profile grid, scroll stop, quote reel, feed scroll.
+- **Product & ads (5):** studio pedestal, float, swatch fan, value stack, product story (a 3-beat
+  problem → product → result narrative).
+- **Showcase (5):** image morph, split scroll (counter-scrolling columns), colour grade, UI states,
+  grid to hero.
+- **Explainers & data (5):** sankey flow, treemap, bell curve, journey map, stat morph.
+- **Brand & quotes (5):** brand gradient (a living mesh field), manifesto, brand values, quote
+  portrait, logo orbit.
+- **Openers (5):** gradient wash, hairline, column rise, zoom through, liquid.
+- **Events & travel (5):** seat map, compass, season shift, skyline, horizon pan.
+
+### Notes
+- Every duration was read back off a live `TemplateRunner` and every template's re-seek verified
+  pixel-identical before baselines were written. 180 new golden baselines; the existing 399 are
+  byte-for-byte unchanged.
+- `treemap` carries an adaptive contrast ramp: it is the only template placing text on accent-tinted
+  surfaces, and mid-tone tints are exactly where neither a light nor a dark ink clears 4.5:1.
+- Several engine-level lessons from this pack were added to the pitfalls list in `CLAUDE.md` — Pixi
+  `Text.dropShadow` ghosting at sub-1× rasterisation, line-box descender geometry, binary-stencil
+  `Graphics` masks, velocity-matched multi-leg easing for long moves, and the cleared-optional-field
+  default bug.
+
 ## [1.17.0] — 2026-07-25 · Official logo, 3 new fonts, theme presets & brand kit
 
 The official Jima logo lands across the site, the font picker grows, and the Style tab gains two

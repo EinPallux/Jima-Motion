@@ -408,6 +408,51 @@ import { airmailEnvelope } from "./airmail-envelope/index";
 import { eventMenu } from "./event-menu/index";
 import { sunriseScene } from "./sunrise-scene/index";
 import { raceBib } from "./race-bib/index";
+import { liquidHeadline } from "./liquid-headline/index";
+import { weightShift } from "./weight-shift/index";
+import { slowPanType } from "./slow-pan-type/index";
+import { depthStackText } from "./depth-stack-text/index";
+import { unfoldLine } from "./unfold-line/index";
+import { glassBar } from "./glass-bar/index";
+import { hairlineThird } from "./hairline-third/index";
+import { pillExpand } from "./pill-expand/index";
+import { sideRail } from "./side-rail/index";
+import { softScrim } from "./soft-scrim/index";
+import { collabPost } from "./collab-post/index";
+import { profileGrid } from "./profile-grid/index";
+import { scrollStop } from "./scroll-stop/index";
+import { quoteReel } from "./quote-reel/index";
+import { feedScroll } from "./feed-scroll/index";
+import { studioPedestal } from "./studio-pedestal/index";
+import { floatProduct } from "./float-product/index";
+import { swatchFan } from "./swatch-fan/index";
+import { valueStack } from "./value-stack/index";
+import { productStory } from "./product-story/index";
+import { imageMorph } from "./image-morph/index";
+import { splitScroll } from "./split-scroll/index";
+import { colorGrade } from "./color-grade/index";
+import { uiStates } from "./ui-states/index";
+import { gridToHero } from "./grid-to-hero/index";
+import { sankeyFlow } from "./sankey-flow/index";
+import { treemap } from "./treemap/index";
+import { bellCurve } from "./bell-curve/index";
+import { journeyMap } from "./journey-map/index";
+import { statMorph } from "./stat-morph/index";
+import { brandGradient } from "./brand-gradient/index";
+import { manifesto } from "./manifesto/index";
+import { brandValues } from "./brand-values/index";
+import { quotePortrait } from "./quote-portrait/index";
+import { logoOrbit } from "./logo-orbit/index";
+import { gradientWash } from "./gradient-wash/index";
+import { hairlineIntro } from "./hairline-intro/index";
+import { columnRise } from "./column-rise/index";
+import { zoomThrough } from "./zoom-through/index";
+import { liquidIntro } from "./liquid-intro/index";
+import { seatMap } from "./seat-map/index";
+import { compassBearing } from "./compass-bearing/index";
+import { seasonShift } from "./season-shift/index";
+import { skylineBuild } from "./skyline-build/index";
+import { horizonPan } from "./horizon-pan/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -861,6 +906,61 @@ export const templates: TemplateDefinition[] = [
   eventMenu,
   sunriseScene,
   raceBib,
+  // v1.18 pack — +45 templates (5 per gallery section; clean/modern/smooth brief).
+  // Text & titles
+  liquidHeadline,
+  weightShift,
+  slowPanType,
+  depthStackText,
+  unfoldLine,
+  // Overlays & lower-thirds
+  glassBar,
+  hairlineThird,
+  pillExpand,
+  sideRail,
+  softScrim,
+  // Social
+  collabPost,
+  profileGrid,
+  scrollStop,
+  quoteReel,
+  feedScroll,
+  // Product & ads
+  studioPedestal,
+  floatProduct,
+  swatchFan,
+  valueStack,
+  productStory,
+  // Showcase
+  imageMorph,
+  splitScroll,
+  colorGrade,
+  uiStates,
+  gridToHero,
+  // Explainers & data
+  sankeyFlow,
+  treemap,
+  bellCurve,
+  journeyMap,
+  statMorph,
+  // Brand & quotes
+  brandGradient,
+  manifesto,
+  brandValues,
+  quotePortrait,
+  logoOrbit,
+  // Openers
+  gradientWash,
+  hairlineIntro,
+  columnRise,
+  zoomThrough,
+  liquidIntro,
+  // Events & travel
+  seatMap,
+  compassBearing,
+  seasonShift,
+  skylineBuild,
+  horizonPan,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {
