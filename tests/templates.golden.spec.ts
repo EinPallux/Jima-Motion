@@ -493,6 +493,8 @@ const TEMPLATES: T[] = [
   { id: "season-shift", palette: "nordic-day", poster: 4.7, duration: 5.0 },
   { id: "skyline-build", palette: "dusk-indigo", poster: 4.2, duration: 4.5 },
   { id: "horizon-pan", palette: "alpine-dawn", poster: 4.0, duration: 4.4 },
+  // v1.18.1 — owner-requested one-off.
+  { id: "flight-mode", palette: "daylight", poster: 4.6, duration: 4.8 },
 ];
 
 const ASPECTS: Aspect[] = ["1:1", "4:5", "9:16", "16:9"];

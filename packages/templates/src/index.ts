@@ -453,6 +453,7 @@ import { compassBearing } from "./compass-bearing/index";
 import { seasonShift } from "./season-shift/index";
 import { skylineBuild } from "./skyline-build/index";
 import { horizonPan } from "./horizon-pan/index";
+import { flightMode } from "./flight-mode/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -961,6 +962,8 @@ export const templates: TemplateDefinition[] = [
   seasonShift,
   skylineBuild,
   horizonPan,
+  // v1.18.1 — owner-requested one-off: iOS Control Center travel-vlog intro.
+  flightMode,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {
