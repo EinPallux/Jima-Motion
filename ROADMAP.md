@@ -288,6 +288,7 @@ rendering, AI credits, dark mode.
 | +5 templates for every gallery section (all 9, incl. Text & titles) | ✅ 2026-07-25 — **v1.16.0**, library 354 → 399 |
 | Official logo + 3 fonts + body-font picker + 18 theme presets + brand kit | ✅ 2026-07-25 — **v1.17.0** |
 | +5 clean/modern/smooth templates for every gallery section | ✅ 2026-07-25 — **v1.18.0**, library 399 → 444 |
+| Flight-mode Control Center travel intro (owner request) | ✅ 2026-07-25 — **v1.18.1**, library 444 → 445 |
 | Official logo + 3 fonts (Parkinsans/Jakarta/Inter) + body-font picker + 18 theme presets + brand kit | ✅ 2026-07-25 — **v1.17.0** |
 
 *(Update this table + CHANGELOG.md at every phase transition.)*

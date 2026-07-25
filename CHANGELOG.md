@@ -11,6 +11,23 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.18.1] — 2026-07-25 · Flight Mode — an iOS Control Center travel-vlog intro
+
+One owner-requested template for **Events & travel**: `flight-mode`. A light-mode iOS-style Control
+Center tile drops in with a soft bounce; the Flight Mode button presses with a heavy, bouncy impact
+and turns airplane-orange (WiFi, cellular and Bluetooth dim in sympathy — airplane mode really does
+kill the radios); a "Flight Mode: On" pill pops; then the plane lifts vertically off its button,
+banks, and accelerates out of frame, handing over to an editable title + subline end card
+("Off to Tokyo · A travel film"). Designed as an intro/transition for travel vlogs; ~4.8 s.
+
+The takeoff is a two-phase move on purpose: a visible vertical lift clear of the tile, then the
+accelerating climb — a single accelerating ease straight from the button left the grown plane
+overlapping its own orange circle as a shapeless blob (caught in frame-by-frame QA).
+
+All four aspects, 4 light palettes, per-element colours, status-pill + shadow toggles; the drawn
+airplane/WiFi/Bluetooth/cellular glyphs are Graphics, no image assets. Golden: 4 baselines added,
+determinism verified, existing 444 untouched.
+
 ## [1.18.0] — 2026-07-25 · +45 clean/modern/smooth templates → 444
 
 Five new templates for every gallery section, built to a deliberately calmer brief than the earlier

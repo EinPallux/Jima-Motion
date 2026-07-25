@@ -3,7 +3,7 @@
 Jima Motion is a **100 % free, no-account, browser-only motion-graphics tool for social media
 managers**: pick a template → type your text / drop images → export MP4/WebM/GIF, rendered
 entirely client-side. Brand = "Jima Motion"; the editor = "Jima Studio" ("the Studio").
-**Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 444,
+**Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 445,
 plus a v1.5 sound + editable-speed release, a v1.6 transparent-export release, a v1.7
 +50-template / editable-decorations release, a v1.7.2 +10-social-template release, a v1.8 landing
 makeover (new 3D hero) + Template-Library overhaul, a v1.9 release that removed the Backgrounds
@@ -17,8 +17,9 @@ light + emerald), a v1.15 release that added 80 templates (10 new each for overl
 product/ads, showcase, explainers/data, brand/quotes, openers and events/travel), and a v1.16
 release that added 45 templates (5 new for **every** gallery section, Text & titles included), a
 v1.17 release (official Jima logo, +3 fonts, body-font picker, 18 theme presets, brand kit), and a
-v1.18 release that added 45 clean/modern/smooth templates (5 new for every gallery section).**
-Workspace/CI/guardrails; deterministic motion engine + **444 templates** (12 launch + a 23-template
+v1.18 release that added 45 clean/modern/smooth templates (5 new for every gallery section) plus a
+one-off owner-requested flight-mode intro (v1.18.1).**
+Workspace/CI/guardrails; deterministic motion engine + **445 templates** (12 launch + a 23-template
 expansion + a 20-template smooth-text pack + a 20-template explainer/showcase/product/ad pack + a
 20-template showcase & product-presentation pack + a 50-template pack adding overlays/lower-thirds,
 intros/openers, and more text/social/product/stat/brand + a 10-template
