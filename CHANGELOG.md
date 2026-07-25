@@ -33,6 +33,13 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
   section and dissolve at the left/right edges via a new `.edge-fade-x` mask utility (a mask, not
   two opaque gradient overlays, so the fade works over any background and needs no colour matching).
   Each side is separately overridable so a scroller can drop the fade where it has run out of cards.
+- **The Studio mockup now shows Voice Note (Social) instead of a generic headline template**, and
+  the faux inspector shows that template's real fields at their real defaults — Sender name "Maya",
+  Reply "Hahaha love this 😂", its palette's own accent (so the swatch matches the blue waveform
+  beside it) and the `noteLen` slider at 7s on its 3–30s range. Template-specific controls make the
+  "everything is a simple field" point better than Headline/Subline did. The panel also gained the
+  editor's real "Editing / <name> / <category>" header, and the preview now sits on the Studio's
+  actual dotted stage as a centred canvas card rather than filling the pane edge to edge.
 - Hero cards are sized for that narrower column: a viewport-tracking height
   (`clamp(184px, 19vw, 248px)`) with widths from the aspect ratio, instead of a fixed 300px. The
   per-card float animation is gone — a horizontal scroller has to clip its vertical axis, and every
