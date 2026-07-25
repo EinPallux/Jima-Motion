@@ -43,9 +43,14 @@ features that make every one of the 399 templates substantially more editable.
 ### Fixed
 - **Font weights are no longer claimed without being loaded.** Each selectable font now declares the
   static weights actually shipped for it, and the default registry registers the weights templates
-  really draw at (notably body 700, used by 28 templates). Previously an unregistered weight was
-  measured against a fallback face while painting with the real one — the source of garbled word
-  spacing. Verified against the golden suite: no baseline drift.
+  really draw at (notably display 600 and body 700). Previously an unregistered weight was *measured*
+  against a fallback face while *painting* with the real one, so any template that measures text to
+  compute its own wrapping got the wrong width.
+- **Testimonial Slide no longer clips its quote.** The visible symptom of the above: in 16:9 the
+  quote overflowed the right edge and was cut off mid-word, because the wrap width was measured
+  against a fallback face. It now wraps onto two lines as designed. This is the one intentional
+  golden-baseline update in this release — the old baseline had captured the bug. The full
+  1,995-test golden suite is otherwise unchanged.
 
 ## [1.16.0] — 2026-07-25 · +45 templates (5 per section, all nine) → 399
 
