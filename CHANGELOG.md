@@ -18,14 +18,21 @@ Center tile drops in with a soft bounce; the Flight Mode button presses with a h
 and turns airplane-orange (WiFi, cellular and Bluetooth dim in sympathy — airplane mode really does
 kill the radios); a "Flight Mode: On" pill pops; then the plane lifts vertically off its button,
 banks, and accelerates out of frame, handing over to an editable title + subline end card
-("Off to Tokyo · A travel film"). Designed as an intro/transition for travel vlogs; ~4.8 s.
+("Off to Tokyo · A travel film"). Designed as an intro/transition for travel vlogs; ~5.4 s.
 
-The takeoff is a two-phase move on purpose: a visible vertical lift clear of the tile, then the
-accelerating climb — a single accelerating ease straight from the button left the grown plane
-overlapping its own orange circle as a shapeless blob (caught in frame-by-frame QA).
+The takeoff flies a quadratic bezier whose start tangent is vertical and whose end tangent is
+up-and-right, so one continuous curve gives both the lift off the button and the bank away — no
+two-phase seam. Position, bank and scale all derive from the same parameter in a pure `update(t)`,
+which is why the nose always points exactly along the path, and a short ghost trail fades up only
+once the plane is genuinely moving fast.
+
+The airplane silhouette is one closed mirrored path rather than a fuselage plus separate wing
+polys — the overlapping fills showed hairline seams at the wing roots that the scaled-up takeoff
+magnified badly. The departing plane also starts in the button's white and only turns accent once
+it is clear of the orange disc; an orange plane on an orange circle is invisible.
 
 All four aspects, 4 light palettes, per-element colours, status-pill + shadow toggles; the drawn
-airplane/WiFi/Bluetooth/cellular glyphs are Graphics, no image assets. Golden: 4 baselines added,
+airplane/WiFi/Bluetooth/cellular glyphs are Graphics, no image assets. Golden: 4 baselines,
 determinism verified, existing 444 untouched.
 
 ## [1.18.0] — 2026-07-25 · +45 clean/modern/smooth templates → 444

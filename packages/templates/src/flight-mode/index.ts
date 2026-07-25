@@ -4,7 +4,6 @@ import {
   makeText,
   outQuad,
   outQuint,
-  inQuad,
   makeOutBack,
   safeRect,
   type BuiltTemplate,
@@ -58,47 +57,45 @@ const PRESS_DUR = 0.13;
 const RELEASE_AT = 1.66; // heavy bouncy release + orange activation
 const RADIOS_AT = 1.82; // wifi/cellular/bluetooth give up
 const PILL_AT = 2.02;
-const TAKEOFF_AT = 2.5; // vertical lift, well clear of the tile
-const CLIMB_AT = 3.0; // main accelerating exit
-const CLIMB_DUR = 1.35;
-const PILL_OUT_AT = 3.28;
-const TITLE_AT = 3.55;
-const SUB_AT = 3.78;
-const ICON_BACK_AT = 4.35; // the button gets its glyph back for the end card
-const DURATION = 4.8;
+const LIFT_AT = 2.72; // the flyer takes over from the button glyph (seamless)
+const EXIT_END = 4.5; // fully clear of the frame
+const PILL_OUT_AT = 3.35;
+const ICON_BACK_AT = 3.98; // glyph returns while the plane is still leaving
+const TITLE_AT = 3.92;
+const SUB_AT = 4.16;
+const DURATION = 5.4;
 
-/**
- * Solid airplane-mode silhouette pointing UP, centred at (0,0), wingspan ~= s.
- * Drawn (not the shared paper-plane icon) so it reads as the iOS glyph.
- */
+const TRAIL = 5; // ghost copies lagging the plane during the fast exit
+
+// Right half of the airplane silhouette, nose-up, in units of `s` — mirrored for
+// the left so the glyph is perfectly symmetric. ONE closed path (not a fuselage
+// plus separate wing polys): overlapping fills showed hairline seams where the
+// wing roots met the body, which the scaled-up takeoff magnified badly.
+const PLANE_HALF: [number, number][] = [
+  [0, -0.5], // nose
+  [0.043, -0.3],
+  [0.058, -0.09], // wing root, leading edge
+  [0.46, 0.15], // wingtip, leading edge
+  [0.46, 0.238], // wingtip, trailing edge
+  [0.064, 0.095], // wing root, trailing edge
+  [0.054, 0.3], // fuselage at the tailplane
+  [0.183, 0.418], // tailtip, leading edge
+  [0.183, 0.474], // tailtip, trailing edge
+  [0.036, 0.4], // tail root, trailing edge
+  [0.03, 0.474],
+  [0, 0.5], // tail centre
+];
+
+/** Solid airplane-mode silhouette pointing UP, centred at (0,0), height ~= s. */
 function makeAirplane(s: number, color: string): Graphics {
-  const g = new Graphics();
-  // fuselage (nose at -0.5s, tail at 0.42s)
-  g.moveTo(0, -0.5 * s)
-    .bezierCurveTo(0.085 * s, -0.38 * s, 0.075 * s, -0.2 * s, 0.07 * s, -0.05 * s)
-    .lineTo(0.07 * s, 0.3 * s)
-    .quadraticCurveTo(0.05 * s, 0.42 * s, 0, 0.42 * s)
-    .quadraticCurveTo(-0.05 * s, 0.42 * s, -0.07 * s, 0.3 * s)
-    .lineTo(-0.07 * s, -0.05 * s)
-    .bezierCurveTo(-0.075 * s, -0.2 * s, -0.085 * s, -0.38 * s, 0, -0.5 * s)
-    .fill(color);
-  // main wings (swept slightly back)
-  g.poly([
-    0.06 * s, -0.14 * s,
-    0.5 * s, 0.1 * s,
-    0.5 * s, 0.2 * s,
-    0.06 * s, 0.08 * s,
-  ]).fill(color);
-  g.poly([
-    -0.06 * s, -0.14 * s,
-    -0.5 * s, 0.1 * s,
-    -0.5 * s, 0.2 * s,
-    -0.06 * s, 0.08 * s,
-  ]).fill(color);
-  // tailplane
-  g.poly([0.05 * s, 0.3 * s, 0.22 * s, 0.44 * s, 0.22 * s, 0.5 * s, 0.04 * s, 0.42 * s]).fill(color);
-  g.poly([-0.05 * s, 0.3 * s, -0.22 * s, 0.44 * s, -0.22 * s, 0.5 * s, -0.04 * s, 0.42 * s]).fill(color);
-  return g;
+  const pts: number[] = [];
+  for (const [x, y] of PLANE_HALF) pts.push(x * s, y * s);
+  // mirror back up the left side (skip the shared nose/tail vertices)
+  for (let i = PLANE_HALF.length - 2; i >= 1; i--) {
+    const p = PLANE_HALF[i]!;
+    pts.push(-p[0] * s, p[1] * s);
+  }
+  return new Graphics().poly(pts).fill(color);
 }
 
 /** WiFi glyph: 3 arcs + dot, centred, pointing up. */
@@ -290,42 +287,42 @@ function build(ctx: TemplateContext): BuiltTemplate {
       .to(pill, { prop: "y", from: pillY, to: pillY + minDim * 0.012, start: PILL_OUT_AT, duration: 0.3, ease: outQuad });
   }
 
-  // --- Takeoff: the button's plane lifts, grows, and exits up-right ---
+  // --- Takeoff -------------------------------------------------------------
+  // The plane flies a quadratic bezier whose start tangent is straight up and
+  // whose end tangent is up-and-right, so one continuous curve gives both the
+  // vertical lift off the button AND the bank away — no two-phase seam. Position,
+  // bank and scale are all derived from the same parameter in a pure update(t),
+  // which is why the nose always points exactly along the path.
   const bx = cx - off;
   const by = panelCy - off;
-  const flyer = new Container();
-  flyer.position.set(bx, by);
-  flyer.alpha = 0;
-  const flyerPlane = makeAirplane(iconS, accent);
-  flyer.addChild(flyerPlane);
-  root.addChild(flyer);
+  const exitX = w * 0.5 + w * 0.62 + iconS * 4;
+  const exitY = -h * 0.55 - iconS * 4;
+  // control point directly above the button => initial tangent is vertical
+  const ctrlX = bx + w * 0.015;
+  const ctrlY = by - h * 0.5;
+  const SCALE_MAX = 5.2;
 
-  const liftDur = CLIMB_AT - TAKEOFF_AT;
-  const liftY = by - tile * 0.62; // visibly OFF the tile before the bank-away
-  const exitX = w + iconS * 3.2;
-  const exitY = -iconS * 3.2;
-  // glyph points up; rotate to face the climb direction
-  const rot = Math.atan2(exitX - bx, -(exitY - liftY));
+  const planes: Container[] = [];
+  for (let i = TRAIL; i >= 0; i--) {
+    const c = new Container();
+    c.position.set(bx, by);
+    c.alpha = 0;
+    c.addChild(makeAirplane(iconS, accent));
+    root.addChild(c); // ghosts first => they render behind the lead plane
+    planes.push(c);
+  }
+  // The lead plane leaves *from* the orange button, so it starts in the button's
+  // white and only turns accent once it is clear of the disc — an orange plane
+  // on an orange circle is simply invisible for the first frames of the lift.
+  const leadWhite = makeAirplane(iconS, "#FFFFFF");
+  planes[planes.length - 1]!.addChild(leadWhite);
 
-  timeline
-    .to(flyer, { prop: "alpha", from: 0, to: 1, start: TAKEOFF_AT, duration: 0.12, ease: outQuad })
-    .to(planeOn, { prop: "alpha", from: 1, to: 0, start: TAKEOFF_AT + 0.02, duration: 0.14, ease: outQuad })
-    // phase 1 — a real vertical lift: the plane rises clear of the button and
-    // tile (an accelerating exit straight from the button reads as an orange
-    // blob overlapping the orange circle — verified frame-by-frame)
-    .to(flyer, { prop: "y", from: by, to: liftY, start: TAKEOFF_AT, duration: liftDur, ease: outQuad })
-    .to(flyer, { prop: "rotation", from: 0, to: rot * 0.22, start: TAKEOFF_AT + 0.05, duration: liftDur, ease: outQuad })
-    .to(flyer, { prop: "scale.x", from: 1, to: 2.2, start: TAKEOFF_AT, duration: liftDur, ease: outQuad })
-    .to(flyer, { prop: "scale.y", from: 1, to: 2.2, start: TAKEOFF_AT, duration: liftDur, ease: outQuad })
-    // phase 2 — banks into the climb and accelerates out of frame
-    .to(flyer, { prop: "x", from: bx, to: exitX, start: CLIMB_AT, duration: CLIMB_DUR, ease: inQuad })
-    .to(flyer, { prop: "y", from: liftY, to: exitY, start: CLIMB_AT, duration: CLIMB_DUR, ease: inQuad })
-    .to(flyer, { prop: "rotation", from: rot * 0.22, to: rot, start: CLIMB_AT, duration: 0.55, ease: outQuad })
-    .to(flyer, { prop: "scale.x", from: 2.2, to: 5.4, start: CLIMB_AT, duration: CLIMB_DUR, ease: inQuad })
-    .to(flyer, { prop: "scale.y", from: 2.2, to: 5.4, start: CLIMB_AT, duration: CLIMB_DUR, ease: inQuad });
-
-  // the button quietly gets its glyph back for the end card
-  timeline.to(planeOn, { prop: "alpha", from: 0, to: 1, start: ICON_BACK_AT, duration: 0.24, ease: outQuad });
+  // Seamless handoff: the glyph vanishes on the exact frame the flyer appears,
+  // at the same position and scale (a fade-out overlapped the two planes).
+  timeline.to(planeOn, { prop: "alpha", from: 1, to: 0, start: LIFT_AT, duration: 0 });
+  // …and comes back while the plane is still departing, so the tile is never a
+  // bare orange disc under the end card.
+  timeline.to(planeOn, { prop: "alpha", from: 0, to: 1, start: ICON_BACK_AT, duration: 0.42, ease: outQuad });
 
   // --- Title / subline (the vlog intro card) ---
   const titleSize = fitSize(fonts, title, "display", 700, Math.round(minDim * 0.058), zone.width * 0.86);
@@ -351,7 +348,62 @@ function build(ctx: TemplateContext): BuiltTemplate {
       .to(s2, { prop: "y", from: subY + minDim * 0.018, to: subY, start: SUB_AT, duration: 0.6, ease: outQuint });
   }
 
-  return { timeline, duration: DURATION };
+  const clamp01 = (v: number): number => (v < 0 ? 0 : v > 1 ? 1 : v);
+  /** Distance travelled 0→1: an unhurried lift that builds into a fast exit. */
+  const travel = (raw: number): number => 0.32 * raw + 0.68 * Math.pow(raw, 2.4);
+  const smooth = (edge0: number, edge1: number, x: number): number => {
+    const t = clamp01((x - edge0) / (edge1 - edge0));
+    return t * t * (3 - 2 * t);
+  };
+
+  function placePlane(node: Container, u: number, alpha: number): void {
+    const iu = 1 - u;
+    node.position.set(
+      iu * iu * bx + 2 * iu * u * ctrlX + u * u * exitX,
+      iu * iu * by + 2 * iu * u * ctrlY + u * u * exitY,
+    );
+    // bank along the path tangent (glyph points up, hence atan2(dx, -dy))
+    const dx = 2 * iu * (ctrlX - bx) + 2 * u * (exitX - ctrlX);
+    const dy = 2 * iu * (ctrlY - by) + 2 * u * (exitY - ctrlY);
+    node.rotation = Math.atan2(dx, -dy);
+    const sc = 1 + (SCALE_MAX - 1) * Math.pow(u, 0.82);
+    node.scale.set(sc);
+    node.alpha = alpha;
+  }
+
+  const update = (t: number): void => {
+    const raw = clamp01((t - LIFT_AT) / (EXIT_END - LIFT_AT));
+    if (t < LIFT_AT) {
+      for (const p of planes) p.alpha = 0;
+      return;
+    }
+    const u = travel(raw);
+    // White while the plane still overlaps its orange disc, accent once clear.
+    // The crossover is tuned to where the silhouette actually leaves the circle:
+    // switching earlier put an orange plane on an orange disc, later left a white
+    // plane on the white tile.
+    leadWhite.alpha = 1 - smooth(0.075, 0.155, u);
+    for (let i = 0; i < planes.length; i++) {
+      const isLead = i === planes.length - 1;
+      if (isLead) {
+        placePlane(planes[i]!, u, 1);
+        continue;
+      }
+      // Ghosts hug the plane with a small lag, and only fade up once it is
+      // genuinely moving fast — a wide lag strung them back down the path as
+      // detached shards near the button instead of reading as a smear.
+      const lagIdx = planes.length - 1 - i;
+      const gu = u - lagIdx * 0.016;
+      const speed = smooth(0.22, 0.6, u); // trail belongs to the fast exit only
+      if (gu <= 0.03 || speed <= 0) {
+        planes[i]!.alpha = 0;
+        continue;
+      }
+      placePlane(planes[i]!, gu, 0.24 * speed * (1 - lagIdx / (TRAIL + 1)));
+    }
+  };
+
+  return { timeline, duration: DURATION, update };
 }
 
 export const flightMode: TemplateDefinition = {
@@ -362,7 +414,7 @@ export const flightMode: TemplateDefinition = {
   aspects: ["1:1", "4:5", "9:16", "16:9"],
   defaultAspect: "16:9",
   loopable: false,
-  posterTime: 4.6,
+  posterTime: 5.0,
   palettes: PALETTES,
   fields: [
     { key: "title", type: "text", label: "Title", default: "Off to Tokyo", maxLength: 34, shrinkToFit: true, optional: true },
