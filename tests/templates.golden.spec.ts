@@ -383,6 +383,61 @@ const TEMPLATES: T[] = [
   { id: "destination-reveal", palette: "sunset", poster: 2.6, duration: 4.0 },
   { id: "currency-card", palette: "mint-cash", poster: 2.4, duration: 3.8 },
   { id: "trip-map", palette: "atlas", poster: 3.2, duration: 3.9 },
+  // v1.16 pack — +45 templates (5 per gallery section, all 9 sections).
+  // Text & titles
+  { id: "ransom-note", palette: "magazine-paper", poster: 4.0, duration: 4.2 },
+  { id: "text-swing", palette: "signpainter", poster: 4.0, duration: 4.3 },
+  { id: "shadow-pop", palette: "print-cream", poster: 3.9, duration: 4.3 },
+  { id: "echo-zoom", palette: "studio-white", poster: 3.8, duration: 4.4 },
+  { id: "stand-up-text", palette: "gallery-white", poster: 3.2, duration: 4.0 },
+  // Overlays & lower-thirds
+  { id: "up-next", palette: "studio", poster: 2.8, duration: 4.2 },
+  { id: "frame-corners", palette: "noir", poster: 2.6, duration: 4.0 },
+  { id: "karaoke-caption", palette: "noir-pop", poster: 4.0, duration: 4.44 },
+  { id: "key-press", palette: "carbon", poster: 3.3, duration: 4.0 },
+  { id: "arrow-callout", palette: "marker-red", poster: 2.9, duration: 4.0 },
+  // Social
+  { id: "streak-flame", palette: "ember", poster: 3.6, duration: 4.2 },
+  { id: "wrapped-recap", palette: "poster-cream", poster: 4.0, duration: 4.5 },
+  { id: "voice-note", palette: "paper", poster: 3.6, duration: 4.1 },
+  { id: "avatar-stack", palette: "porcelain", poster: 3.7, duration: 4.2 },
+  { id: "on-this-day", palette: "album-cream", poster: 3.4, duration: 4.3 },
+  // Product & ads
+  { id: "spin-wheel", palette: "carnival", poster: 4.0, duration: 4.6 },
+  { id: "loyalty-card", palette: "espresso-cream", poster: 3.85, duration: 4.7 },
+  { id: "order-confirmed", palette: "mint-receipt", poster: 3.7, duration: 4.4 },
+  { id: "exploded-view", palette: "studio-white", poster: 3.1, duration: 4.8 },
+  { id: "waitlist-card", palette: "violet-paper", poster: 4.6, duration: 4.7 },
+  // Showcase
+  { id: "blueprint-reveal", palette: "blueprint", poster: 3.7, duration: 4.2 },
+  { id: "parallax-layers", palette: "porcelain", poster: 3.3, duration: 4.0 },
+  { id: "cube-spin", palette: "frost", poster: 4.0, duration: 4.4 },
+  { id: "window-cascade", palette: "slate", poster: 3.5, duration: 4.1 },
+  { id: "iso-layers", palette: "circuit", poster: 3.4, duration: 4.4 },
+  // Explainers & data
+  { id: "bubble-chart", palette: "ink", poster: 2.6, duration: 3.39 },
+  { id: "slope-graph", palette: "emerald", poster: 3.2, duration: 3.92 },
+  { id: "gantt-chart", palette: "ink", poster: 3.4, duration: 4.13 },
+  { id: "dot-stats", palette: "ink", poster: 3.3, duration: 4.1 },
+  { id: "iceberg-model", palette: "arctic", poster: 3.4, duration: 4.0 },
+  // Brand & quotes
+  { id: "crest-monogram", palette: "ivory", poster: 3.5, duration: 4.2 },
+  { id: "ribbon-banner", palette: "emerald", poster: 3.0, duration: 4.0 },
+  { id: "foil-card", palette: "onyx-gold", poster: 3.9, duration: 4.4 },
+  { id: "trophy-shelf", palette: "gallery", poster: 3.4, duration: 4.2 },
+  { id: "press-clipping", palette: "newsprint", poster: 3.6, duration: 4.4 },
+  // Openers
+  { id: "page-turn", palette: "notebook", poster: 3.0, duration: 4.0 },
+  { id: "marquee-bulbs", palette: "matinee", poster: 3.4, duration: 4.2 },
+  { id: "shatter-intro", palette: "tangerine", poster: 3.0, duration: 4.0 },
+  { id: "unfold-intro", palette: "linen", poster: 3.2, duration: 4.2 },
+  { id: "flash-cut", palette: "editorial", poster: 3.3, duration: 4.0 },
+  // Events & travel
+  { id: "metro-map", palette: "transit-cream", poster: 4.0, duration: 4.3 },
+  { id: "airmail-envelope", palette: "postal-cream", poster: 3.6, duration: 4.4 },
+  { id: "event-menu", palette: "ivory", poster: 3.5, duration: 4.2 },
+  { id: "sunrise-scene", palette: "dawn-blue", poster: 3.6, duration: 4.4 },
+  { id: "race-bib", palette: "classic-red", poster: 4.0, duration: 4.4 },
 ];
 
 const ASPECTS: Aspect[] = ["1:1", "4:5", "9:16", "16:9"];

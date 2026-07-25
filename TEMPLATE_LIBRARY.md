@@ -501,6 +501,22 @@ degradation, per-element color fields.
 | T94 | Product Review | `product-review` | product | 4:5 | Product + star rating + customer quote |
 | T95 | Shop Grid | `shop-grid` | product | 4:5 | A shop collection grid with prices + CTA |
 
+## 18. +45 templates — 5 each for all nine sections (2026-07-25, v1.16.0)
+
+Library 354 → **399**. Five new templates apiece for **every** gallery section, Text & titles included:
+
+- **Text & titles** (`statement`/`announcement`): `ransom-note`, `text-swing`, `shadow-pop`, `echo-zoom`, `stand-up-text`.
+- **Overlays & lower-thirds** (`overlay`): `up-next`, `frame-corners`, `karaoke-caption`, `key-press`, `arrow-callout`.
+- **Social** (`social`): `streak-flame`, `wrapped-recap`, `voice-note`, `avatar-stack`, `on-this-day`.
+- **Product & ads** (`promo`/`product`): `spin-wheel`, `loyalty-card`, `order-confirmed`, `exploded-view`, `waitlist-card`.
+- **Showcase** (`tech`/`showcase`): `blueprint-reveal`, `parallax-layers`, `cube-spin`, `window-cascade`, `iso-layers`.
+- **Explainers & data** (`stat`/`comparison`/`educational`): `bubble-chart`, `slope-graph`, `gantt-chart`, `dot-stats`, `iceberg-model`.
+- **Brand & quotes** (`brand`/`testimonial`): `crest-monogram`, `ribbon-banner`, `foil-card`, `trophy-shelf`, `press-clipping`.
+- **Openers** (`intro`): `page-turn`, `marquee-bulbs`, `shatter-intro`, `unfold-intro`, `flash-cut`.
+- **Events & travel** (`travel`/`event`): `metro-map`, `airmail-envelope`, `event-menu`, `sunrise-scene`, `race-bib`.
+
+All deterministic (re-seek pixel-identity verified per template), 4 aspects, 4 palettes, per-element colors, decorative toggles, ≥4.5:1 end-frame contrast. Overlays default to a transparent background (alpha-WebM ready).
+
 ## 17. +80 templates — 10 each for eight sections (2026-07-24, v1.15.0)
 
 Library 274 → **354**. Ten new templates apiece for every gallery section **except Text & titles**:

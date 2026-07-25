@@ -11,6 +11,43 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.16.0] — 2026-07-25 · +45 templates (5 per section, all nine) → 399
+
+Five new templates for **every** gallery section this time — Text & titles included — taking the
+library from 354 to **399**. Same contract as the rest: deterministic (pure `f(t)`, seeded RNG only),
+all 4 aspects, 4 palettes with ≥4.5:1 end-frame contrast, per-element colour fields, decorative
+toggles and a designed hold/poster frame.
+
+### Added
+- **Text & titles (5):** ransom note (per-letter cut-paper tiles), text swing (hinged sign plates),
+  shadow pop (hard flat offset print layers), echo zoom (outlined ripples), stand up (rises off the
+  floor in perspective with a cast shadow).
+- **Overlays & lower-thirds (5):** up next (broadcast queue card), frame corners (drawing brackets),
+  karaoke caption (travelling per-word highlight), key press (depressing keycaps), arrow callout
+  (freehand scribble + arrow).
+- **Social (5):** streak counter (flickering flame + day ticks), year recap (wrapped-style stat
+  takeover), voice note (playing waveform bubble), avatar stack (overlapping pile-up + count),
+  on this day (taped memory card).
+- **Product & ads (5):** spin to win (prize wheel that deterministically lands the winner), loyalty
+  card (punch stamps), order confirmed (success check + stepper), exploded view (parts separate and
+  reassemble), waitlist (typed email + queue position).
+- **Showcase (5):** blueprint reveal (wireframe → filled), parallax layers, cube spin (stepped
+  faux-3D faces), window cascade (OS windows open into a cascade), iso layers (isometric exploded
+  stack).
+- **Explainers & data (5):** bubble chart, slope graph (before → after), gantt chart (with a today
+  line), dot stats (100-dot isotype), iceberg model.
+- **Brand & quotes (5):** crest monogram (type-on-a-circle crest), ribbon banner (unfurl with folds),
+  foil card (tilting holo shine), trophy shelf, press clipping (torn newsprint quote).
+- **Openers (5):** page turn (corner peel), marquee bulbs (chasing theatre bulbs), shatter intro
+  (cracking pane + falling shards), unfold intro (hinged panels), flash cut (photo-flash montage).
+- **Events & travel (5):** metro map (schematic transit route), airmail envelope (flap opens, invite
+  rises, postmark stamps), event menu, sunrise scene, race bib (pinned marathon bib).
+
+### Notes
+- Golden determinism + poster entries added for all 45; 180 new baselines generated and the existing
+  354 baselines are byte-for-byte unchanged. Every new template's duration was probed against the
+  live engine and its re-seek pixel-identity verified before the baselines were written.
+
 ## [1.15.0] — 2026-07-24 · +80 templates (10 per non-Text section) → 354
 
 Ten new templates for every gallery section **except Text & titles**, taking the library from 274 to

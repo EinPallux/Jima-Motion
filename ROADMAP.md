@@ -285,5 +285,6 @@ rendering, AI credits, dark mode.
 | Bold visual refresh — chunky type + vibrant color blocks | ✅ 2026-07-24 — **v1.13.0** (+ v1.13.1 QA hardening) |
 | Full re-layout — Jitter-level landing, app-shell library, three-pane editor | ✅ 2026-07-24 — **v1.14.0** |
 | +10 templates each for overlays, social, product/ads, showcase, explainers/data, brand/quotes, openers, events/travel | ✅ 2026-07-24 — **v1.15.0**, library 274 → 354 |
+| +5 templates for every gallery section (all 9, incl. Text & titles) | ✅ 2026-07-25 — **v1.16.0**, library 354 → 399 |
 
 *(Update this table + CHANGELOG.md at every phase transition.)*

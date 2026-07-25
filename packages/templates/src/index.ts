@@ -363,6 +363,51 @@ import { packingList } from "./packing-list/index";
 import { destinationReveal } from "./destination-reveal/index";
 import { currencyCard } from "./currency-card/index";
 import { tripMap } from "./trip-map/index";
+import { ransomNote } from "./ransom-note/index";
+import { textSwing } from "./text-swing/index";
+import { shadowPop } from "./shadow-pop/index";
+import { echoZoom } from "./echo-zoom/index";
+import { standUpText } from "./stand-up-text/index";
+import { upNext } from "./up-next/index";
+import { frameCorners } from "./frame-corners/index";
+import { karaokeCaption } from "./karaoke-caption/index";
+import { keyPress } from "./key-press/index";
+import { arrowCallout } from "./arrow-callout/index";
+import { streakFlame } from "./streak-flame/index";
+import { wrappedRecap } from "./wrapped-recap/index";
+import { voiceNote } from "./voice-note/index";
+import { avatarStack } from "./avatar-stack/index";
+import { onThisDay } from "./on-this-day/index";
+import { spinWheel } from "./spin-wheel/index";
+import { loyaltyCard } from "./loyalty-card/index";
+import { orderConfirmed } from "./order-confirmed/index";
+import { explodedView } from "./exploded-view/index";
+import { waitlistCard } from "./waitlist-card/index";
+import { blueprintReveal } from "./blueprint-reveal/index";
+import { parallaxLayers } from "./parallax-layers/index";
+import { cubeSpin } from "./cube-spin/index";
+import { windowCascade } from "./window-cascade/index";
+import { isoLayers } from "./iso-layers/index";
+import { bubbleChart } from "./bubble-chart/index";
+import { slopeGraph } from "./slope-graph/index";
+import { ganttChart } from "./gantt-chart/index";
+import { dotStats } from "./dot-stats/index";
+import { icebergModel } from "./iceberg-model/index";
+import { crestMonogram } from "./crest-monogram/index";
+import { ribbonBanner } from "./ribbon-banner/index";
+import { foilCard } from "./foil-card/index";
+import { trophyShelf } from "./trophy-shelf/index";
+import { pressClipping } from "./press-clipping/index";
+import { pageTurn } from "./page-turn/index";
+import { marqueeBulbs } from "./marquee-bulbs/index";
+import { shatterIntro } from "./shatter-intro/index";
+import { unfoldIntro } from "./unfold-intro/index";
+import { flashCut } from "./flash-cut/index";
+import { metroMap } from "./metro-map/index";
+import { airmailEnvelope } from "./airmail-envelope/index";
+import { eventMenu } from "./event-menu/index";
+import { sunriseScene } from "./sunrise-scene/index";
+import { raceBib } from "./race-bib/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -761,6 +806,61 @@ export const templates: TemplateDefinition[] = [
   destinationReveal,
   currencyCard,
   tripMap,
+  // v1.16 pack — +45 templates (5 per gallery section, all 9 sections).
+  // Text & titles
+  ransomNote,
+  textSwing,
+  shadowPop,
+  echoZoom,
+  standUpText,
+  // Overlays & lower-thirds
+  upNext,
+  frameCorners,
+  karaokeCaption,
+  keyPress,
+  arrowCallout,
+  // Social
+  streakFlame,
+  wrappedRecap,
+  voiceNote,
+  avatarStack,
+  onThisDay,
+  // Product & ads
+  spinWheel,
+  loyaltyCard,
+  orderConfirmed,
+  explodedView,
+  waitlistCard,
+  // Showcase
+  blueprintReveal,
+  parallaxLayers,
+  cubeSpin,
+  windowCascade,
+  isoLayers,
+  // Explainers & data
+  bubbleChart,
+  slopeGraph,
+  ganttChart,
+  dotStats,
+  icebergModel,
+  // Brand & quotes
+  crestMonogram,
+  ribbonBanner,
+  foilCard,
+  trophyShelf,
+  pressClipping,
+  // Openers
+  pageTurn,
+  marqueeBulbs,
+  shatterIntro,
+  unfoldIntro,
+  flashCut,
+  // Events & travel
+  metroMap,
+  airmailEnvelope,
+  eventMenu,
+  sunriseScene,
+  raceBib,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {

@@ -3,7 +3,7 @@
 Jima Motion is a **100 % free, no-account, browser-only motion-graphics tool for social media
 managers**: pick a template → type your text / drop images → export MP4/WebM/GIF, rendered
 entirely client-side. Brand = "Jima Motion"; the editor = "Jima Studio" ("the Studio").
-**Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 354,
+**Current state: v1.0.0 shipped — all phases 0–6 complete; template library since expanded to 399,
 plus a v1.5 sound + editable-speed release, a v1.6 transparent-export release, a v1.7
 +50-template / editable-decorations release, a v1.7.2 +10-social-template release, a v1.8 landing
 makeover (new 3D hero) + Template-Library overhaul, a v1.9 release that removed the Backgrounds
@@ -13,9 +13,10 @@ v1.11 landing + Studio redesign (true light mode, emerald, Parkinsans), a v1.12 
 added 25 templates (5 new each for the same five sections), a v1.13 bold visual refresh (chunky
 oversized type + vibrant coral/pink/amber/mint/indigo color blocks, still fully light + emerald), a
 v1.14 full re-layout of the landing, library & editor to a Jitter-level pro-SaaS bar (still fully
-light + emerald), and a v1.15 release that added 80 templates (10 new each for overlays, social,
-product/ads, showcase, explainers/data, brand/quotes, openers and events/travel).**
-Workspace/CI/guardrails; deterministic motion engine + **354 templates** (12 launch + a 23-template
+light + emerald), a v1.15 release that added 80 templates (10 new each for overlays, social,
+product/ads, showcase, explainers/data, brand/quotes, openers and events/travel), and a v1.16
+release that added 45 templates (5 new for **every** gallery section, Text & titles included).**
+Workspace/CI/guardrails; deterministic motion engine + **399 templates** (12 launch + a 23-template
 expansion + a 20-template smooth-text pack + a 20-template explainer/showcase/product/ad pack + a
 20-template showcase & product-presentation pack + a 50-template pack adding overlays/lower-thirds,
 intros/openers, and more text/social/product/stat/brand + a 10-template
@@ -39,7 +40,15 @@ cycle, org chart, roadmap, word cloud, quadrant, survey, radar), brand & quotes 
 assemble/flip/morph, award laurels, coming soon, social end card, brand palette, review stack/badge,
 video testimonial), openers (curtain, light sweep, ink, panel, spotlight, countdown ring, burst,
 grid, title card, sparkle) and events & travel (wedding, anniversary, speaker lineup, holiday, grand
-opening, graduation, packing list, destination reveal, currency, trip map));
+opening, graduation, packing list, destination reveal, currency, trip map) + a 45-template v1.16
+pack — 5 new for every section: text (ransom note, text swing, shadow pop, echo zoom, stand up),
+overlays (up next, frame corners, karaoke caption, key press, arrow callout), social (streak, year
+recap, voice note, avatar stack, on this day), product/ads (spin to win, loyalty card, order
+confirmed, exploded view, waitlist), showcase (blueprint, parallax layers, cube spin, window
+cascade, iso layers), explainers/data (bubble chart, slope graph, gantt, dot stats, iceberg),
+brand/quotes (crest monogram, ribbon banner, foil card, trophy shelf, press clipping), openers (page
+turn, marquee bulbs, shatter, unfold, flash cut) and events/travel (metro map, airmail envelope,
+event menu, sunrise scene, race bib));
 two added categories — **overlay** (lower-thirds), **intro** (openers);
 the seldom-used **loop/Backgrounds** category was retired in v1.9;
 **per-template toggles to switch off decorative accents** (accent bar/dot, badges, frames, glows…);
