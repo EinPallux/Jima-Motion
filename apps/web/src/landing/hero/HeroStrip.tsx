@@ -1,74 +1,209 @@
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 import { Link } from "react-router-dom";
-import type { Aspect } from "@jima/engine";
+import type { Aspect, TemplateDefinition } from "@jima/engine";
 import { getTemplate } from "@jima/templates";
 import { LivePreview } from "../../studio/components/LivePreview";
 import { PosterThumb } from "../../studio/components/PosterThumb";
 import { useReducedMotion } from "../../studio/hooks/useReducedMotion";
 import { Container } from "../../ui";
 
-// A varied row of template cards under the hero headline (Jitter-style). Mixed
-// aspects at a uniform height read as a lively, editorial strip. A few play live
-// (WebGL); the rest are cheap static posters. Lazy-loaded so the engine/registry
-// chunk stays out of the eager landing bundle.
-//
-// The strip is held to the page's content column and is deliberately a little
-// wider than it, so the outer cards peek in and dissolve at the edges rather
-// than hard-cutting at the viewport (.edge-fade-x). Both ends are 16:9 — the
-// widest aspect — so each peek is a readable slice instead of a sliver, and the
-// order keeps every live preview fully inside the column (no WebGL context
-// rendering off-screen for nothing).
-type Item = { id: string; aspect: Aspect; live?: boolean; tone: string };
+/**
+ * The hero's template carousel — a dozen templates under the headline, each one
+ * playing its real animation rather than showing a still. Arrows page through
+ * the rest; the row also scrolls/swipes directly.
+ *
+ * Two things keep "everything animates" affordable. A card only starts a live
+ * preview while it is genuinely on screen — an IntersectionObserver against the
+ * viewport, which also accounts for the rail's own horizontal clipping — so
+ * roughly four WebGL contexts exist at a time instead of twelve, and every one
+ * of them is released when the hero scrolls out of view. And a cached poster
+ * frame sits underneath as the placeholder, so a card is never blank while its
+ * context boots (and is all a reduced-motion visitor ever sees).
+ *
+ * The rail is held to the page's content column and masked at both ends, so it
+ * dissolves into the page instead of hard-cutting; the fade lifts on whichever
+ * side has run out of cards.
+ */
+type Item = { id: string; aspect: Aspect; tone: string };
+
+// One template from each of ten use cases, in mixed aspects — and picked as much
+// for motion that carries a whole loop as for how they look. Templates are
+// required to end on a designed hold frame, so a second or so of stillness is
+// normal; what disqualifies a candidate here is snapping into place early and
+// holding for most of the loop (bar-race and gallery-strip both hold for well
+// over half their run). Overlays are out for the same reason they're overlays:
+// they're a bar on an empty frame, which reads as an empty card.
 const ITEMS: Item[] = [
-  { id: "map-route", aspect: "16:9", tone: "bg-emerald-tint" },
-  { id: "product-pop", aspect: "1:1", live: true, tone: "bg-coral-tint" },
-  { id: "deal-countdown", aspect: "9:16", tone: "bg-amber-tint" },
-  { id: "coverflow", aspect: "1:1", tone: "bg-indigo-tint" },
-  { id: "rating-reveal", aspect: "9:16", live: true, tone: "bg-pink-tint" },
-  { id: "poll-results", aspect: "16:9", live: true, tone: "bg-mint-tint" },
+  { id: "kinetic-type", aspect: "16:9", tone: "bg-mint-tint" },
+  { id: "unbox-reveal", aspect: "4:5", tone: "bg-amber-tint" },
+  { id: "phone-scroll", aspect: "9:16", tone: "bg-indigo-tint" },
+  { id: "subscribe-bell", aspect: "16:9", tone: "bg-pink-tint" },
+  { id: "donut-chart", aspect: "1:1", tone: "bg-mint-tint" },
+  { id: "countdown-ring", aspect: "9:16", tone: "bg-coral-tint" },
+  { id: "line-graph", aspect: "16:9", tone: "bg-indigo-tint" },
+  { id: "photo-fan", aspect: "4:5", tone: "bg-amber-tint" },
+  { id: "orbit-showcase", aspect: "1:1", tone: "bg-coral-tint" },
+  { id: "boarding-pass", aspect: "16:9", tone: "bg-emerald-tint" },
+  { id: "sparkle-reveal", aspect: "4:5", tone: "bg-pink-tint" },
+  { id: "wave-text", aspect: "16:9", tone: "bg-emerald-tint" },
 ];
 
-// Uniform card height; each card's width follows its aspect ratio. It tracks the
-// viewport between roughly 1024px and 1272px (where the content column stops
-// growing) so the overhang past that column stays proportional instead of
-// swallowing whole cards on smaller desktops.
-const CARD_H = "clamp(176px, 17vw, 216px)";
+// Uniform card height; each card's width follows its aspect ratio.
+const CARD_H = "clamp(184px, 19vw, 248px)";
 const RATIO: Record<Aspect, number> = { "1:1": 1, "4:5": 0.8, "9:16": 9 / 16, "16:9": 16 / 9 };
+
+type Card = Item & { def: TemplateDefinition };
+
+function Chevron({ dir }: { dir: "left" | "right" }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="20"
+      height="20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d={dir === "left" ? "M15 5 8 12l7 7" : "M9 5l7 7-7 7"} />
+    </svg>
+  );
+}
+
+function StripCard({ card, reduced }: { card: Card; reduced: boolean }) {
+  const ref = useRef<HTMLAnchorElement | null>(null);
+  const [onScreen, setOnScreen] = useState(false);
+
+  useEffect(() => {
+    if (reduced) return;
+    const el = ref.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setOnScreen(true);
+      return;
+    }
+    // No explicit root: the viewport already gives us both axes — a card paged
+    // out of the rail is clipped by its overflow, and the whole rail stops
+    // counting once the hero scrolls past. Both free the WebGL context.
+    const io = new IntersectionObserver(
+      (entries) => {
+        const e = entries[0];
+        if (e) setOnScreen(e.isIntersecting);
+      },
+      // Low threshold on purpose: a card only half-visible under the edge fade
+      // should still be moving, or the rail reads as "some of these are stills".
+      { threshold: 0.1 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [reduced]);
+
+  return (
+    <Link
+      ref={ref}
+      to={`/studio?t=${card.def.id}`}
+      aria-label={`Edit ${card.def.name}`}
+      style={{ height: CARD_H, aspectRatio: RATIO[card.aspect] }}
+      className={`group relative shrink-0 overflow-hidden rounded-bento border border-mist ${card.tone} shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-bold`}
+    >
+      <PosterThumb
+        def={card.def}
+        aspect={card.aspect}
+        paletteId={card.def.palettes[0]?.id}
+        alt={card.def.name}
+        className="absolute inset-0 h-full w-full"
+      />
+      {onScreen && !reduced && (
+        <LivePreview def={card.def} paletteId={card.def.palettes[0]?.id} aspect={card.aspect} />
+      )}
+      <span className="absolute bottom-2 left-2 z-10 rounded-full bg-ink/80 px-2.5 py-1 text-xs font-bold text-white opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100">
+        {card.def.name}
+      </span>
+    </Link>
+  );
+}
 
 export default function HeroStrip() {
   const reduced = useReducedMotion();
   const cards = useMemo(
     () =>
       ITEMS.map((it) => ({ ...it, def: getTemplate(it.id) })).filter(
-        (c): c is Item & { def: NonNullable<ReturnType<typeof getTemplate>> } => Boolean(c.def),
+        (c): c is Card => Boolean(c.def),
       ),
     [],
   );
 
+  const railRef = useRef<HTMLDivElement | null>(null);
+  const [ends, setEnds] = useState({ start: true, end: false });
+
+  const syncEnds = useCallback(() => {
+    const el = railRef.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    setEnds({ start: el.scrollLeft <= 2, end: el.scrollLeft >= max - 2 });
+  }, []);
+
+  useEffect(() => {
+    const el = railRef.current;
+    if (!el) return;
+    syncEnds();
+    // Card widths come from a clamped height, so the reachable scroll range
+    // moves with the viewport — re-measure on resize, not just on scroll.
+    if (typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(syncEnds);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [syncEnds, cards.length]);
+
+  const page = useCallback(
+    (dir: -1 | 1) => {
+      const el = railRef.current;
+      if (!el) return;
+      el.scrollBy({ left: dir * el.clientWidth * 0.85, behavior: reduced ? "auto" : "smooth" });
+    },
+    [reduced],
+  );
+
   return (
-    // Held to the page's content width and faded at both ends with a mask, so
-    // the row genuinely dissolves (works over any background, no colour to
-    // match). Below lg it stays a swipeable scroller; from lg up it centres and
-    // `overflow-x: clip` crops it to the column — clip rather than hidden so the
-    // vertical axis stays visible and the cards' float + soft shadows aren't
-    // sliced off top and bottom.
     <Container>
-      <div className="edge-fade-x flex items-center justify-start gap-4 overflow-x-auto pb-4 pt-2 lg:justify-center lg:gap-5 lg:overflow-x-clip [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {cards.map((c, i) => (
-          <Link
-            key={c.id}
-            to={`/studio?t=${c.def.id}`}
-            aria-label={`Edit ${c.def.name}`}
-            style={{ height: CARD_H, aspectRatio: RATIO[c.aspect], animationDelay: `${i * 0.6}s` }}
-            className={`group relative shrink-0 overflow-hidden rounded-bento border border-mist ${c.tone} shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:shadow-bold ${reduced ? "" : "float-slow"}`}
-          >
-            <PosterThumb def={c.def} aspect={c.aspect} paletteId={c.def.palettes[0]?.id} alt={c.def.name} className="absolute inset-0 h-full w-full" />
-            {!reduced && c.live && <LivePreview def={c.def} paletteId={c.def.palettes[0]?.id} aspect={c.aspect} />}
-            <span className="absolute bottom-2 left-2 z-10 rounded-full bg-ink/80 px-2.5 py-1 text-xs font-bold text-white opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100">
-              {c.def.name}
-            </span>
-          </Link>
-        ))}
+      <div className="relative">
+        <div
+          ref={railRef}
+          onScroll={syncEnds}
+          // The mask lifts on whichever side has nothing left to scroll to, so
+          // the first and last cards sit crisp at rest and the fade only ever
+          // means "there is more this way".
+          style={{
+            ...(ends.start ? { "--edge-fade-l": "0px" } : null),
+            ...(ends.end ? { "--edge-fade-r": "0px" } : null),
+          } as CSSProperties}
+          className="edge-fade-x flex items-center gap-4 overflow-x-auto pb-8 pt-4 sm:gap-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {cards.map((c) => (
+            <StripCard key={c.id} card={c} reduced={reduced} />
+          ))}
+        </div>
+
+        {(["left", "right"] as const).map((dir) => {
+          const spent = dir === "left" ? ends.start : ends.end;
+          return (
+            <button
+              key={dir}
+              type="button"
+              onClick={() => !spent && page(dir === "left" ? -1 : 1)}
+              aria-disabled={spent}
+              aria-label={dir === "left" ? "Show previous templates" : "Show more templates"}
+              className={`absolute top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-mist bg-paper shadow-pop transition-transform duration-200 sm:grid ${
+                dir === "left" ? "left-0" : "right-0"
+              } ${spent ? "cursor-default text-muted" : "text-ink hover:scale-110"}`}
+            >
+              <Chevron dir={dir} />
+            </button>
+          );
+        })}
       </div>
     </Container>
   );

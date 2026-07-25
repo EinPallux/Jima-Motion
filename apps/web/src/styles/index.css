@@ -139,25 +139,33 @@ h1, h2, h3, h4 {
 
 /**
  * Horizontal edge fade for rails that are wider than their container (the
- * template marquee, the hero strip). A mask rather than two opaque gradient
+ * template marquee, the hero carousel). A mask rather than two opaque gradient
  * overlays: the content genuinely dissolves, so it works over any background
  * and needs no colour matching. The fade width scales with the rail but stays
  * sane on phones and doesn't swallow the middle on ultrawide.
+ *
+ * Each side is separately overridable (`--edge-fade-l` / `--edge-fade-r`) so a
+ * scroller can drop the fade on a side it has run out of content for — at rest
+ * the first card stays crisp, and a visible fade always means "there is more
+ * this way". Setting a side to 0 collapses its two stops onto the same
+ * position, which is a hard edge, i.e. no fade.
  */
 .edge-fade-x {
   --edge-fade: clamp(28px, 7%, 96px);
+  --edge-fade-l: var(--edge-fade);
+  --edge-fade-r: var(--edge-fade);
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0,
-    #000 var(--edge-fade),
-    #000 calc(100% - var(--edge-fade)),
+    #000 var(--edge-fade-l),
+    #000 calc(100% - var(--edge-fade-r)),
     transparent 100%
   );
   mask-image: linear-gradient(
     to right,
     transparent 0,
-    #000 var(--edge-fade),
-    #000 calc(100% - var(--edge-fade)),
+    #000 var(--edge-fade-l),
+    #000 calc(100% - var(--edge-fade-r)),
     transparent 100%
   );
 }

@@ -9,19 +9,34 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 ## [Unreleased]
 
+### Added
+
+- **The hero strip is now a template carousel — twelve templates, all of them animating.** Previous
+  arrow buttons page the rail (it still scrolls and swipes directly); the fade lifts on whichever
+  side has run out of cards, so a visible fade always means "there is more this way". Every card on
+  screen plays its real animation instead of a still: cards start a live preview only while they are
+  genuinely visible — an IntersectionObserver against the viewport, which also accounts for the
+  rail's own horizontal clipping — so about four WebGL contexts exist at a time rather than twelve,
+  and all of them are released when the hero scrolls away. A cached poster frame sits underneath as
+  the placeholder, so a card is never blank while its context boots, and is what a reduced-motion
+  visitor sees (arrows still page, instantly).
+- The twelve are a new set, one per use case (statement, product, app, social, data ×2, opener ×2,
+  photo, showcase, travel) in mixed aspects, chosen as much for motion as for looks: candidates were
+  measured frame-by-frame over a full loop and rejected when they snapped into place early and held
+  (bar-race holds 2.8s of 4.6s, gallery-strip 2.6s of 4.2s). Overlays are excluded for the reason
+  they are overlays — a bar on an empty frame reads as an empty card.
+
 ### Changed
 
 - **Landing: the hero strip and the template marquee now sit inside the page's content column.**
   Both were full-bleed and hard-cut at the viewport; they now share the same width as every other
   section and dissolve at the left/right edges via a new `.edge-fade-x` mask utility (a mask, not
   two opaque gradient overlays, so the fade works over any background and needs no colour matching).
-  The hero strip was re-sized for that narrower column — a viewport-tracking card height
-  (`clamp(176px, 17vw, 216px)`) instead of a fixed 300px, and both ends re-ordered to the widest
-  (16:9) cards so each edge shows a readable slice rather than a sliver. All six cards are now on
-  screen at every desktop width; previously two fell entirely outside the column at ≤1280px, one of
-  them a live WebGL preview rendering for nothing. Below `lg` the strip stays a swipeable scroller;
-  from `lg` up it centres and crops with `overflow-x: clip` (not `hidden`) so the cards' float and
-  soft shadows are not sliced off top and bottom.
+  Each side is separately overridable so a scroller can drop the fade where it has run out of cards.
+- Hero cards are sized for that narrower column: a viewport-tracking height
+  (`clamp(184px, 19vw, 248px)`) with widths from the aspect ratio, instead of a fixed 300px. The
+  per-card float animation is gone — a horizontal scroller has to clip its vertical axis, and every
+  card now carries its own motion anyway.
 
 ## [1.18.1] — 2026-07-25 · Flight Mode — an iOS Control Center travel-vlog intro
 
