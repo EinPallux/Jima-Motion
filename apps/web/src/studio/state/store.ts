@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import {
   resolveValues,
+  THEME_KEYS,
+  themePreset,
   type Aspect,
   type SoundPack,
   type TemplateDefinition,
@@ -16,6 +18,22 @@ export interface EditableState {
   loop: boolean;
   /** Headline font id (FONT_CHOICES); undefined = template default. */
   font: string | undefined;
+  /** Body/caption font id (BODY_FONT_CHOICES); undefined = template default. */
+  bodyFont: string | undefined;
+}
+
+/**
+ * A reusable set of brand choices, saved globally (not per-template) so a user
+ * can carry their colors + fonts across templates in one click. Lives in
+ * localStorage like the sound preference — still nothing leaves the browser.
+ */
+export interface BrandKit {
+  background?: string;
+  textColor?: string;
+  accent?: string;
+  font?: string;
+  bodyFont?: string;
+  savedAt: number;
 }
 
 interface StudioStore extends EditableState {
@@ -27,16 +45,24 @@ interface StudioStore extends EditableState {
   /** Global sound preference (persisted, not per-template, not undoable). */
   sound: boolean;
   soundPack: SoundPack;
+  /** Saved brand kit (global, persisted, not undoable). */
+  brandKit: BrandKit | null;
 
   openTemplate: (def: TemplateDefinition, initial?: Partial<EditableState>) => void;
   setValue: (key: string, value: unknown) => void;
   setAspect: (aspect: Aspect) => void;
   setPalette: (paletteId: string | undefined) => void;
   setFont: (font: string | undefined) => void;
+  setBodyFont: (font: string | undefined) => void;
+  /** Apply a global theme preset to whichever core color fields exist. */
+  applyTheme: (themeId: string) => void;
   setSpeed: (speed: number) => void;
   setLoop: (loop: boolean) => void;
   setSound: (on: boolean) => void;
   setSoundPack: (pack: SoundPack) => void;
+  saveBrandKit: () => void;
+  applyBrandKit: () => void;
+  clearBrandKit: () => void;
   reset: () => void;
   undo: () => void;
   redo: () => void;
@@ -45,6 +71,27 @@ interface StudioStore extends EditableState {
 
 const SOUND_KEY = "jima.sound";
 const PACK_KEY = "jima.soundPack";
+const BRAND_KEY = "jima.brandKit";
+
+function readBrandKit(): BrandKit | null {
+  if (typeof localStorage === "undefined") return null;
+  try {
+    const raw = localStorage.getItem(BRAND_KEY);
+    if (!raw) return null;
+    const p = JSON.parse(raw) as unknown;
+    if (!p || typeof p !== "object") return null;
+    const k = p as Record<string, unknown>;
+    const str = (v: unknown) => (typeof v === "string" && v.length > 0 ? v : undefined);
+    const kit: BrandKit = { savedAt: typeof k.savedAt === "number" ? k.savedAt : 0 };
+    for (const f of ["background", "textColor", "accent", "font", "bodyFont"] as const) {
+      const v = str(k[f]);
+      if (v) kit[f] = v;
+    }
+    return kit;
+  } catch {
+    return null; // corrupt entry — behave as if nothing was saved
+  }
+}
 
 function readSoundPref(): boolean {
   if (typeof localStorage === "undefined") return true;
@@ -83,6 +130,7 @@ function snapshot(s: EditableState): EditableState {
     speed: s.speed,
     loop: s.loop,
     font: s.font,
+    bodyFont: s.bodyFont,
   };
 }
 
@@ -94,6 +142,7 @@ export const useStudio = create<StudioStore>((set, get) => ({
   speed: 1,
   loop: false,
   font: undefined,
+  bodyFont: undefined,
   def: null,
   past: [],
   future: [],
@@ -101,6 +150,7 @@ export const useStudio = create<StudioStore>((set, get) => ({
   lastEditAt: 0,
   sound: readSoundPref(),
   soundPack: readPackPref(),
+  brandKit: readBrandKit(),
 
   openTemplate: (def, initial) => {
     const paletteId = initial?.paletteId ?? def.palettes[0]?.id;
@@ -118,6 +168,7 @@ export const useStudio = create<StudioStore>((set, get) => ({
       speed: initial?.speed ?? 1,
       loop: initial?.loop ?? def.loopable,
       font: initial?.font ?? undefined,
+      bodyFont: initial?.bodyFont ?? undefined,
       past: [],
       future: [],
       lastEditKey: null,
@@ -162,6 +213,36 @@ export const useStudio = create<StudioStore>((set, get) => ({
     set({ past: [...s.past, snapshot(s)].slice(-HISTORY_LIMIT), future: [], font, lastEditKey: null });
   },
 
+  setBodyFont: (bodyFont) => {
+    const s = get();
+    if (bodyFont === s.bodyFont) return;
+    set({ past: [...s.past, snapshot(s)].slice(-HISTORY_LIMIT), future: [], bodyFont, lastEditKey: null });
+  },
+
+  // Theme presets are cross-template: they drive only the three color fields
+  // that virtually every template declares by convention, and skip any a given
+  // template doesn't have. Bespoke keys (card fills, bubble tints…) are left
+  // alone, so a preset can't break a layout it doesn't understand. Selecting one
+  // clears `paletteId` — the colors no longer match the template's own preset.
+  applyTheme: (themeId) => {
+    const s = get();
+    const theme = themePreset(themeId);
+    if (!theme || !s.def) return;
+    const keys = new Set(s.def.fields.filter((f) => f.type === "color").map((f) => f.key));
+    const next: Values = {};
+    if (keys.has(THEME_KEYS.background)) next[THEME_KEYS.background] = theme.background;
+    if (keys.has(THEME_KEYS.text)) next[THEME_KEYS.text] = theme.text;
+    if (keys.has(THEME_KEYS.accent)) next[THEME_KEYS.accent] = theme.accent;
+    if (Object.keys(next).length === 0) return;
+    set({
+      past: [...s.past, snapshot(s)].slice(-HISTORY_LIMIT),
+      future: [],
+      paletteId: undefined,
+      values: { ...s.values, ...next },
+      lastEditKey: null,
+    });
+  },
+
   setSpeed: (speed) => {
     const s = get();
     const clamped = Math.max(0.25, Math.min(3, speed));
@@ -196,6 +277,58 @@ export const useStudio = create<StudioStore>((set, get) => ({
     set({ soundPack: pack });
   },
 
+  // Brand kit: capture the current core colors + fonts as a reusable set. Global
+  // and persisted (like the sound preference), so it survives switching
+  // templates — that's the whole point — and stays out of the undo history.
+  saveBrandKit: () => {
+    const s = get();
+    const str = (v: unknown) => (typeof v === "string" && v.length > 0 ? v : undefined);
+    const kit: BrandKit = { savedAt: Date.now() };
+    const bg = str(s.values[THEME_KEYS.background]);
+    const text = str(s.values[THEME_KEYS.text]);
+    const accent = str(s.values[THEME_KEYS.accent]);
+    if (bg) kit.background = bg;
+    if (text) kit.textColor = text;
+    if (accent) kit.accent = accent;
+    if (s.font) kit.font = s.font;
+    if (s.bodyFont) kit.bodyFont = s.bodyFont;
+    if (typeof localStorage !== "undefined") {
+      try {
+        localStorage.setItem(BRAND_KEY, JSON.stringify(kit));
+      } catch {
+        // Storage full / blocked — keep it in memory for this session.
+      }
+    }
+    set({ brandKit: kit });
+  },
+
+  applyBrandKit: () => {
+    const s = get();
+    const kit = s.brandKit;
+    if (!kit || !s.def) return;
+    const keys = new Set(s.def.fields.filter((f) => f.type === "color").map((f) => f.key));
+    const next: Values = {};
+    if (kit.background && keys.has(THEME_KEYS.background)) next[THEME_KEYS.background] = kit.background;
+    if (kit.textColor && keys.has(THEME_KEYS.text)) next[THEME_KEYS.text] = kit.textColor;
+    if (kit.accent && keys.has(THEME_KEYS.accent)) next[THEME_KEYS.accent] = kit.accent;
+    const fontChanged = kit.font !== undefined && kit.font !== s.font;
+    const bodyChanged = kit.bodyFont !== undefined && kit.bodyFont !== s.bodyFont;
+    if (Object.keys(next).length === 0 && !fontChanged && !bodyChanged) return;
+    set({
+      past: [...s.past, snapshot(s)].slice(-HISTORY_LIMIT),
+      future: [],
+      ...(Object.keys(next).length > 0 ? { paletteId: undefined, values: { ...s.values, ...next } } : {}),
+      ...(fontChanged ? { font: kit.font } : {}),
+      ...(bodyChanged ? { bodyFont: kit.bodyFont } : {}),
+      lastEditKey: null,
+    });
+  },
+
+  clearBrandKit: () => {
+    if (typeof localStorage !== "undefined") localStorage.removeItem(BRAND_KEY);
+    set({ brandKit: null });
+  },
+
   reset: () => {
     const s = get();
     if (!s.def) return;
@@ -212,6 +345,7 @@ export const useStudio = create<StudioStore>((set, get) => ({
       // and consistent (previously font + loop were left untouched). Aspect is a
       // canvas/output choice and is intentionally preserved.
       font: undefined,
+      bodyFont: undefined,
       loop: s.def.loopable,
       lastEditKey: null,
     });

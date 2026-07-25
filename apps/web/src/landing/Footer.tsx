@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { clearProject } from "../studio/state/persistence";
-import { Container, LeafMark, Wordmark } from "../ui";
+import { Container, JimaLogo } from "../ui";
 
 const COLUMNS: { title: string; links: { label: string; href: string; to?: string }[] }[] = [
   {
@@ -28,11 +28,8 @@ export function Footer() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
           {/* Brand */}
           <div className="max-w-sm">
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-tint">
-                <LeafMark className="h-6 w-6" />
-              </span>
-              <Wordmark className="text-2xl" />
+            <div className="flex items-center text-ink">
+              <JimaLogo className="h-9" title="Jima Motion" />
             </div>
             <p className="mt-4 text-sm font-medium text-slate">
               100% free · no account · nothing leaves your browser. Every animation on this page is a

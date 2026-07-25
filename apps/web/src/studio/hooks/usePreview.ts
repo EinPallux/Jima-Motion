@@ -33,6 +33,7 @@ interface Params {
   values: Values;
   paletteId: string | undefined;
   font: string | undefined;
+  bodyFont: string | undefined;
   speed: number;
   loop: boolean;
   sound: boolean;
@@ -80,7 +81,7 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
         aspect: params.aspect,
         values: engineValues(params.def!, params.values),
         ...(params.paletteId ? { paletteId: params.paletteId } : {}),
-        fonts: createFontRegistry({ headline: params.font }),
+        fonts: createFontRegistry({ headline: params.font, body: params.bodyFont }),
         resolution: 1,
       });
       if (disposed) {
@@ -142,7 +143,7 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
       setState({ t: 0, duration: 0, playing: false, ready: false });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.def, params.aspect, imagesKey, params.font]);
+  }, [params.def, params.aspect, imagesKey, params.font, params.bodyFont]);
 
   // Rebuild scene on value/palette changes (debounced, in place).
   useEffect(() => {

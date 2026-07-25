@@ -11,6 +11,42 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 _Nothing yet._
 
+## [1.17.0] — 2026-07-25 · Official logo, 3 new fonts, theme presets & brand kit
+
+The official Jima logo lands across the site, the font picker grows, and the Style tab gains two
+features that make every one of the 399 templates substantially more editable.
+
+### Added
+- **The official Jima logo.** Inlined from `assets/` as a `JimaLogo` (full lockup) / `JimaMark`
+  (glyph) component and used everywhere the old placeholder leaf mark was — landing nav, footer,
+  Studio library rail, editor top bar, legal pages, capability screen — plus a real favicon and
+  apple-touch-icon. Inlined rather than `<img>` so it paints with the first render, costs no extra
+  request, and inherits `currentColor` (one asset serves ink-on-white and white-on-emerald).
+- **Three new fonts: Parkinsans, Plus Jakarta Sans and Inter.** Selectable for headlines. Parkinsans
+  ships as *static* instances (family "Parkinsans") deliberately separate from the variable face that
+  drives app chrome — a canvas `font` string can't express variable axes, so template text needs real
+  static weights or it silently falls back.
+- **A body-font picker.** The body role (sublines, captions, labels) is now swappable too, not just
+  the headline — so a project's whole type pairing is the user's choice. Honoured identically by the
+  preview and the export.
+- **18 global theme presets.** Unlike the per-template palettes, these apply to *any* template:
+  they drive the three colour fields virtually every template declares by convention (`background`,
+  `textColor`, `accent`) and skip bespoke keys, so a preset can never break a layout it doesn't
+  understand. 12 light + 6 dark, each with text ≥ 4.5:1 and accent ≥ 3:1 on its background —
+  asserted by unit tests, not by eye.
+- **Brand kit.** Save your colours + fonts once and reapply them to any template in a tap. Stored in
+  this browser only (localStorage), like the sound preference — nothing leaves the device.
+- **A readability hint.** The Style tab now shows the live contrast ratio of your text on your
+  background, and names the problem when it's too low. Guidance, not a block — some templates put
+  text on a card rather than the background.
+
+### Fixed
+- **Font weights are no longer claimed without being loaded.** Each selectable font now declares the
+  static weights actually shipped for it, and the default registry registers the weights templates
+  really draw at (notably body 700, used by 28 templates). Previously an unregistered weight was
+  measured against a fallback face while painting with the real one — the source of garbled word
+  spacing. Verified against the golden suite: no baseline drift.
+
 ## [1.16.0] — 2026-07-25 · +45 templates (5 per section, all nine) → 399
 
 Five new templates for **every** gallery section this time — Text & titles included — taking the

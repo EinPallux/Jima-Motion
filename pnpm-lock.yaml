@@ -59,6 +59,12 @@ importers:
       '@fontsource/outfit':
         specifier: ^5.3.0
         version: 5.3.0
+      '@fontsource/parkinsans':
+        specifier: ^5.3.0
+        version: 5.3.0
+      '@fontsource/plus-jakarta-sans':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@fontsource/poppins':
         specifier: ^5.3.0
         version: 5.3.0
@@ -221,6 +227,12 @@ packages:
 
   '@fontsource/outfit@5.3.0':
     resolution: {integrity: sha512-0AVHzTTVJSxWDOxPKSfMeHhZeBFDU3cmgrcOb76ZEyhGo0+xgyG3GsLF3h9+X8w0IX7G4jzjJgFQEBiWdX6VgA==}
+
+  '@fontsource/parkinsans@5.3.0':
+    resolution: {integrity: sha512-6mzn/Y/sZVmea1vYD7qUxnMuK3DxyP7nQc//unMBWq+CBwlTDFyIfvU9/Xcc4Uka0NGNoD6TUwX6A+pxRbNBmw==}
+
+  '@fontsource/plus-jakarta-sans@5.3.0':
+    resolution: {integrity: sha512-9WRw3G74Ve4cyPApAZSXLPY5DiLOZXDn7Q7dIBjFBpA0Pj56ljDItEdy2UUajjJxRuTg2HkMLO5C3K2nAQORWg==}
 
   '@fontsource/poppins@5.3.0':
     resolution: {integrity: sha512-cms1nM7U6SN8epIV1WMVOV8VsA645aSm3wHfzIQnkk188U341ThbJGSl2Sv54V29gnDbT2arMPfLzvVIIVCceQ==}
@@ -1455,6 +1467,10 @@ snapshots:
   '@fontsource/jetbrains-mono@5.3.0': {}
 
   '@fontsource/outfit@5.3.0': {}
+
+  '@fontsource/parkinsans@5.3.0': {}
+
+  '@fontsource/plus-jakarta-sans@5.3.0': {}
 
   '@fontsource/poppins@5.3.0': {}
 

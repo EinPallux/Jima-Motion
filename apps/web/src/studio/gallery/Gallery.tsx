@@ -3,7 +3,7 @@ import type { TemplateDefinition } from "@jima/engine";
 import { TemplateCard } from "./TemplateCard";
 import { GROUPS, groupOf } from "./groups";
 import type { PersistedProject } from "../state/persistence";
-import { Button, Card, LeafMark, Wordmark, cn } from "../../ui";
+import { Button, Card, JimaLogo, cn } from "../../ui";
 
 // Concept keywords per category so natural searches match intent, not just the
 // literal name/tagline (e.g. "lower third", "caption", "background", "intro").
@@ -95,11 +95,8 @@ export function Gallery({
       {/* Persistent category rail (desktop). A real <nav> landmark. */}
       <aside className="sticky top-0 hidden h-[100dvh] w-64 shrink-0 flex-col border-r border-mist bg-paper xl:flex">
         <div className="flex items-center gap-2.5 border-b border-mist px-5 py-4">
-          <a href="/" aria-label="Jima Motion home" className="flex items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-tint">
-              <LeafMark className="h-5 w-5" />
-            </span>
-            <span className="font-display text-lg font-extrabold tracking-tight text-ink">jima</span>
+          <a href="/" aria-label="Jima Motion home" className="flex items-center text-ink">
+            <JimaLogo className="h-7" />
           </a>
         </div>
 
@@ -143,8 +140,8 @@ export function Gallery({
         {/* Search bar — sticky, with the wordmark on mobile where the rail is hidden. */}
         <header className="sticky top-0 z-20 border-b border-mist bg-paper/85 px-4 py-3 backdrop-blur sm:px-6 xl:px-8">
           <div className="flex items-center gap-3">
-            <a href="/" aria-label="Jima Motion home" className="flex items-center xl:hidden">
-              <Wordmark className="text-lg" />
+            <a href="/" aria-label="Jima Motion home" className="flex items-center text-ink xl:hidden">
+              <JimaLogo className="h-6" />
             </a>
             <div className="relative flex-1">
               <span aria-hidden className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted">

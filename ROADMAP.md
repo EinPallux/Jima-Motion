@@ -286,5 +286,6 @@ rendering, AI credits, dark mode.
 | Full re-layout — Jitter-level landing, app-shell library, three-pane editor | ✅ 2026-07-24 — **v1.14.0** |
 | +10 templates each for overlays, social, product/ads, showcase, explainers/data, brand/quotes, openers, events/travel | ✅ 2026-07-24 — **v1.15.0**, library 274 → 354 |
 | +5 templates for every gallery section (all 9, incl. Text & titles) | ✅ 2026-07-25 — **v1.16.0**, library 354 → 399 |
+| Official logo + 3 fonts (Parkinsans/Jakarta/Inter) + body-font picker + 18 theme presets + brand kit | ✅ 2026-07-25 — **v1.17.0** |
 
 *(Update this table + CHANGELOG.md at every phase transition.)*

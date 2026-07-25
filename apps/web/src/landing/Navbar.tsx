@@ -34,7 +34,7 @@ export function Navbar() {
       )}
     >
       <Container className="flex items-center justify-between gap-4 py-4">
-        <a href="#top" className="flex items-center">
+        <a href="#top" aria-label="Jima Motion — home" className="flex items-center">
           <Wordmark className="text-xl" />
         </a>
 

@@ -1,7 +1,7 @@
 import type { Aspect, TemplateDefinition } from "@jima/engine";
 import { useStudio, canUndo, canRedo } from "../state/store";
 import { categoryLabel } from "../gallery/groups";
-import { Button, Badge, LeafMark } from "../../ui";
+import { Button, Badge, JimaMark } from "../../ui";
 
 const ASPECT_LABEL: Record<Aspect, string> = {
   "1:1": "1:1",
@@ -39,8 +39,12 @@ export function Topbar({
           <span className="hidden sm:inline">Templates</span>
         </button>
         <span aria-hidden className="hidden h-6 w-px bg-mist sm:block" />
-        <a href="/" aria-label="Jima Motion home" className="hidden h-8 w-8 items-center justify-center rounded-lg bg-emerald-tint sm:flex">
-          <LeafMark className="h-[18px] w-[18px]" />
+        <a
+          href="/"
+          aria-label="Jima Motion home"
+          className="hidden h-8 w-8 items-center justify-center rounded-lg text-ink transition-colors hover:bg-subtle sm:flex"
+        >
+          <JimaMark className="h-[19px] w-[19px]" />
         </a>
         <div className="flex min-w-0 items-center gap-2">
           <span className="truncate font-display text-[15px] font-bold text-ink">{def.name}</span>

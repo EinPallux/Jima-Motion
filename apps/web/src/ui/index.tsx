@@ -1,11 +1,13 @@
 import type { HTMLAttributes, ReactNode } from "react";
 import { cn } from "./cn";
 import { useInView } from "./useInView";
+import { JimaLogo, JimaMark } from "./JimaLogo";
 
 export { cn } from "./cn";
 export { Button, type ButtonProps } from "./Button";
 export { Reveal } from "./Reveal";
 export { useInView } from "./useInView";
+export { JimaLogo, JimaMark } from "./JimaLogo";
 
 /** Vibrant color-block tones shared by Card, Badge and section bands (v3 bold look). */
 export type Tone = "paper" | "emerald" | "coral" | "pink" | "amber" | "mint" | "indigo";
@@ -86,33 +88,29 @@ export function Badge({
   );
 }
 
-/** The Jima wordmark — emerald leaf mark + Parkinsans wordmark. */
+/**
+ * The Jima wordmark — the official lockup (mark + "jima"). Kept as `Wordmark`
+ * so every existing call site kept its sizing: the SVG's height is set in `em`,
+ * so the same `text-xl` / `text-2xl` classes still drive it. Inherits
+ * `currentColor`, defaulting to ink.
+ */
 export function Wordmark({ className }: { className?: string }) {
   return (
-    <span className={cn("inline-flex items-center gap-2 font-display font-extrabold tracking-tight", className)}>
-      <LeafMark className="h-[1.1em] w-[1.1em]" />
-      <span className="text-ink">jima</span>
+    <span className={cn("inline-flex items-center text-ink", className)}>
+      {/* Labelled, not decorative: this stands in for the literal word "jima" it
+          replaced, so a link wrapping only the logo still has an accessible name.
+          A wrapper's own aria-label (e.g. "Jima Motion home") still wins. */}
+      <JimaLogo style={{ height: "1.05em" }} title="Jima Motion" />
     </span>
   );
 }
 
-/** Emerald leaf/spark brand mark (inline SVG, currentColor-free). */
+/**
+ * The Jima mark alone, for square icon slots. Named `LeafMark` historically;
+ * now the official mark (see JimaMark), which is what should appear everywhere.
+ */
 export function LeafMark({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden fill="none">
-      <path
-        d="M12 2c3.9 3 8 5.4 8 11a8 8 0 1 1-16 0C4 7.4 8.1 5 12 2Z"
-        fill="url(#leaf)"
-      />
-      <path d="M12 7.5v10M12 12.5l3-2.2M12 15l-2.6-1.9" stroke="#ffffff" strokeWidth="1.4" strokeLinecap="round" opacity="0.9" />
-      <defs>
-        <linearGradient id="leaf" x1="4" y1="3" x2="20" y2="21" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#34d399" />
-          <stop offset="1" stopColor="#059669" />
-        </linearGradient>
-      </defs>
-    </svg>
-  );
+  return <JimaMark className={className} />;
 }
 
 const EYEBROW_TONES: Record<string, string> = {

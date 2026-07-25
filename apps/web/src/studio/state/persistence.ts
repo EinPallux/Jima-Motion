@@ -20,6 +20,7 @@ export interface PersistedProject {
   aspect: Aspect;
   paletteId?: string;
   font?: string;
+  bodyFont?: string;
   values: Values;
   speed: number;
   loop: boolean;

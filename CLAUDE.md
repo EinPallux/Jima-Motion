@@ -52,7 +52,12 @@ event menu, sunrise scene, race bib));
 two added categories — **overlay** (lower-thirds), **intro** (openers);
 the seldom-used **loop/Backgrounds** category was retired in v1.9;
 **per-template toggles to switch off decorative accents** (accent bar/dot, badges, frames, glows…);
-editable headline fonts (7 OFL families), a use-case-grouped gallery, and per-element color pickers;
+editable headline **and body** fonts (10 OFL families incl. Parkinsans, Plus Jakarta Sans, Inter),
+**18 global theme presets** (apply to any template via the conventional `background`/`textColor`/
+`accent` keys, all contrast-checked), a **brand kit** (save your colors + fonts, reapply anywhere,
+localStorage-only), a live **contrast hint**, a use-case-grouped gallery, and per-element color pickers;
+the **official Jima logo** across landing + Studio (inlined `JimaLogo`/`JimaMark`, currentColor) —
+source art in `assets/`;
 **optional procedural, motion-matched sound (ADR-012) — synthesized SFX auto-cued from each
 template's timeline beats, toggleable with 3 packs, baked into MP4/WebM exports; GIF silent**;
 **editable animation speed/length (0.25×–3×) that the export honours**;
