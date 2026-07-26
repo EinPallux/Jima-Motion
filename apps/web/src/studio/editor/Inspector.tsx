@@ -12,7 +12,7 @@ import {
 import { useStudio } from "../state/store";
 import { Field } from "../components/Field";
 import { categoryLabel } from "../gallery/groups";
-import { Badge, Button, cn } from "../../ui";
+import { Badge, Button, Switch, cn } from "../../ui";
 
 type Tab = "content" | "style" | "motion";
 
@@ -416,16 +416,7 @@ function MotionTab({
       <div className="border-t border-mist pt-6">
         <label className="flex items-center justify-between">
           <span className="text-sm font-semibold text-graphite">Sound effects</span>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={sound}
-            aria-label="Sound effects"
-            onClick={() => setSound(!sound)}
-            className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors", sound ? "bg-primary" : "bg-mist")}
-          >
-            <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow-xs transition-transform", sound ? "translate-x-5" : "translate-x-0.5")} />
-          </button>
+          <Switch checked={sound} onChange={setSound} label="Sound effects" />
         </label>
         <p className="mt-1.5 text-xs text-slate">Auto-matched to the motion — plays in the preview and is baked into MP4/WebM exports.</p>
         {sound && (
@@ -455,15 +446,7 @@ function MotionTab({
         <div className="border-t border-mist pt-6">
           <label className="flex items-center justify-between">
             <span className="text-sm font-semibold text-graphite">Loop</span>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={loop}
-              onClick={() => setLoop(!loop)}
-              className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors", loop ? "bg-primary" : "bg-mist")}
-            >
-              <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow-xs transition-transform", loop ? "translate-x-5" : "translate-x-0.5")} />
-            </button>
+            <Switch checked={loop} onChange={setLoop} label="Loop" />
           </label>
         </div>
       )}

@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState, type ChangeEvent } from "react";
 import type { TemplateField } from "@jima/engine";
 import { isImageValue, storeImageBlob, type ImageValue } from "../state/persistence";
-import { Button, cn } from "../../ui";
+import { Button, Switch, cn } from "../../ui";
 
 /** Reject very large images before they hit IndexedDB (rough quota safety). */
 const MAX_IMAGE_BYTES = 20 * 1024 * 1024;
@@ -218,23 +218,7 @@ function SliderControl({ id, field, value, onChange }: { id: string; field: Temp
 }
 
 function ToggleControl({ id, value, onChange }: { id: string; value: boolean; onChange: (v: unknown) => void }) {
-  return (
-    <button
-      id={id}
-      type="button"
-      role="switch"
-      aria-checked={value}
-      onClick={() => onChange(!value)}
-      className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors", value ? "bg-primary" : "bg-mist")}
-    >
-      <span
-        className={cn(
-          "absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow-xs transition-transform",
-          value ? "translate-x-5" : "translate-x-0.5",
-        )}
-      />
-    </button>
-  );
+  return <Switch id={id} checked={value} onChange={(next) => onChange(next)} />;
 }
 
 function ImageControl({

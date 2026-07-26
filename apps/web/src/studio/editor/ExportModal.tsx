@@ -11,7 +11,7 @@ import {
 } from "@jima/engine";
 import { useStudio } from "../state/store";
 import { engineValues } from "../state/values";
-import { Button, cn } from "../../ui";
+import { Button, Switch, cn } from "../../ui";
 
 type Phase = "configure" | "rendering" | "done" | "error";
 
@@ -247,16 +247,7 @@ function Configure(props: {
       <div>
         <label className="flex items-center justify-between">
           <span className="text-sm font-semibold text-graphite">Transparent background</span>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={transparent}
-            aria-label="Transparent background"
-            onClick={() => onTransparentChange(!transparent)}
-            className={cn("relative h-6 w-11 shrink-0 rounded-full transition-colors", transparent ? "bg-primary" : "bg-mist")}
-          >
-            <span className={cn("absolute top-0.5 h-5 w-5 rounded-full bg-paper shadow-xs transition-transform", transparent ? "translate-x-5" : "translate-x-0.5")} />
-          </button>
+          <Switch checked={transparent} onChange={onTransparentChange} label="Transparent background" />
         </label>
         <p className="mt-1.5 text-xs text-slate">
           {transparent

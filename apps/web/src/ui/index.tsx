@@ -53,6 +53,54 @@ export function Card({
   );
 }
 
+/**
+ * On/off switch — the one used for every toggle in the Studio (template
+ * decorations, sound, loop, transparent export).
+ *
+ * The knob carries an explicit `left`, which is load-bearing: an absolutely
+ * positioned child with `left: auto` falls back to its *static* position, and a
+ * `<button>` centres its inline content. Without it the knob started 22px in
+ * (mid-track), so "off" sat flush against the right end and "on" pushed it 18px
+ * clear of the pill entirely.
+ */
+export function Switch({
+  checked,
+  onChange,
+  id,
+  label,
+  className,
+}: {
+  checked: boolean;
+  onChange: (next: boolean) => void;
+  id?: string;
+  label?: string;
+  className?: string;
+}) {
+  return (
+    <button
+      {...(id ? { id } : {})}
+      type="button"
+      role="switch"
+      aria-checked={checked}
+      {...(label ? { "aria-label": label } : {})}
+      onClick={() => onChange(!checked)}
+      className={cn(
+        "relative h-6 w-11 shrink-0 rounded-full transition-colors",
+        checked ? "bg-primary" : "bg-mist",
+        className,
+      )}
+    >
+      {/* 44px track, 20px knob, 2px inset → travels exactly 20px. */}
+      <span
+        className={cn(
+          "absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-paper shadow-xs transition-transform",
+          checked && "translate-x-5",
+        )}
+      />
+    </button>
+  );
+}
+
 const BADGE_TONES: Record<string, string> = {
   emerald: "bg-emerald-tint text-primary-strong",
   neutral: "bg-subtle text-graphite",
