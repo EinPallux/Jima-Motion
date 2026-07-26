@@ -31,18 +31,37 @@ export interface TweenSpec {
   ease?: EaseFn;
 }
 
-/** A summarized cluster of tweens sharing a start time (for the sound layer). */
+/**
+ * A summarized cluster of tweens sharing a start time (for the sound layer).
+ *
+ * These are the only facts the cue mapper gets, so they carry not just *what*
+ * moved but *how hard and how fast* — a 0.1s snap and a 2s drift travelling the
+ * same distance want completely different sounds, and an exit wants a different
+ * sound from an entrance.
+ */
 export interface TimelineBeat {
   time: number;
+  /** Longest tween duration on this beat, in seconds — a snap vs. a glide. */
+  dur: number;
   /** An ease overshoots 1.0 (spring/back/elastic) → springy. */
   overshoot: boolean;
   /** A scale.* tween grows from < 0.75 → an entrance/pop. */
   scaleFromSmall: boolean;
+  /** A scale.* tween collapses to < 0.75 → an exit/vanish. */
+  scaleToSmall: boolean;
   /** Largest x/y travel in logical px. */
   moveDist: number;
+  /** Axis of that largest travel — vertical drops read heavier than slides. */
+  moveAxis: "x" | "y" | null;
+  /** Direction of that largest travel: +1 right/down, -1 left/up, 0 if none. */
+  moveSign: number;
   rotate: boolean;
+  /** Largest |rotation| delta in radians. */
+  rotateAmount: number;
   /** An alpha 0→1 fade-in. */
   fadeIn: boolean;
+  /** An alpha fade-out to (near) zero. */
+  fadeOut: boolean;
   /** How many tweens fired on this beat. */
   count: number;
 }
@@ -143,20 +162,44 @@ export class JimaTimeline {
       const time = key / 50;
       let b = groups.get(key);
       if (!b) {
-        b = { time, overshoot: false, scaleFromSmall: false, moveDist: 0, rotate: false, fadeIn: false, count: 0 };
+        b = {
+          time,
+          dur: 0,
+          overshoot: false,
+          scaleFromSmall: false,
+          scaleToSmall: false,
+          moveDist: 0,
+          moveAxis: null,
+          moveSign: 0,
+          rotate: false,
+          rotateAmount: 0,
+          fadeIn: false,
+          fadeOut: false,
+          count: 0,
+        };
         groups.set(key, b);
       }
       b.count++;
+      b.dur = Math.max(b.dur, tw.duration);
       // Overshoot (spring/back/elastic) → a springy "pop" feel. Detect by sampling.
       if (tw.ease(0.4) > 1.03 || tw.ease(0.6) > 1.03 || tw.ease(0.78) > 1.03) b.overshoot = true;
       if (tw.prop === "scale.x" || tw.prop === "scale.y") {
         if (tw.from < 0.75 && tw.to >= tw.from) b.scaleFromSmall = true;
+        if (tw.to < 0.75 && tw.to < tw.from) b.scaleToSmall = true;
       } else if (tw.prop === "x" || tw.prop === "y") {
-        b.moveDist = Math.max(b.moveDist, Math.abs(tw.to - tw.from));
+        const delta = tw.to - tw.from;
+        const dist = Math.abs(delta);
+        if (dist > b.moveDist) {
+          b.moveDist = dist;
+          b.moveAxis = tw.prop;
+          b.moveSign = delta === 0 ? 0 : delta > 0 ? 1 : -1;
+        }
       } else if (tw.prop === "rotation") {
         b.rotate = true;
-      } else if (tw.prop === "alpha" && tw.to > tw.from) {
-        b.fadeIn = true;
+        b.rotateAmount = Math.max(b.rotateAmount, Math.abs(tw.to - tw.from));
+      } else if (tw.prop === "alpha") {
+        if (tw.to > tw.from) b.fadeIn = true;
+        else if (tw.to < tw.from && tw.to < 0.06) b.fadeOut = true;
       }
     }
     return [...groups.values()].sort((a, b) => a.time - b.time);

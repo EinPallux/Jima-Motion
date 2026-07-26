@@ -230,6 +230,11 @@ mux a procedurally-synthesized audio track — AAC (MP4) / Opus (WebM) — baked
 timeline's beats via `OfflineAudioContext`. GIF stays silent; browsers without an AudioEncoder
 export silent video (probed, never assumed). No sample files are bundled or fetched.
 
+Cues are voiced through the template's **sound profile** (ADR-012a) and one of three packs
+(Crisp/Soft/Retro), then summed through a shared high-pass → procedural room → limiter chain. The
+cue → voice mapping is a pure function, so the live preview and the baked export render an
+identical graph.
+
 Optional **transparent (alpha) export** (ADR-013): a "Transparent background" toggle exports a
 **WebM with an alpha channel** (VP9, `alpha: 'keep'` → alpha as packet side data, which Mediabunny
 uses to mark the track transparent). The export runner clears the canvas with alpha 0 and a shared
@@ -415,15 +420,36 @@ intentional template change as a P1 bug.
   files** are bundled, licensed, or fetched (keeps CSP airtight and the "client-side only, free"
   rules intact) — SFX are **synthesized with the Web Audio API** from recipe graphs (oscillators,
   filtered seeded noise, envelopes). Cues are **auto-derived from each template's timeline beats**
-  (`JimaTimeline.beats()` → `cuesFromBeats`): a springy scale-in → a pop, a slide → a swoosh, the
-  settle → a ding. This scales to all 95 templates with zero per-template authoring and stays
-  deterministic (seeded noise; sound is never part of the visual render, so golden frames are
-  unaffected). Preview plays cues live via an `AudioContext` unlocked on the first play/toggle
+  (`JimaTimeline.beats()` → `cuesFromBeats`). This scales to the whole library with zero
+  per-template authoring and stays deterministic (seeded noise; sound is never part of the visual
+  render, so golden frames are unaffected). Preview plays cues live via an `AudioContext` unlocked on the first play/toggle
   gesture; export bakes the same cues offline (`OfflineAudioContext` → `AudioBuffer`) and muxes them
   with Mediabunny (`AudioBufferSource`: **AAC** for MP4, **Opus** for WebM). AudioEncoder gaps —
   the original ADR-006 worry — degrade gracefully: capability is probed like video, and a browser
   without it (or GIF, which has no audio) simply exports silent. Sound defaults on but is a
   persisted global preference, not a per-template/undoable value.
+- **ADR-012a — Sound profiles + a two-layer synth (amends ADR-012, 2026-07-26, owner request:
+  "the sounds don't fit the animations and aren't high quality enough").** Two changes, one per
+  complaint.
+  *Fit*: beats now carry **how hard and how fast**, not just what moved (`dur`, `scaleToSmall`,
+  `fadeOut`, `moveAxis`/`moveSign`, `rotateAmount`), and every template resolves a **sound profile**
+  — `ui | type | impact | data | airy | warm | cinematic` — from its category, overridable per
+  template via `TemplateDefinition.sound`. The profile fixes the instrument family, the musical
+  scale, the brightness and the density, so a chart steps up a marimba while an opener swells and
+  lands. Pitched cues **walk that scale** across a run rather than repeating one hardcoded
+  frequency (the old mapper fired the identical 360 Hz tap for all 16 letters of a stagger), the
+  first hit of a run is accented and the rest ducked, exits sound different from entrances, impacts
+  are spaced so they stay punctuation, and the closing chime only fires **when the tail is actually
+  quiet** — it used to be appended unconditionally at `duration − 0.55`.
+  *Quality*: a cue is no longer one oscillator. `audio/voices.ts` is a **pure** cue → `VoiceSpec[]`
+  mapping (unit-tested in Node, and the reason preview and export provably bake the same graph);
+  `audio/sfx.ts` renders it. Every percussive sound is a **transient + body**; air uses **pink**
+  noise; bells get inharmonic partials; and all of it runs through a shared master chain —
+  high-pass, **procedurally-generated convolution room**, soft limiter. The room is generated from
+  seeded noise, so ADR-012's no-sample-files rule still holds. The limiter is load-bearing: a dozen
+  cues can land within a few frames and the sum used to clip. Measured across 36 templates, all
+  seven profiles and all three packs, baked peaks now sit at 0.19–0.61 with no clipping and no
+  silent tracks (`tests/audio.smoke.spec.ts` enforces this).
 - **ADR-013 — Transparent (alpha) export via WebM/VP9 (2026-07-21, owner request).** A
   "Transparent background" toggle exports the animation with **no background**, to overlay on footage
   in an editor. Implemented as **VP9 WebM with alpha** (WebCodecs `alpha: 'keep'`; Mediabunny writes

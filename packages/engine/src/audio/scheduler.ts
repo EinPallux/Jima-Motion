@@ -1,4 +1,5 @@
 import type { SoundCue } from "./cues";
+import type { SoundProfile } from "./profile";
 import { SfxPlayer, type SoundPack } from "./sfx";
 
 const EPS = 1e-4;
@@ -15,7 +16,7 @@ export class CueScheduler {
   private cues: SoundCue[] = [];
   private enabled: boolean;
 
-  constructor(opts: { pack?: SoundPack; volume?: number; enabled?: boolean } = {}) {
+  constructor(opts: { pack?: SoundPack; profile?: SoundProfile; volume?: number; enabled?: boolean } = {}) {
     this.player = new SfxPlayer(opts);
     this.enabled = opts.enabled ?? false;
   }
@@ -31,6 +32,10 @@ export class CueScheduler {
   }
   setPack(pack: SoundPack): void {
     this.player.setPack(pack);
+  }
+  /** The template's sonic character — must match the sheet the cues came from. */
+  setProfile(profile: SoundProfile): void {
+    this.player.setProfile(profile);
   }
   setVolume(v: number): void {
     this.player.setVolume(v);
@@ -57,7 +62,7 @@ export class CueScheduler {
 
   private fire(fromT: number, toT: number): void {
     for (const c of this.cues) {
-      if (c.time > fromT && c.time <= toT) this.player.play(c.sound, c.gain);
+      if (c.time > fromT && c.time <= toT) this.player.play(c);
     }
   }
 

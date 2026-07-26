@@ -411,6 +411,9 @@ export const flightMode: TemplateDefinition = {
   name: "Flight Mode",
   tagline: "The Control Center drops in, Flight Mode thumps on, and the plane takes off — your travel vlog begins.",
   category: "travel",
+  // Filed under travel, but it is an opener: it should swell and land, not
+  // tinkle politely like a postcard.
+  sound: "cinematic",
   aspects: ["1:1", "4:5", "9:16", "16:9"],
   defaultAspect: "16:9",
   loopable: false,

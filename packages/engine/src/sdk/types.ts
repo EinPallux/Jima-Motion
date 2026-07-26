@@ -3,6 +3,7 @@ import type { Aspect, Size } from "../layout/aspect";
 import type { Rng } from "../timeline/rng";
 import type { JimaTimeline } from "../timeline/timeline";
 import type { FontRegistry, FontRole } from "../text/fonts";
+import type { SoundProfile } from "../audio/profile";
 
 export type { Aspect } from "../layout/aspect";
 
@@ -125,6 +126,12 @@ export interface TemplateDefinition {
   fields: TemplateField[];
   palettes: Palette[];
   fontRoles?: Record<string, FontRole>;
+  /**
+   * Sonic character for the optional sound layer. Defaults to the category's
+   * profile, which is right for almost everything; set it when a template sounds
+   * unlike its neighbours (a data-driven social post, a cinematic product reveal).
+   */
+  sound?: SoundProfile;
   /** Estimate duration before a full build (for UI); optional. */
   estimateDuration?: (values: Values) => number;
   build: (ctx: TemplateContext) => BuiltTemplate;

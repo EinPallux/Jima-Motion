@@ -8,6 +8,8 @@ import "../src/fonts";
 
 import {
   TemplateRunner,
+  cuesForTemplate,
+  renderCuesToBuffer,
   createFontRegistry,
   exportTemplate,
   detectCapabilities,
@@ -17,6 +19,7 @@ import {
   type Aspect,
   type Capabilities,
   type ExportProfile,
+  type SoundPack,
   type Values,
 } from "@jima/engine";
 import { getTemplate } from "@jima/templates";
@@ -39,6 +42,17 @@ interface ProbeOut {
   audioPacketCount: number;
   transparent: boolean;
 }
+interface AudioStats {
+  profile: string;
+  cues: number;
+  seconds: number;
+  /** Peak sample magnitude across both channels. >= 1 means the bake clipped. */
+  peak: number;
+  /** Root-mean-square level — near 0 means the track is effectively silent. */
+  rms: number;
+  /** Fraction of the track that is below -60 dBFS. */
+  silentFraction: number;
+}
 interface HarnessApi {
   ready: boolean;
   renderAt: (t: number) => void;
@@ -50,6 +64,8 @@ interface HarnessApi {
   /** Min alpha (0–255) across the four canvas corners at the current frame. */
   cornerAlpha: () => number;
   caps: () => Promise<Capabilities>;
+  /** Bake the template's cue sheet offline and measure it. */
+  audio: (pack?: SoundPack) => Promise<AudioStats | null>;
 }
 
 declare global {
@@ -183,6 +199,46 @@ async function main(): Promise<void> {
       );
     },
     caps: () => detectCapabilities(),
+    audio: async (pack) => {
+      const sheet = cuesForTemplate(def, runner.timeline, runner.duration);
+      const buf = await renderCuesToBuffer(sheet.cues, runner.duration, {
+        profile: sheet.profile,
+        ...(pack ? { pack } : {}),
+      });
+      if (!buf) return null;
+      let peak = 0;
+      let sumSq = 0;
+      let quiet = 0;
+      let n = 0;
+      const win = Math.max(1, Math.floor(buf.sampleRate * 0.02));
+      for (let ch = 0; ch < buf.numberOfChannels; ch++) {
+        const data = buf.getChannelData(ch);
+        for (let i = 0; i < data.length; i++) {
+          const v = Math.abs(data[i] ?? 0);
+          if (v > peak) peak = v;
+          sumSq += v * v;
+          n++;
+        }
+      }
+      // Silence measured in 20ms windows on channel 0 — a per-sample test would
+      // call every zero crossing silent.
+      const ch0 = buf.getChannelData(0);
+      let windows = 0;
+      for (let i = 0; i < ch0.length; i += win) {
+        let w = 0;
+        for (let j = i; j < Math.min(i + win, ch0.length); j++) w = Math.max(w, Math.abs(ch0[j] ?? 0));
+        windows++;
+        if (w < 0.001) quiet++;
+      }
+      return {
+        profile: sheet.profile,
+        cues: sheet.cues.length,
+        seconds: buf.duration,
+        peak,
+        rms: Math.sqrt(sumSq / Math.max(1, n)),
+        silentFraction: quiet / Math.max(1, windows),
+      };
+    },
   };
   window.__jimaHarnessReady = true;
 }

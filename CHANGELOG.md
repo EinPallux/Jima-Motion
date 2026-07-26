@@ -9,6 +9,53 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 ## [Unreleased]
 
+### Changed
+
+- **The sound system is rebuilt (ADR-012a).** The owner's report was that the sounds didn't fit the
+  animations and weren't well enough made; those are two different problems and both are addressed.
+
+  **Fit.** Motion beats now record *how hard and how fast*, not just what moved — tween duration,
+  collapse and fade-out (so exits stop sounding like entrances), travel axis and direction, rotation
+  amount. On top of that every template resolves a **sound profile** (`ui`, `type`, `impact`,
+  `data`, `airy`, `warm`, `cinematic`) from its category, overridable per template via
+  `TemplateDefinition.sound`. The profile fixes the instrument family, the musical scale, the
+  brightness and the density: a chart now steps up a marimba, an opener swells and lands on a low
+  hit, a lower-third stays out of the way. Pitched cues **walk the profile's scale** across a run
+  instead of repeating one hardcoded frequency — the old mapper played the identical 360 Hz tap for
+  all sixteen letters of a stagger. The first hit of a run is accented and the rest ducked; impacts
+  are spaced so they read as punctuation rather than texture; and the closing chime only fires when
+  the tail is genuinely quiet, where it used to be appended unconditionally at `duration − 0.55`
+  whatever was on screen.
+
+  **Quality.** A cue is no longer a single oscillator with an envelope. Every percussive sound is a
+  **transient plus a body** — the short filtered tick is what makes a sound read as an object rather
+  than a beep. Air uses **pink** noise instead of white, bells get inharmonic partials, marimbas get
+  their characteristic fourth partial, and everything runs through a shared master chain:
+  high-pass, a **procedurally generated convolution room**, and a soft limiter. The room is
+  synthesized from seeded noise, so there are still no sample files to bundle, fetch or license. The
+  limiter is not polish — a dozen cues can land within a few frames and the sum used to clip.
+
+  The cue → voice mapping is a **pure function** (`audio/voices.ts`), unit-tested in Node, which is
+  also what makes the live preview and the baked export provably render the same graph.
+
+  The three packs are now real characters rather than a swapped waveform: **Crisp** (bright, punchy,
+  modern app UI), **Soft** (rounded, longer tails, more space) and **Retro** (chiptune pulses, dry
+  and close).
+
+  Verified by baking the real Web Audio graph in a browser across 36 templates, all seven profiles
+  and all three packs: peaks land at 0.19–0.61 with no clipping and no silent tracks.
+  `tests/audio.smoke.spec.ts` (10 tests) keeps it that way; 86 unit tests cover cue selection and
+  voice specs. Golden frames are untouched — sound never takes part in the render.
+
+### Fixed
+
+- **Toggle knobs sat outside their pill in the Studio.** Measured: a 44px track with a 20px knob
+  drawn at x+42..x+62 — 18px clear of the right end when on, flush against it when off. The knob is
+  absolutely positioned but had no `left`, so it fell back to its static position, and a `<button>`
+  centres its inline content: computed style showed `left: 22px` on an element that never set it.
+  All four switches (template decorations, sound, loop, transparent export) shared the copy-pasted
+  markup, so the fix lands as a shared `Switch` primitive.
+
 ### Added
 
 - **The hero strip is now a template carousel — twelve templates, all of them animating.** Previous

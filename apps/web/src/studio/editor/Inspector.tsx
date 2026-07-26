@@ -4,6 +4,7 @@ import {
   FONT_CHOICES,
   SOUND_PACKS,
   THEME_KEYS,
+  profileForTemplate,
   THEME_PRESETS,
   contrastRatio,
   type TemplateDefinition,
@@ -18,6 +19,20 @@ type Tab = "content" | "style" | "motion";
 
 const CONTENT_TYPES = new Set(["text", "textarea", "textlist", "image"]);
 const MOTION_TYPES = new Set(["select", "slider", "toggle"]);
+
+/**
+ * Plain-language names for the sound profiles. The profile is picked from the
+ * template, not by the user — this just tells them what they are hearing.
+ */
+const PROFILE_LABEL: Record<string, string> = {
+  ui: "app-UI sounds",
+  type: "typographic ticks",
+  impact: "punchy product hits",
+  data: "mallet steps",
+  airy: "glassy, open tones",
+  warm: "soft, rounded tones",
+  cinematic: "cinematic swells",
+};
 
 /** Small uppercase group label used to break the inspector into labeled sections. */
 const groupLabelCls = "text-[11px] font-bold uppercase tracking-[0.1em] text-graphite";
@@ -418,27 +433,36 @@ function MotionTab({
           <span className="text-sm font-semibold text-graphite">Sound effects</span>
           <Switch checked={sound} onChange={setSound} label="Sound effects" />
         </label>
-        <p className="mt-1.5 text-xs text-slate">Auto-matched to the motion — plays in the preview and is baked into MP4/WebM exports.</p>
+        <p className="mt-1.5 text-xs text-slate">
+          Synthesized to match this template&rsquo;s motion — plays in the preview and is baked into MP4/WebM
+          exports.
+        </p>
         {sound && (
-          <div className="mt-3 grid grid-cols-3 gap-2" role="group" aria-label="Sound pack">
-            {SOUND_PACKS.map((p) => {
-              const active = p.id === soundPack;
-              return (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => setSoundPack(p.id)}
-                  aria-pressed={active}
-                  className={cn(
-                    "rounded-xl border-2 px-3 py-2 text-sm font-semibold transition-colors",
-                    active ? "border-primary-strong bg-emerald-tint text-ink" : "border-mist text-graphite hover:border-slate",
-                  )}
-                >
-                  {p.label}
-                </button>
-              );
-            })}
-          </div>
+          <>
+            <div className="mt-3 grid grid-cols-3 gap-2" role="group" aria-label="Sound pack">
+              {SOUND_PACKS.map((p) => {
+                const active = p.id === soundPack;
+                return (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => setSoundPack(p.id)}
+                    aria-pressed={active}
+                    title={p.hint}
+                    className={cn(
+                      "rounded-xl border-2 px-3 py-2 text-sm font-semibold transition-colors",
+                      active ? "border-primary-strong bg-emerald-tint text-ink" : "border-mist text-graphite hover:border-slate",
+                    )}
+                  >
+                    {p.label}
+                  </button>
+                );
+              })}
+            </div>
+            <p className="mt-2 text-xs text-slate">
+              {SOUND_PACKS.find((p) => p.id === soundPack)?.hint} Tuned for {PROFILE_LABEL[profileForTemplate(def)]}.
+            </p>
+          </>
         )}
       </div>
 

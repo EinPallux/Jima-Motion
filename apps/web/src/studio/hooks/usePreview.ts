@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import {
   createFontRegistry,
   CueScheduler,
-  cuesFromTimeline,
+  cuesForTemplate,
   isImageRef,
   PreviewPlayer,
   TemplateRunner,
@@ -90,8 +90,11 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
       }
       runnerRef.current = runner;
 
-      const scheduler = new CueScheduler({ enabled: params.sound, pack: params.soundPack });
-      scheduler.setCues(cuesFromTimeline(runner.timeline, runner.duration));
+      // The profile is the template's sonic character; the cues are its rhythm.
+      // Both come from one call so the preview and the baked export match.
+      const sheet = cuesForTemplate(runner.def, runner.timeline, runner.duration);
+      const scheduler = new CueScheduler({ enabled: params.sound, pack: params.soundPack, profile: sheet.profile });
+      scheduler.setCues(sheet.cues);
       schedulerRef.current = scheduler;
 
       const canvas = runner.canvas;
@@ -154,7 +157,7 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
       runner.rebuildScene(engineValues(runner.def, params.values), params.paletteId);
       setState((s) => ({ ...s, duration: runner.duration }));
       // Editing values can change the motion (and its timing) → refit the cues.
-      schedulerRef.current?.setCues(cuesFromTimeline(runner.timeline, runner.duration));
+      schedulerRef.current?.setCues(cuesForTemplate(runner.def, runner.timeline, runner.duration).cues);
       if (player && !player.isPlaying) runner.renderAt(player.currentTime);
     }, 60);
     return () => clearTimeout(id);
