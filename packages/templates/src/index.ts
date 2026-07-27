@@ -495,6 +495,10 @@ import { menuBoard } from "./menu-board/index";
 import { openingHours } from "./opening-hours/index";
 import { deliveryTrack } from "./delivery-track/index";
 import { scratchReveal } from "./scratch-reveal/index";
+import { kanbanBoard } from "./kanban-board/index";
+import { vinylSleeve } from "./vinyl-sleeve/index";
+import { businessCard } from "./business-card/index";
+import { apparelMockup } from "./apparel-mockup/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -1051,6 +1055,11 @@ export const templates: TemplateDefinition[] = [
   openingHours,
   deliveryTrack,
   scratchReveal,
+  // Showcase
+  kanbanBoard,
+  vinylSleeve,
+  businessCard,
+  apparelMockup,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {
