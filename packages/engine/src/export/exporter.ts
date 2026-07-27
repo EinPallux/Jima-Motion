@@ -5,7 +5,7 @@ import { cuesForTemplate, renderCuesToBuffer, type SoundPack } from "../audio/in
 import { detectCapabilities } from "./capabilities";
 import { exportVideo } from "./video";
 import { exportGif } from "./gif";
-import type { ExportFormat, ExportProfile, ExportProgress, ExportResult } from "./types";
+import { MOTION_BLUR_DEFAULT, type ExportFormat, type ExportProfile, type ExportProgress, type ExportResult, type MotionBlur } from "./types";
 
 export interface ExportRequest {
   def: TemplateDefinition;
@@ -19,6 +19,11 @@ export interface ExportRequest {
   soundPack?: SoundPack;
   /** Export a transparent background (alpha). WebM only — ignored otherwise. */
   transparent?: boolean;
+  /**
+   * Synthetic motion blur. `true` uses the 180°/8-sample default; pass an object
+   * to tune it. Costs one extra render per sample, so it is export-only.
+   */
+  motionBlur?: boolean | MotionBlur;
   signal?: AbortSignal;
   onProgress?: (p: ExportProgress) => void;
 }
@@ -70,6 +75,9 @@ export async function exportTemplate(req: ExportRequest): Promise<ExportResult> 
     // each sampling the timeline at outputTime × speed.
     const speed = req.speed && req.speed > 0 ? req.speed : 1;
     const totalFrames = Math.max(1, Math.round((runner.duration / speed) * fps));
+    // Motion blur costs one render per sample, so it is opt-in and export-only.
+    const motionBlur: MotionBlur | null =
+      req.motionBlur === true ? MOTION_BLUR_DEFAULT : typeof req.motionBlur === "object" ? req.motionBlur : null;
 
     let bytes: Uint8Array;
     if (profile.format === "gif") {
@@ -78,6 +86,7 @@ export async function exportTemplate(req: ExportRequest): Promise<ExportResult> 
         fps,
         totalFrames,
         speed,
+        ...(motionBlur ? { motionBlur } : {}),
         ...(profile.gifMaxColors !== undefined ? { maxColors: profile.gifMaxColors } : {}),
         ...(signal ? { signal } : {}),
         ...(onProgress ? { onProgress } : {}),
@@ -113,6 +122,7 @@ export async function exportTemplate(req: ExportRequest): Promise<ExportResult> 
         fps,
         totalFrames,
         speed,
+        ...(motionBlur ? { motionBlur } : {}),
         ...(audio ? { audio, audioCodec } : {}),
         ...(transparent ? { alpha: true } : {}),
         ...(signal ? { signal } : {}),

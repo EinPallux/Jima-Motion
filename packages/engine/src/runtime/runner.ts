@@ -197,6 +197,27 @@ export class TemplateRunner {
     this.scene.render(this.root);
   }
 
+  /**
+   * Paint one frame with synthetic motion blur: the average of `samples` poses
+   * spread evenly across a shutter window centred on `t`.
+   *
+   * This is only possible because the timeline is a pure `f(t)` — there is no
+   * per-frame state to rewind, so a sub-frame is just another evaluation. A
+   * 180° shutter (`shutter` = half the frame interval) is the film default and
+   * is what makes fast whooshes and spins stop strobing.
+   */
+  renderBlurredAt(t: number, samples: number, shutter: number): void {
+    const n = Math.max(1, Math.round(samples));
+    this.lastT = t;
+    this.scene.renderAveraged(this.root, n, (i) => {
+      // Centred box filter over the shutter, sampled at bin centres.
+      const offset = shutter > 0 ? ((i + 0.5) / n - 0.5) * shutter : 0;
+      const sub = Math.min(this.duration, Math.max(0, t + offset));
+      this.timeline.evaluate(sub);
+      this.update?.(sub);
+    });
+  }
+
   destroy(): void {
     this.scene.destroy();
     this.root.destroy({ children: true });

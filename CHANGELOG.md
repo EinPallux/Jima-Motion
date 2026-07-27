@@ -9,6 +9,23 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
 
 ## [Unreleased]
 
+### Added
+
+- **Motion blur on export.** Each output frame can be rendered as the average of
+  eight poses spread across a 180° shutter, so fast slides, spins and whip pans smear the way real
+  motion graphics do instead of strobing. Only moving elements blur — a headline that has already
+  settled stays crisp while a word still sliding in smears, because the blur comes from the actual
+  per-element motion rather than a post-process. Off by default, on a toggle in the export dialog,
+  and available for GIF too, where 12–15 fps is exactly where un-blurred motion strobes worst.
+
+  This is nearly free architecturally: the timeline is a pure `f(t)` with no per-frame state, so a
+  sub-frame is just another evaluation. The average is accumulated as an incremental mean
+  (`1/(i+1)` alpha per sub-frame, which is exactly the running mean), with each pose rendered to an
+  offscreen target first and blitted as one sprite — a Container's `alpha` multiplies each *child*
+  separately, and doing it per-child would blend overlapping elements into each other. Premultiplied
+  alpha means it holds for transparent exports too. It costs one render per sample, hence
+  export-only.
+
 ### Changed
 
 - **The sound system is rebuilt (ADR-012a).** The owner's report was that the sounds didn't fit the

@@ -43,6 +43,7 @@ export function ExportModal({
   const [phase, setPhase] = useState<Phase>("configure");
   const [format, setFormat] = useState<ExportFormat>("webm");
   const [transparent, setTransparent] = useState(false);
+  const [motionBlur, setMotionBlur] = useState(false);
   const [videoQuality, setVideoQuality] = useState<"1080" | "720">("1080");
   const [fps, setFps] = useState(30);
   const [gifSize, setGifSize] = useState<"480" | "720">("480");
@@ -107,6 +108,7 @@ export function ExportModal({
         sound,
         soundPack,
         transparent: transparent && format === "webm",
+        motionBlur,
         signal: controller.signal,
         onProgress: setProgress,
       });
@@ -167,6 +169,8 @@ export function ExportModal({
               sound={sound}
               transparent={transparent}
               onTransparentChange={toggleTransparent}
+              motionBlur={motionBlur}
+              onMotionBlurChange={setMotionBlur}
               onExport={run}
             />
           )}
@@ -204,9 +208,11 @@ function Configure(props: {
   sound: boolean;
   transparent: boolean;
   onTransparentChange: (on: boolean) => void;
+  motionBlur: boolean;
+  onMotionBlurChange: (on: boolean) => void;
   onExport: () => void;
 }) {
-  const { format, setFormat, available, caps, sound, transparent, onTransparentChange } = props;
+  const { format, setFormat, available, caps, sound, transparent, onTransparentChange, motionBlur, onMotionBlurChange } = props;
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-3 gap-2">
@@ -243,6 +249,18 @@ function Configure(props: {
           <Segment label="Frame rate" value={String(props.fps)} options={[["30", "30 fps"], ["60", "60 fps"]]} onChange={(v) => props.setFps(Number(v))} />
         </>
       )}
+
+      <div>
+        <label className="flex items-center justify-between">
+          <span className="text-sm font-semibold text-graphite">Motion blur</span>
+          <Switch checked={motionBlur} onChange={onMotionBlurChange} label="Motion blur" />
+        </label>
+        <p className="mt-1.5 text-xs text-slate">
+          {motionBlur
+            ? "Each frame is averaged across a 180° shutter — fast moves smear instead of strobing. Slower to export."
+            : "Off = one crisp pose per frame. Turn on for fast slides, spins and whip pans."}
+        </p>
+      </div>
 
       <div>
         <label className="flex items-center justify-between">

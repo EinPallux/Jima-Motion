@@ -1,7 +1,8 @@
 import type { TemplateRunner } from "../runtime/runner";
 import { readCanvasRGBA } from "./pixels";
 import { encodeGif, type GifFrameData } from "./gifEncode";
-import { ExportCancelledError, type ExportProgress } from "./types";
+import { ExportCancelledError, type ExportProgress, type MotionBlur } from "./types";
+import { renderFrame } from "./frame";
 import type { GifWorkerRequest, GifWorkerResponse } from "./gif.worker";
 
 export interface GifExportArgs {
@@ -11,6 +12,8 @@ export interface GifExportArgs {
   /** Timeline-time = outputTime × speed (clamped to duration). Default 1. */
   speed?: number;
   maxColors?: number;
+  /** Synthetic motion blur; omitted or null renders one pose per frame. */
+  motionBlur?: MotionBlur | null;
   signal?: AbortSignal;
   onProgress?: (p: ExportProgress) => void;
 }
@@ -32,7 +35,7 @@ export async function exportGif(args: GifExportArgs): Promise<Uint8Array> {
 
   for (let i = 0; i < totalFrames; i++) {
     if (signal?.aborted) throw new ExportCancelledError();
-    runner.renderAt(Math.min(runner.duration, i * frameDur * speed));
+    renderFrame(runner, Math.min(runner.duration, i * frameDur * speed), frameDur * speed, args.motionBlur);
     const shot = readCanvasRGBA(runner.canvas);
     width = shot.width;
     height = shot.height;

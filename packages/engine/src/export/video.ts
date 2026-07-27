@@ -11,7 +11,8 @@ import {
   type AudioCodec,
 } from "mediabunny";
 import type { TemplateRunner } from "../runtime/runner";
-import { ExportCancelledError, type ExportFormat, type ExportProgress } from "./types";
+import { ExportCancelledError, type ExportFormat, type ExportProgress, type MotionBlur } from "./types";
+import { renderFrame } from "./frame";
 
 export interface VideoExportArgs {
   runner: TemplateRunner;
@@ -26,6 +27,8 @@ export interface VideoExportArgs {
   audioCodec?: string | null;
   /** Keep the canvas alpha channel (transparent WebM). VP9/VP8 only. */
   alpha?: boolean;
+  /** Synthetic motion blur; omitted or null renders one pose per frame. */
+  motionBlur?: MotionBlur | null;
   signal?: AbortSignal;
   onProgress?: (p: ExportProgress) => void;
 }
@@ -72,7 +75,7 @@ export async function exportVideo(args: VideoExportArgs): Promise<Uint8Array> {
         await output.cancel();
         throw new ExportCancelledError();
       }
-      runner.renderAt(Math.min(runner.duration, i * frameDur * speed));
+      renderFrame(runner, Math.min(runner.duration, i * frameDur * speed), frameDur * speed, args.motionBlur);
       await source.add(i * frameDur, frameDur);
       onProgress?.({
         phase: "render",

@@ -9,6 +9,18 @@ export interface ExportProfile {
   gifMaxColors?: number;
 }
 
+/**
+ * Synthetic motion blur: each output frame is the average of `samples` poses
+ * spread across `shutter` × the frame interval, centred on the frame time.
+ * 0.5 is a 180° shutter — the film default.
+ */
+export interface MotionBlur {
+  samples: number;
+  shutter: number;
+}
+
+export const MOTION_BLUR_DEFAULT: MotionBlur = { samples: 8, shutter: 0.5 };
+
 export type ExportPhase = "prepare" | "render" | "finalize";
 
 export interface ExportProgress {

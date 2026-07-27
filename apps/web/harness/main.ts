@@ -58,7 +58,7 @@ interface HarnessApi {
   renderAt: (t: number) => void;
   duration: number;
   canvas: HTMLCanvasElement;
-  export: (profile: ExportProfile, speed?: number, sound?: boolean, transparent?: boolean) => Promise<ExportOut>;
+  export: (profile: ExportProfile, speed?: number, sound?: boolean, transparent?: boolean, motionBlur?: boolean) => Promise<ExportOut>;
   exportExpectCancel: (profile: ExportProfile) => Promise<string>;
   probe: (base64: string) => Promise<ProbeOut | null>;
   /** Min alpha (0–255) across the four canvas corners at the current frame. */
@@ -66,6 +66,8 @@ interface HarnessApi {
   caps: () => Promise<Capabilities>;
   /** Bake the template's cue sheet offline and measure it. */
   audio: (pack?: SoundPack) => Promise<AudioStats | null>;
+  /** Render one frame with/without motion blur and report its edge energy. */
+  blurProbe: (t: number, frameDur: number, samples: number) => { sharp: number; blurred: number };
 }
 
 declare global {
@@ -146,8 +148,8 @@ async function main(): Promise<void> {
     renderAt: (time) => runner.renderAt(time),
     duration: runner.duration,
     canvas: runner.canvas,
-    export: async (profile, speed, sound, transparent) => {
-      const result = await exportTemplate({ def, runner: runnerConfig, profile, ...(speed ? { speed } : {}), ...(sound ? { sound: true } : {}), ...(transparent ? { transparent: true } : {}) });
+    export: async (profile, speed, sound, transparent, motionBlur) => {
+      const result = await exportTemplate({ def, runner: runnerConfig, profile, ...(speed ? { speed } : {}), ...(sound ? { sound: true } : {}), ...(transparent ? { transparent: true } : {}), ...(motionBlur ? { motionBlur: true } : {}) });
       return {
         base64: toBase64(result.bytes),
         byteLength: result.bytes.byteLength,
@@ -197,6 +199,29 @@ async function main(): Promise<void> {
         alphaAt(0, height - 1),
         alphaAt(width - 1, height - 1),
       );
+    },
+    blurProbe: (time, frameDur, samples) => {
+      // Sobel-ish edge energy: motion blur must lower it (smeared edges) while
+      // leaving the frame non-empty.
+      const energy = (): number => {
+        const { rgba, width, height } = readCanvasRGBA(runner.canvas);
+        let sum = 0;
+        for (let y = 1; y < height - 1; y += 2) {
+          for (let x = 1; x < width - 1; x += 2) {
+            const i = (y * width + x) * 4;
+            const r = rgba[i] ?? 0;
+            const rx = rgba[i + 4] ?? 0;
+            const ry = rgba[i + width * 4] ?? 0;
+            sum += Math.abs(r - rx) + Math.abs(r - ry);
+          }
+        }
+        return sum / (width * height);
+      };
+      runner.renderAt(time);
+      const sharp = energy();
+      runner.renderBlurredAt(time, samples, frameDur * 0.5);
+      const blurred = energy();
+      return { sharp, blurred };
     },
     caps: () => detectCapabilities(),
     audio: async (pack) => {
