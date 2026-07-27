@@ -389,6 +389,8 @@ function MotionTab({
 }) {
   const speed = useStudio((s) => s.speed);
   const setSpeed = useStudio((s) => s.setSpeed);
+  const energy = useStudio((s) => s.energy);
+  const setEnergy = useStudio((s) => s.setEnergy);
   const loop = useStudio((s) => s.loop);
   const setLoop = useStudio((s) => s.setLoop);
   const sound = useStudio((s) => s.sound);
@@ -419,6 +421,30 @@ function MotionTab({
           <span>Slower / longer</span>
           <span>Faster / shorter</span>
         </div>
+      </div>
+
+      <div className="border-t border-mist pt-6">
+        <div className="flex items-baseline justify-between">
+          <p className={groupLabelCls}>Energy</p>
+          <span className="text-sm tabular-nums text-slate">{Math.round(energy * 100)}%</span>
+        </div>
+        <input
+          type="range"
+          className="mt-3 h-1.5 w-full cursor-pointer accent-emerald"
+          min={0}
+          max={2}
+          step={0.05}
+          value={energy}
+          aria-label="Motion energy"
+          onChange={(e) => setEnergy(Number(e.target.value))}
+        />
+        <div className="mt-1.5 flex justify-between text-[11px] text-slate">
+          <span>Calm</span>
+          <span>Punchy</span>
+        </div>
+        <p className="mt-2 text-xs text-slate">
+          How much bounce and travel the motion has. Timing doesn&rsquo;t change — that&rsquo;s Speed.
+        </p>
       </div>
 
       <div className="border-t border-mist pt-6">

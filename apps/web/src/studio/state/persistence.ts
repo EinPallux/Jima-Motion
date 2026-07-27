@@ -23,6 +23,8 @@ export interface PersistedProject {
   bodyFont?: string;
   values: Values;
   speed: number;
+  /** Motion energy 0–2. Optional: projects saved before v1.19 predate it. */
+  energy?: number;
   loop: boolean;
   updatedAt: number;
 }

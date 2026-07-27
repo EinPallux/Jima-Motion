@@ -34,6 +34,23 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
   cannot express the axis. Wired into `side-slide` and `drop-letters` behind a per-template
   "Squash & stretch" toggle; `JimaTimeline.valueAt()` is the new primitive that makes it possible.
 
+- **An Energy slider, 0–200%, on every template.** One control for "calmer" or "punchier" without
+  ever showing a keyframe. It reshapes the finished timeline rather than asking 445 templates to
+  implement anything, so every template gets it and none of them can get it wrong.
+
+  Two transforms, both chosen because they leave the endpoints exactly where the author put them.
+  Ease character: `ease'(u) = u + (ease(u) − u) · g` — the term `ease(u) − u` is the ease's whole
+  personality, its deviation from a straight line, which is both the acceleration *and* the
+  overshoot; scaling it scales both together, and since that deviation is zero at both ends the
+  tween still starts and lands where it did. Travel: `from' = to + (from − to) · g` on position,
+  scale and rotation, so a slide starts closer in or further out but lands in exactly the same
+  place. Alpha is deliberately excluded — fading in from 0.4 instead of 0 doesn't read as calmer, it
+  reads as broken.
+
+  Timing is untouched, which keeps Energy orthogonal to Speed: one changes how the motion *feels*,
+  the other how long it *takes*. At 100% the transform is the exact identity, so posters and golden
+  frames are unaffected.
+
 ### Changed
 
 - **The sound system is rebuilt (ADR-012a).** The owner's report was that the sounds didn't fit the

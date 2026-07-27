@@ -75,6 +75,12 @@ export interface StaggerOptions {
 
 type MutableTarget = Record<string, unknown>;
 
+/**
+ * Properties whose start value the Energy control scales. Alpha is absent on
+ * purpose (see {@link JimaTimeline.applyEnergy}).
+ */
+const ENERGY_TRAVEL_PROPS = new Set(["x", "y", "scale.x", "scale.y", "rotation"]);
+
 function setPath(target: object, path: string, value: unknown): void {
   const dot = path.indexOf(".");
   if (dot === -1) {
@@ -250,6 +256,41 @@ export class JimaTimeline {
   }
 
   /** Write all animated + set properties for time `t` (seconds) onto the targets. */
+  /**
+   * Dial the *character* of every tween up or down in place — the engine side of
+   * the Studio's Energy control.
+   *
+   * Two transforms, both chosen because they leave the endpoints exactly where
+   * the template author put them:
+   *
+   * 1. **Ease character.** `ease'(u) = u + (ease(u) − u) · g`. The term
+   *    `ease(u) − u` is the ease's whole personality — its deviation from a
+   *    straight line, which is both the acceleration *and* the overshoot. Scaling
+   *    it scales both together, and since the deviation is zero at u=0 and u=1,
+   *    the tween still starts and ends where it did. g=1 is the identity, g=0
+   *    flattens everything to linear, g>1 exaggerates.
+   * 2. **Travel.** `from' = to + (from − to) · gTravel` on position, scale and
+   *    rotation, so a slide starts closer in or further out while landing in
+   *    exactly the same place. Alpha is deliberately left alone: fading in from
+   *    0.4 instead of 0 does not read as "calmer", it reads as broken.
+   *
+   * Timing is untouched, so this stays orthogonal to the speed control — Energy
+   * changes how the motion feels, never how long it takes.
+   */
+  applyEnergy(energy: number, travel: number): void {
+    if (energy === 1 && travel === 1) return;
+    for (const tw of this.tweens) {
+      if (energy !== 1) {
+        const base = tw.ease;
+        tw.ease = (u: number): number => u + (base(u) - u) * energy;
+      }
+      if (travel !== 1 && ENERGY_TRAVEL_PROPS.has(tw.prop)) {
+        tw.from = tw.to + (tw.from - tw.to) * travel;
+      }
+    }
+    this.groups = null;
+  }
+
   /**
    * The value a (target, prop) holds at time t, **without writing anything**.
    *

@@ -106,6 +106,7 @@ async function main(): Promise<void> {
   const paletteId = param("palette") || undefined;
   const fontId = param("font") || undefined;
   const seed = Number(param("seed", "6682")) || 6682;
+  const energyParam = param("energy");
 
   let values: Values | undefined;
   const raw = param("v");
@@ -133,6 +134,7 @@ async function main(): Promise<void> {
     ...(effectiveValues ? { values: effectiveValues } : {}),
     ...(fontId ? { fonts: createFontRegistry({ headline: fontId }) } : {}),
     ...(transparentParam ? { transparent: true } : {}),
+    ...(energyParam !== "" ? { energy: Number(energyParam) } : {}),
     seed,
   };
 

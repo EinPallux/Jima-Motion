@@ -15,6 +15,8 @@ export interface EditableState {
   paletteId: string | undefined;
   values: Values;
   speed: number;
+  /** Motion energy 0–2 (1 = as authored): how punchy vs. calm the motion feels. */
+  energy: number;
   loop: boolean;
   /** Headline font id (FONT_CHOICES); undefined = template default. */
   font: string | undefined;
@@ -57,6 +59,7 @@ interface StudioStore extends EditableState {
   /** Apply a global theme preset to whichever core color fields exist. */
   applyTheme: (themeId: string) => void;
   setSpeed: (speed: number) => void;
+  setEnergy: (energy: number) => void;
   setLoop: (loop: boolean) => void;
   setSound: (on: boolean) => void;
   setSoundPack: (pack: SoundPack) => void;
@@ -128,6 +131,7 @@ function snapshot(s: EditableState): EditableState {
     paletteId: s.paletteId,
     values: { ...s.values },
     speed: s.speed,
+    energy: s.energy,
     loop: s.loop,
     font: s.font,
     bodyFont: s.bodyFont,
@@ -140,6 +144,7 @@ export const useStudio = create<StudioStore>((set, get) => ({
   paletteId: undefined,
   values: {},
   speed: 1,
+  energy: 1,
   loop: false,
   font: undefined,
   bodyFont: undefined,
@@ -166,6 +171,7 @@ export const useStudio = create<StudioStore>((set, get) => ({
       paletteId,
       values,
       speed: initial?.speed ?? 1,
+      energy: initial?.energy ?? 1,
       loop: initial?.loop ?? def.loopable,
       font: initial?.font ?? undefined,
       bodyFont: initial?.bodyFont ?? undefined,
@@ -257,6 +263,22 @@ export const useStudio = create<StudioStore>((set, get) => ({
       future: [],
       speed: clamped,
       lastEditKey: "__speed",
+      lastEditAt: now,
+    });
+  },
+
+  setEnergy: (energy) => {
+    const s = get();
+    const clamped = Math.max(0, Math.min(2, energy));
+    if (clamped === s.energy) return;
+    // Coalesced like speed — one drag is one undo entry.
+    const now = Date.now();
+    const coalesce = s.lastEditKey === "__energy" && now - s.lastEditAt < COALESCE_MS;
+    set({
+      past: coalesce ? s.past : [...s.past, snapshot(s)].slice(-HISTORY_LIMIT),
+      future: [],
+      energy: clamped,
+      lastEditKey: "__energy",
       lastEditAt: now,
     });
   },

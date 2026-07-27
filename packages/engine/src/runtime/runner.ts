@@ -46,6 +46,20 @@ export interface RunnerConfig {
   fonts?: FontRegistry;
   /** Clear the canvas with alpha 0 (for transparent/alpha WebM export). */
   transparent?: boolean;
+  /**
+   * Motion energy, 0–2 (1 = as authored). Scales every ease's character and how
+   * far things travel, without changing timing. See
+   * {@link JimaTimeline.applyEnergy}.
+   */
+  energy?: number;
+}
+
+/** Energy → the two gains {@link JimaTimeline.applyEnergy} takes. */
+export function energyGains(energy: number | undefined): { ease: number; travel: number } {
+  const e = Math.max(0, Math.min(2, energy ?? 1));
+  // Travel is deliberately gentler than ease: at zero energy things should
+  // arrive from closer in, not teleport into place with no movement at all.
+  return { ease: e, travel: 0.55 + 0.45 * e };
 }
 
 function pickPalette(def: TemplateDefinition, id?: string): Palette {
@@ -79,6 +93,7 @@ export class TemplateRunner {
   private readonly scene: SceneRenderer;
   private readonly fonts: FontRegistry;
   private readonly seed: number;
+  private readonly energy: number | undefined;
   private lastT = 0;
 
   private constructor(args: {
@@ -94,6 +109,7 @@ export class TemplateRunner {
     scene: SceneRenderer;
     fonts: FontRegistry;
     seed: number;
+    energy: number | undefined;
   }) {
     this.def = args.def;
     this.aspect = args.aspect;
@@ -107,6 +123,7 @@ export class TemplateRunner {
     this.scene = args.scene;
     this.fonts = args.fonts;
     this.seed = args.seed;
+    this.energy = args.energy;
   }
 
   static async create(def: TemplateDefinition, config: RunnerConfig): Promise<TemplateRunner> {
@@ -116,6 +133,7 @@ export class TemplateRunner {
     await fonts.ensureAll();
 
     const seed = config.seed ?? 0x1a1a;
+    const energy = config.energy;
     const { map: images, bitmaps: imageBitmaps } = await loadImages(def, resolveValues(def, config.values));
     const built = buildScene(def, {
       size,
@@ -125,6 +143,7 @@ export class TemplateRunner {
       fonts,
       seed,
       images,
+      energy,
     });
 
     const scene = await SceneRenderer.create({
@@ -147,6 +166,7 @@ export class TemplateRunner {
       scene,
       fonts,
       seed,
+      energy,
     });
     scene.onContextLost(() => runner.renderAt(runner.lastT));
     return runner;
@@ -174,6 +194,7 @@ export class TemplateRunner {
       fonts: this.fonts,
       seed: this.seed,
       images: this.images,
+      energy: this.energy,
     });
     this.root.destroy({ children: true });
     this.root = built.root;
@@ -239,6 +260,7 @@ function buildScene(
     fonts: FontRegistry;
     seed: number;
     images: ImageMap;
+    energy?: number | undefined;
   },
 ): { root: Container; timeline: JimaTimeline; duration: number; update: ((t: number) => void) | undefined } {
   const values = resolveValues(def, args.values);
@@ -254,6 +276,11 @@ function buildScene(
     fonts: args.fonts,
     images: args.images,
   });
+  // Energy reshapes the finished timeline rather than asking 445 templates to
+  // implement it: the transform only touches ease curves and start values, so
+  // every template gets it for free and none of them can get it wrong.
+  const gains = energyGains(args.energy);
+  built.timeline.applyEnergy(gains.ease, gains.travel);
   return {
     root,
     timeline: built.timeline,

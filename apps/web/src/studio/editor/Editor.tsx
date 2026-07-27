@@ -25,6 +25,7 @@ export function Editor({
   const font = useStudio((s) => s.font);
   const bodyFont = useStudio((s) => s.bodyFont);
   const speed = useStudio((s) => s.speed);
+  const energy = useStudio((s) => s.energy);
   const loop = useStudio((s) => s.loop);
   const sound = useStudio((s) => s.sound);
   const soundPack = useStudio((s) => s.soundPack);
@@ -35,7 +36,7 @@ export function Editor({
   const caps = useCapabilities();
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const preview = usePreview(containerRef, { def, aspect, values, paletteId, font, bodyFont, speed, loop, sound, soundPack, reducedMotion: reduced });
+  const preview = usePreview(containerRef, { def, aspect, values, paletteId, font, bodyFont, speed, energy, loop, sound, soundPack, reducedMotion: reduced });
   const [exportOpen, setExportOpen] = useState(false);
 
   useEffect(() => {

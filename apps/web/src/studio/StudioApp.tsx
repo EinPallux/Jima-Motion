@@ -34,6 +34,7 @@ export function StudioApp() {
             bodyFont: saved.bodyFont,
             values,
             speed: saved.speed,
+            energy: saved.energy ?? 1,
             loop: saved.loop,
           }),
         );
@@ -67,6 +68,7 @@ export function StudioApp() {
           ...(s.bodyFont ? { bodyFont: s.bodyFont } : {}),
           values: s.values,
           speed: s.speed,
+          energy: s.energy,
           loop: s.loop,
         });
       }, 500);
@@ -100,6 +102,7 @@ export function StudioApp() {
           bodyFont: resume.bodyFont,
           values,
           speed: resume.speed,
+          energy: resume.energy ?? 1,
           loop: resume.loop,
         });
       }}

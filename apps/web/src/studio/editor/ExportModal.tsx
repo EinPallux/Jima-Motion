@@ -37,6 +37,7 @@ export function ExportModal({
   const font = useStudio((s) => s.font);
   const bodyFont = useStudio((s) => s.bodyFont);
   const speed = useStudio((s) => s.speed);
+  const energy = useStudio((s) => s.energy);
   const sound = useStudio((s) => s.sound);
   const soundPack = useStudio((s) => s.soundPack);
 
@@ -102,7 +103,7 @@ export function ExportModal({
     try {
       const res = await exportTemplate({
         def,
-        runner: { aspect, values: engineValues(def, values), ...(paletteId ? { paletteId } : {}), fonts: createFontRegistry({ headline: font, body: bodyFont }) },
+        runner: { aspect, values: engineValues(def, values), ...(paletteId ? { paletteId } : {}), fonts: createFontRegistry({ headline: font, body: bodyFont }), energy },
         profile,
         speed,
         sound,
