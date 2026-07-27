@@ -499,6 +499,12 @@ import { kanbanBoard } from "./kanban-board/index";
 import { vinylSleeve } from "./vinyl-sleeve/index";
 import { businessCard } from "./business-card/index";
 import { apparelMockup } from "./apparel-mockup/index";
+import { packagingMockup } from "./packaging-mockup/index";
+import { billboardMockup } from "./billboard-mockup/index";
+import { projectIndex } from "./project-index/index";
+import { bookMockup } from "./book-mockup/index";
+import { emailMockup } from "./email-mockup/index";
+import { typeSpecimen } from "./type-specimen/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -1060,6 +1066,12 @@ export const templates: TemplateDefinition[] = [
   vinylSleeve,
   businessCard,
   apparelMockup,
+  packagingMockup,
+  billboardMockup,
+  projectIndex,
+  bookMockup,
+  emailMockup,
+  typeSpecimen,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {

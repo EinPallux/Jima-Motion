@@ -123,9 +123,12 @@ function build(ctx: TemplateContext): BuiltTemplate {
     lane.position.set(x, top);
     root.addChild(lane);
 
+    // Every lane is sized for one more card than it starts with, so the one
+    // that moves in still lands inside its column rather than below it.
+    const laneRows = Math.max(1, lanes[i]!.length + (showMove ? 1 : 0));
     lane.addChild(
       new Graphics()
-        .roundRect(0, 0, colW, headerH + (Math.max(1, lanes[i]!.length) * (cardH + cardGap)) + cardGap, cardSize * 0.6)
+        .roundRect(0, 0, colW, headerH + laneRows * (cardH + cardGap) + cardGap, cardSize * 0.6)
         .fill({ color: textColor, alpha: 0.05 }),
     );
 

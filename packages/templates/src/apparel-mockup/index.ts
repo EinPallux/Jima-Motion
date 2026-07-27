@@ -106,7 +106,12 @@ function build(ctx: TemplateContext): BuiltTemplate {
   root.addChild(shirt);
 
   const base = swatches[0] ?? "#F4F4F2";
-  const body = new Graphics().poly(teePath(W, H)).fill(base);
+  // A hairline outline, always: the first colourway is usually a natural or
+  // white, and on a light page an unstroked garment simply disappears.
+  const body = new Graphics()
+    .poly(teePath(W, H))
+    .fill(base)
+    .stroke({ color: textColor, width: Math.max(2, W * 0.005), alpha: 0.22 });
   shirt.addChild(body);
   // A soft fold shading down the centre and under the sleeves.
   shirt.addChild(
