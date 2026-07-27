@@ -2,9 +2,11 @@ import { Container, Graphics } from "pixi.js";
 import {
   JimaTimeline,
   makeText,
+  composeUpdates,
   outCubic,
   outExpo,
   makeOutBack,
+  squashStretch,
   type Aspect,
   type BuiltTemplate,
   type Palette,
@@ -34,6 +36,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
   const headline = str(values.headline, "Drop the beat");
   const showAccentBar = values.accentBar !== false;
+  const squashOn = values.squash !== false;
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -57,6 +60,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const perChar = 0.03;
   const dropDist = size.height * 0.5;
   const settle = makeOutBack(1.6); // soft bounce on landing
+  const squash: ((t: number) => void)[] = [];
   boxes.forEach((box) => {
     const t = makeText(fonts, { text: box.char, role: "display", weight: 700, size: fontSize, color: textColor, anchor: 0.5 });
     t.position.set(box.cx, box.cy);
@@ -66,6 +70,9 @@ function build(ctx: TemplateContext): BuiltTemplate {
     timeline
       .to(t, { prop: "alpha", from: 0, to: 1, start, duration: 0.28, ease: outCubic })
       .to(t, { prop: "y", from: box.cy - dropDist, to: box.cy, start, duration: 0.62, ease: settle });
+    // A falling glyph thins and lengthens, then rounds out as it lands — the
+    // oldest read in animation for "this has weight".
+    if (squashOn) squash.push(squashStretch(timeline, t, { amount: 0.16 }));
   });
 
   const lastIndex = boxes.length ? boxes[boxes.length - 1]!.index : 0;
@@ -88,7 +95,8 @@ function build(ctx: TemplateContext): BuiltTemplate {
       .to(rule, { prop: "scale.x", from: 0.3, to: 1, start: ruleStart, duration: 0.6, ease: outExpo });
   }
 
-  return { timeline, duration: Math.max(2.8, 0.3 + lastIndex * perChar + 1.4) };
+  const update = composeUpdates(...squash);
+  return { timeline, duration: Math.max(2.8, 0.3 + lastIndex * perChar + 1.4), ...(update ? { update } : {}) };
 }
 
 export const dropLetters: TemplateDefinition = {
@@ -104,6 +112,7 @@ export const dropLetters: TemplateDefinition = {
   fields: [
     { key: "headline", type: "text", label: "Headline", default: "Drop the beat", maxLength: 44, shrinkToFit: true },
     { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
+    { key: "squash", type: "toggle", label: "Squash & stretch", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

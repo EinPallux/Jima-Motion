@@ -2,8 +2,10 @@ import { Container, Graphics } from "pixi.js";
 import {
   JimaTimeline,
   makeText,
+  composeUpdates,
   outCubic,
   outExpo,
+  squashStretch,
   type Aspect,
   type BuiltTemplate,
   type Palette,
@@ -13,6 +15,7 @@ import {
 import { layoutWords } from "../shared/words";
 
 const str = (v: unknown, fallback: string): string => (typeof v === "string" && v.length > 0 ? v : fallback);
+const on = (v: unknown): boolean => v !== false;
 
 const PALETTES: Palette[] = [
   { id: "ink-white", name: "Ink on white", colors: { background: "#FFFFFF", textColor: "#101014", accent: "#FF4D1C" } },
@@ -49,6 +52,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   const accent = str(values.accent, pc("accent", "#FF4D1C"));
   const headline = str(values.headline, "Slide in from the side");
   const showAccentBar = values.accentBar !== false;
+  const squashOn = on(values.squash);
 
   root.addChild(new Graphics().rect(0, 0, size.width, size.height).fill(bg));
 
@@ -76,6 +80,7 @@ function build(ctx: TemplateContext): BuiltTemplate {
   // safe margins. outExpo settles the slide fast and smooth.
   const lineIndices = [...new Set(boxes.map((b) => b.line))].sort((a, b) => a - b);
   const offset = size.width * 0.45;
+  const squash: ((t: number) => void)[] = [];
   lineIndices.forEach((li, order) => {
     const lineBoxes = boxes.filter((b) => b.line === li);
     const lineC = new Container();
@@ -92,6 +97,9 @@ function build(ctx: TemplateContext): BuiltTemplate {
     timeline
       .to(lineC, { prop: "x", from, to: 0, start, duration: 0.85, ease: outExpo })
       .to(lineC, { prop: "alpha", from: 0, to: 1, start, duration: 0.7, ease: outCubic });
+    // The line arrives fast and stops dead; a little stretch along the travel
+    // and a settle back to round is what sells the deceleration.
+    if (squashOn) squash.push(squashStretch(timeline, lineC, { amount: 0.14 }));
   });
 
   // A short accent underline draws in beneath the block as a quiet finish.
@@ -114,7 +122,8 @@ function build(ctx: TemplateContext): BuiltTemplate {
 
   const linesEnd = 0.35 + (lineIndices.length - 1) * 0.18 + 0.85;
   const end = Math.max(linesEnd, ulStart + 0.7);
-  return { timeline, duration: Math.max(3.6, end + 0.7) };
+  const update = composeUpdates(...squash);
+  return { timeline, duration: Math.max(3.6, end + 0.7), ...(update ? { update } : {}) };
 }
 
 export const sideSlide: TemplateDefinition = {
@@ -130,6 +139,7 @@ export const sideSlide: TemplateDefinition = {
   fields: [
     { key: "headline", type: "text", label: "Headline", default: "Slide in from the side", maxLength: 70, shrinkToFit: true },
     { key: "accentBar", type: "toggle", label: "Accent bar", default: true },
+    { key: "squash", type: "toggle", label: "Squash & stretch", default: true },
     { key: "background", type: "color", label: "Background", default: "", optional: true },
     { key: "textColor", type: "color", label: "Text", default: "", optional: true },
     { key: "accent", type: "color", label: "Accent", default: "", optional: true },

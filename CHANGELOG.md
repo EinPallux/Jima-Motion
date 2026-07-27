@@ -26,6 +26,14 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
   alpha means it holds for transparent exports too. It costs one render per sample, hence
   export-only.
 
+- **Velocity-driven squash and stretch.** A new SDK helper (`squashStretch`) elongates a node along
+  its direction of travel and thins it across, in proportion to how fast it is actually moving —
+  the oldest read in animation for "this has weight". It costs no keyframing: the timeline is a pure
+  `f(t)`, so sampling a node's position a hair either side of the current frame gives its velocity.
+  Volume-preserving, capped, and it fades to nothing on the diagonal, where `scale.x`/`scale.y`
+  cannot express the axis. Wired into `side-slide` and `drop-letters` behind a per-template
+  "Squash & stretch" toggle; `JimaTimeline.valueAt()` is the new primitive that makes it possible.
+
 ### Changed
 
 - **The sound system is rebuilt (ADR-012a).** The owner's report was that the sounds didn't fit the

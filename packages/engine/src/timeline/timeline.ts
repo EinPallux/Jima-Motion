@@ -250,6 +250,19 @@ export class JimaTimeline {
   }
 
   /** Write all animated + set properties for time `t` (seconds) onto the targets. */
+  /**
+   * The value a (target, prop) holds at time t, **without writing anything**.
+   *
+   * Lets a pure `update(t)` hook look at motion it does not own — reading a
+   * node's position slightly before and after the current frame is how the
+   * squash-and-stretch helper derives velocity. Returns undefined when no tween
+   * drives that property.
+   */
+  valueAt(target: object, prop: string, t: number): number | undefined {
+    const group = this.ensureGroups().get(target)?.get(prop);
+    return group ? JimaTimeline.resolve(group, t) : undefined;
+  }
+
   evaluate(t: number): void {
     // Discrete sets first (in `at` order so the latest applicable wins), so
     // tweens (e.g. an alpha fade) can layer on top.
