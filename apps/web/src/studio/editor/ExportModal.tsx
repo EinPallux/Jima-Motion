@@ -41,6 +41,7 @@ export function ExportModal({
   const trim = useStudio((s) => s.trim);
   const hold = useStudio((s) => s.hold);
   const sound = useStudio((s) => s.sound);
+  const music = useStudio((s) => s.music);
   const soundPack = useStudio((s) => s.soundPack);
 
   const [phase, setPhase] = useState<Phase>("configure");
@@ -110,6 +111,7 @@ export function ExportModal({
         speed,
         sound,
         soundPack,
+        music,
         transparent: transparent && format === "webm",
         motionBlur,
         signal: controller.signal,

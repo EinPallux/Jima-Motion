@@ -50,6 +50,8 @@ interface StudioStore extends EditableState {
   lastEditAt: number;
   /** Global sound preference (persisted, not per-template, not undoable). */
   sound: boolean;
+  /** Procedural music bed under the effects — a preference, like sound. */
+  music: boolean;
   soundPack: SoundPack;
   /** Saved brand kit (global, persisted, not undoable). */
   brandKit: BrandKit | null;
@@ -68,6 +70,7 @@ interface StudioStore extends EditableState {
   setHold: (hold: number) => void;
   setLoop: (loop: boolean) => void;
   setSound: (on: boolean) => void;
+  setMusic: (on: boolean) => void;
   setSoundPack: (pack: SoundPack) => void;
   saveBrandKit: () => void;
   applyBrandKit: () => void;
@@ -79,6 +82,7 @@ interface StudioStore extends EditableState {
 }
 
 const SOUND_KEY = "jima.sound";
+const MUSIC_KEY = "jima.music";
 const PACK_KEY = "jima.soundPack";
 const BRAND_KEY = "jima.brandKit";
 
@@ -100,6 +104,11 @@ function readBrandKit(): BrandKit | null {
   } catch {
     return null; // corrupt entry — behave as if nothing was saved
   }
+}
+
+function readMusicPref(): boolean {
+  if (typeof localStorage === "undefined") return false;
+  return localStorage.getItem(MUSIC_KEY) === "1"; // default off — it is an addition
 }
 
 function readSoundPref(): boolean {
@@ -164,6 +173,7 @@ export const useStudio = create<StudioStore>((set, get) => ({
   lastEditKey: null,
   lastEditAt: 0,
   sound: readSoundPref(),
+  music: readMusicPref(),
   soundPack: readPackPref(),
   brandKit: readBrandKit(),
 
@@ -334,6 +344,11 @@ export const useStudio = create<StudioStore>((set, get) => ({
 
   // Sound is a global preference (like volume): persisted, and kept out of the
   // per-template undo history and snapshots.
+  setMusic: (on) => {
+    if (typeof localStorage !== "undefined") localStorage.setItem(MUSIC_KEY, on ? "1" : "0");
+    set({ music: on });
+  },
+
   setSound: (on) => {
     if (typeof localStorage !== "undefined") localStorage.setItem(SOUND_KEY, on ? "1" : "0");
     set({ sound: on });

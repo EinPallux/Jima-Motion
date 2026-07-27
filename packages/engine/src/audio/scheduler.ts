@@ -16,9 +16,42 @@ export class CueScheduler {
   private cues: SoundCue[] = [];
   private enabled: boolean;
 
-  constructor(opts: { pack?: SoundPack; profile?: SoundProfile; volume?: number; enabled?: boolean } = {}) {
+  private music = false;
+  private duration = 0;
+  private speed = 1;
+
+  constructor(
+    opts: { pack?: SoundPack; profile?: SoundProfile; volume?: number; enabled?: boolean; music?: boolean } = {},
+  ) {
     this.player = new SfxPlayer(opts);
     this.enabled = opts.enabled ?? false;
+    this.music = opts.music ?? false;
+  }
+
+  /** Turn the procedural music bed on/off. Takes effect on the next play/loop. */
+  setMusic(on: boolean): void {
+    this.music = on;
+    if (!on) this.player.stopMusic();
+  }
+  setSpeed(speed: number): void {
+    this.speed = speed;
+  }
+
+  /** Start the bed for a fresh pass. Called on play and on each loop wrap. */
+  private restartMusic(duration: number): void {
+    if (!this.enabled || !this.music) return;
+    this.duration = duration;
+    this.player.startMusic({ duration, cues: this.cues, speed: this.speed });
+  }
+
+  /** Playback started (or restarted) — line the bed up with the motion. */
+  start(duration: number): void {
+    this.restartMusic(duration);
+  }
+
+  /** Playback stopped. */
+  stop(): void {
+    this.player.stopMusic();
   }
 
   setCues(cues: SoundCue[]): void {
@@ -26,6 +59,7 @@ export class CueScheduler {
   }
   setEnabled(on: boolean): void {
     this.enabled = on;
+    if (!on) this.player.stopMusic();
   }
   get isEnabled(): boolean {
     return this.enabled;
@@ -52,6 +86,7 @@ export class CueScheduler {
     if (wrapped) {
       this.fire(fromT, duration + EPS); // tail of the old lap
       this.fire(-EPS, toT); // head of the new lap
+      this.restartMusic(duration); // the bed is one pass long — start the next
     } else if (toT > fromT) {
       // A fresh start/replay at t=0 sits *on* the opening beat rather than
       // crossing it; include it (like a loop wrap's head) so a cue at exactly 0
@@ -68,5 +103,10 @@ export class CueScheduler {
 
   destroy(): void {
     this.player.destroy();
+  }
+
+  /** Current bed length, for tests/diagnostics. */
+  get musicDuration(): number {
+    return this.duration;
   }
 }

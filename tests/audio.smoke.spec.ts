@@ -13,7 +13,11 @@ async function load(page: Page, template: string, aspect = "16:9"): Promise<void
   if (err) throw new Error(`harness error: ${err}`);
 }
 
-const measure = (page: Page, pack?: SoundPack) => page.evaluate((p) => window.__jima!.audio(p), pack);
+const measure = (page: Page, pack?: SoundPack, music?: boolean) =>
+  page.evaluate(([p, m]) => window.__jima!.audio(p as SoundPack | undefined, m as boolean | undefined), [
+    pack,
+    music,
+  ] as const);
 
 // One per sound profile, so every branch of the vocabulary gets baked.
 const CASES: { template: string; aspect: string; profile: string }[] = [
@@ -67,6 +71,34 @@ test.describe("baked sound", () => {
     const b = await measure(page);
     expect(a!.peak).toBeCloseTo(b!.peak, 6);
     expect(a!.rms).toBeCloseTo(b!.rms, 6);
+  });
+
+  test("the music bed fills the gaps without clipping", async ({ page }) => {
+    await load(page, "donut-chart", "1:1");
+    const dry = await measure(page);
+    const bed = await measure(page, undefined, true);
+
+    // A bed is meant to give the track a continuous body...
+    expect(bed!.rms).toBeGreaterThan(dry!.rms * 2);
+    expect(bed!.silentFraction).toBeLessThan(dry!.silentFraction);
+    // ...without eating the headroom the effects need.
+    expect(bed!.peak).toBeLessThan(0.95);
+    expect(bed!.peak).toBeGreaterThan(dry!.peak * 0.9);
+  });
+
+  test("the bed ducks under the loud cues and recovers between them", async ({ page }) => {
+    await load(page, "logo-sting", "16:9");
+    const d = await page.evaluate(() => window.__jima!.duckProbe());
+    expect(d, "the template should produce at least one duck trigger").not.toBeNull();
+    expect(d!.hits).toBeGreaterThan(0);
+
+    // Under a hit, the ducked bed is quieter than the same bed without ducking.
+    expect(d!.underHits).toBeLessThan(d!.underHitsNoDuck * 0.95);
+    // Away from every hit the two are the same bed — the duck fully recovers
+    // and never just turns the music down for the whole track.
+    expect(d!.away).toBeCloseTo(d!.awayNoDuck, 4);
+    // And it never mutes: a duck that kills the bed is a gate, not a duck.
+    expect(d!.underHits).toBeGreaterThan(0);
   });
 
   test("the track leaves room for the tail after the animation ends", async ({ page }) => {

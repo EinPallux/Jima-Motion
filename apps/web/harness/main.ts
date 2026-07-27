@@ -65,7 +65,9 @@ interface HarnessApi {
   cornerAlpha: () => number;
   caps: () => Promise<Capabilities>;
   /** Bake the template's cue sheet offline and measure it. */
-  audio: (pack?: SoundPack) => Promise<AudioStats | null>;
+  audio: (pack?: SoundPack, music?: boolean) => Promise<AudioStats | null>;
+  /** Bed level just after each loud cue vs. between them — proves the duck. */
+  duckProbe: () => Promise<{ underHits: number; underHitsNoDuck: number; away: number; awayNoDuck: number; hits: number } | null>;
   /** Render one frame with/without motion blur and report its edge energy. */
   blurProbe: (t: number, frameDur: number, samples: number) => { sharp: number; blurred: number };
 }
@@ -206,6 +208,63 @@ async function main(): Promise<void> {
         alphaAt(width - 1, height - 1),
       );
     },
+    duckProbe: async () => {
+      const sheet = cuesForTemplate(def, runner.timeline, runner.timelineDuration);
+      // The honest experiment: the *same* bed with ducking on and off, compared
+      // in the same windows. Measuring "quiet under the hit" alone conflates the
+      // duck with the bed simply having a gap there.
+      const render = (duck: boolean) =>
+        renderCuesToBuffer(sheet.cues, runner.timelineDuration, {
+          profile: sheet.profile,
+          musicOnly: true,
+          ...(duck ? {} : { duck: false }),
+        });
+      const [ducked, flat] = await Promise.all([render(true), render(false)]);
+      if (!ducked || !flat) return null;
+      const data = ducked.getChannelData(0);
+      const raw = flat.getChannelData(0);
+      const sr = ducked.sampleRate;
+      const loud = new Set(["impact", "sub", "pop", "bell", "chime", "riser"]);
+      const hits = sheet.cues.filter((c) => loud.has(c.sound) && c.gain > 0.25).map((c) => c.time);
+      const rmsOf = (buf: Float32Array, from: number, to: number): number => {
+        const a = Math.max(0, Math.floor(from * sr));
+        const b = Math.min(buf.length, Math.floor(to * sr));
+        let sum = 0;
+        let n = 0;
+        for (let i = a; i < b; i++) {
+          const v = buf[i] ?? 0;
+          sum += v * v;
+          n++;
+        }
+        return n > 0 ? Math.sqrt(sum / n) : 0;
+      };
+      // Just after each hit the bed should be at its floor; a window well clear
+      // of every hit should be at full level.
+      let under = 0;
+      let underFlat = 0;
+      for (const t of hits) {
+        under += rmsOf(data, t + 0.02, t + 0.16);
+        underFlat += rmsOf(raw, t + 0.02, t + 0.16);
+      }
+      const n = Math.max(1, hits.length);
+      // Away from every hit the two renders must be the same bed.
+      let away = 0;
+      let awayFlat = 0;
+      let awayN = 0;
+      for (let t = 0.05; t < runner.timelineDuration - 0.2; t += 0.1) {
+        if (hits.some((h) => t > h - 0.2 && t < h + 0.5)) continue;
+        away += rmsOf(data, t, t + 0.1);
+        awayFlat += rmsOf(raw, t, t + 0.1);
+        awayN++;
+      }
+      return {
+        underHits: under / n,
+        underHitsNoDuck: underFlat / n,
+        away: awayN > 0 ? away / awayN : 0,
+        awayNoDuck: awayN > 0 ? awayFlat / awayN : 0,
+        hits: hits.length,
+      };
+    },
     blurProbe: (time, frameDur, samples) => {
       // Sobel-ish edge energy: motion blur must lower it (smeared edges) while
       // leaving the frame non-empty.
@@ -230,11 +289,12 @@ async function main(): Promise<void> {
       return { sharp, blurred };
     },
     caps: () => detectCapabilities(),
-    audio: async (pack) => {
-      const sheet = cuesForTemplate(def, runner.timeline, runner.duration);
-      const buf = await renderCuesToBuffer(sheet.cues, runner.duration, {
+    audio: async (pack, music) => {
+      const sheet = cuesForTemplate(def, runner.timeline, runner.timelineDuration);
+      const buf = await renderCuesToBuffer(sheet.cues, runner.timelineDuration, {
         profile: sheet.profile,
         ...(pack ? { pack } : {}),
+        ...(music ? { music: true } : {}),
       });
       if (!buf) return null;
       let peak = 0;

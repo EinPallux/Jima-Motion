@@ -17,6 +17,8 @@ export interface ExportRequest {
   /** Bake the motion-matched sound track into MP4/WebM (GIF stays silent). */
   sound?: boolean;
   soundPack?: SoundPack;
+  /** Bake the procedural music bed under the effects (requires `sound`). */
+  music?: boolean;
   /** Export a transparent background (alpha). WebM only — ignored otherwise. */
   transparent?: boolean;
   /**
@@ -111,6 +113,7 @@ export async function exportTemplate(req: ExportRequest): Promise<ExportResult> 
         audio = await renderCuesToBuffer(trimCues(sheet.cues, runner.trim), runner.duration, {
           speed,
           profile: sheet.profile,
+          ...(req.music ? { music: true } : {}),
           ...(req.soundPack ? { pack: req.soundPack } : {}),
         });
       }

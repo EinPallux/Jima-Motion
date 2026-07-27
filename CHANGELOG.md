@@ -59,6 +59,24 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
   are dropped rather than piled onto t=0, which would fire a burst of exactly what the trim was
   meant to skip. The Motion tab shows the resulting output length live.
 
+- **A procedural music bed, with automatic ducking.** An optional loop written from the template's
+  own sound profile — its key, its scale, its tempo — and locked to the animation's exact length.
+  Still no audio files: it is a generated note list the same synth voices, so ADR-012's
+  no-sample-files rule holds and a given (profile, length, seed) always produces the same bed.
+
+  Tempo is derived from the animation rather than imposed on it: a whole number of four-beat bars is
+  fitted to the duration, so the loop lands where the motion lands instead of being cut off
+  mid-phrase. Each profile gets its own progression, tempo and layers — open fifths at 76bpm for
+  cinematic openers, a brisk minor loop with an arpeggio for data, no arpeggio at all on warm quotes.
+
+  It ducks itself under the effects. The cue sheet already knows exactly when the loud hits are, so
+  this needs no envelope following: the bed reaches its floor precisely on the hit, holds briefly,
+  and recovers — anchored open just beforehand so it reads as a dip rather than a slow fade. A
+  cluster of hits stays down for the whole cluster instead of pumping once per hit. Measured on the
+  real baked audio: under a hit the ducked bed is quieter than the identical un-ducked bed, and away
+  from every hit the two are bit-for-bit the same, so the duck genuinely recovers rather than just
+  turning the music down.
+
 ### Changed
 
 - **The sound system is rebuilt (ADR-012a).** The owner's report was that the sounds didn't fit the

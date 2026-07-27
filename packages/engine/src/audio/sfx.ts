@@ -1,6 +1,7 @@
 import { mulberry32 } from "../timeline/rng";
 import type { SoundCue, SoundName } from "./cues";
-import type { SoundProfile } from "./profile";
+import { profileSpec, type SoundProfile } from "./profile";
+import { buildMusicBed, duckAutomation, type MusicNote } from "./music";
 import { voicesForCue, cueTail, type SoundPack, type VoiceSpec } from "./voices";
 
 export { SOUND_PACKS, type SoundPack, type VoiceSpec } from "./voices";
@@ -111,6 +112,8 @@ export interface MasterChain {
   wet: GainNode;
   /** Final output level, so a live player can change volume after wiring. */
   out: GainNode;
+  /** The music bed's own bus, so ducking can ride it independently of the SFX. */
+  music: GainNode;
 }
 
 /**
@@ -152,7 +155,13 @@ export function createMaster(ctx: BaseAudioContext, volume: number): MasterChain
   wet.gain.value = 1;
   wet.connect(convolver).connect(wetTrim).connect(hp);
 
-  return { dry, wet, out };
+  // The bed gets its own bus into the same limiter, so the duck automation can
+  // pull the music down without touching the effects it is making room for.
+  const music = ctx.createGain();
+  music.gain.value = 1;
+  music.connect(hp);
+
+  return { dry, wet, out, music };
 }
 
 // ---------------------------------------------------------------------------
@@ -260,6 +269,7 @@ export class SfxPlayer {
   private profile: SoundProfile;
   private volume: number;
   private fired = 0;
+  private bed: { stop: () => void } | null = null;
 
   constructor(opts: { pack?: SoundPack; profile?: SoundProfile; volume?: number } = {}) {
     this.pack = opts.pack ?? "pop";
@@ -301,7 +311,49 @@ export class SfxPlayer {
     renderCue(ctx, cue, ctx.currentTime + 0.002, this.master, this.pack, this.profile, this.fired++);
   }
 
+  /**
+   * Start (or restart) the music bed for one pass of the animation. The preview
+   * calls this on play and on every loop wrap, so the bed lines up with the
+   * motion the same way the cues do.
+   */
+  startMusic(opts: { duration: number; cues: SoundCue[]; speed?: number; level?: number }): void {
+    const ctx = this.ctx;
+    if (!ctx || !this.master || ctx.state !== "running") return;
+    this.stopMusic();
+    const gate = ctx.createGain();
+    gate.gain.value = 1;
+    gate.connect(this.master.music);
+    const sub: MasterChain = { ...this.master, music: gate };
+    renderMusic(ctx, sub, {
+      profile: this.profile,
+      duration: opts.duration,
+      cues: opts.cues,
+      when: ctx.currentTime + 0.02,
+      ...(opts.speed !== undefined ? { speed: opts.speed } : {}),
+      ...(opts.level !== undefined ? { level: opts.level } : {}),
+    });
+    this.bed = {
+      stop: () => {
+        // Ramp rather than disconnect: cutting a sustaining pad mid-note clicks.
+        try {
+          gate.gain.cancelScheduledValues(ctx.currentTime);
+          gate.gain.setValueAtTime(gate.gain.value, ctx.currentTime);
+          gate.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.06);
+          setTimeout(() => gate.disconnect(), 120);
+        } catch {
+          gate.disconnect();
+        }
+      },
+    };
+  }
+
+  stopMusic(): void {
+    this.bed?.stop();
+    this.bed = null;
+  }
+
   destroy(): void {
+    this.stopMusic();
     if (this.ctx) {
       void this.ctx.close();
       this.ctx = null;
@@ -319,7 +371,25 @@ export class SfxPlayer {
 export async function renderCuesToBuffer(
   cues: SoundCue[],
   duration: number,
-  opts: { speed?: number; pack?: SoundPack; profile?: SoundProfile; volume?: number; sampleRate?: number } = {},
+  opts: {
+    speed?: number;
+    pack?: SoundPack;
+    profile?: SoundProfile;
+    volume?: number;
+    sampleRate?: number;
+    /** Add the procedural music bed under the effects. */
+    music?: boolean;
+    /** Bed level, 0–1 (default 1 = the profile's own trim). */
+    musicLevel?: number;
+    /**
+     * Render the bed (with its ducking) but none of the effects. Only useful for
+     * measuring the duck, which is otherwise masked by the very hits it makes
+     * room for.
+     */
+    musicOnly?: boolean;
+    /** Ducking on the bed. Default on; only turned off to measure it. */
+    duck?: boolean;
+  } = {},
 ): Promise<AudioBuffer | null> {
   if (typeof OfflineAudioContext === "undefined") return null;
   const speed = opts.speed && opts.speed > 0 ? opts.speed : 1;
@@ -336,11 +406,135 @@ export async function renderCuesToBuffer(
 
   const ctx = new OfflineAudioContext(2, Math.ceil(outDur * sampleRate), sampleRate);
   const master = createMaster(ctx, opts.volume ?? 0.62);
-  cues.forEach((cue, i) => {
-    const when = cue.time / speed;
-    if (when >= 0 && when < outDur) renderCue(ctx, cue, when, master, pack, profile, i);
-  });
+  if (!opts.musicOnly) {
+    cues.forEach((cue, i) => {
+      const when = cue.time / speed;
+      if (when >= 0 && when < outDur) renderCue(ctx, cue, when, master, pack, profile, i);
+    });
+  }
+  if (opts.music || opts.musicOnly) {
+    renderMusic(ctx, master, {
+      profile,
+      duration,
+      cues,
+      speed,
+      ...(opts.duck === false ? { duck: false } : {}),
+      ...(opts.musicLevel !== undefined ? { level: opts.musicLevel } : {}),
+    });
+  }
   return ctx.startRendering();
+}
+
+// ---------------------------------------------------------------------------
+// Music bed
+// ---------------------------------------------------------------------------
+
+/** One bed note: a filtered oscillator pair with a slow envelope. */
+function renderNote(
+  ctx: BaseAudioContext,
+  note: MusicNote,
+  when: number,
+  bus: GainNode,
+  profile: SoundProfile,
+): void {
+  const spec = profileSpec(profile);
+  const f = spec.root * Math.pow(2, note.pitch / 12);
+  const t = when + note.time;
+
+  // Per-layer character. The bass is a filtered triangle so it reads as pitch on
+  // a phone speaker rather than as rumble; the pad is two slightly detuned sines
+  // for movement; the arp is short and bright enough to be heard between hits.
+  const cfg =
+    note.voice === "bass"
+      ? { wave: "triangle" as OscillatorType, lp: Math.max(180, f * 3.2), attack: 0.02, release: 0.18, detune: 0, room: 0.06 }
+      : note.voice === "pad"
+        ? { wave: "sine" as OscillatorType, lp: Math.min(spec.tone, 2600), attack: 0.28, release: 0.5, detune: 7, room: spec.room * 1.2 }
+        : { wave: "triangle" as OscillatorType, lp: Math.min(spec.tone, 5200), attack: 0.006, release: 0.12, detune: 3, room: spec.room };
+
+  const env = ctx.createGain();
+  const peak = Math.max(0.0002, note.gain);
+  const sustain = Math.max(0.02, note.duration - cfg.attack);
+  env.gain.setValueAtTime(0.0001, t);
+  env.gain.exponentialRampToValueAtTime(peak, t + cfg.attack);
+  env.gain.setValueAtTime(peak, t + cfg.attack + sustain * 0.7);
+  env.gain.exponentialRampToValueAtTime(0.0001, t + cfg.attack + sustain + cfg.release);
+  env.gain.linearRampToValueAtTime(0, t + cfg.attack + sustain + cfg.release + 0.01);
+
+  const lp = ctx.createBiquadFilter();
+  lp.type = "lowpass";
+  lp.frequency.value = cfg.lp;
+  lp.Q.value = 0.6;
+  env.connect(lp);
+  lp.connect(bus);
+  if (cfg.room > 0) {
+    const send = ctx.createGain();
+    send.gain.value = Math.min(1, cfg.room);
+    lp.connect(send).connect(bus);
+  }
+
+  const end = t + cfg.attack + sustain + cfg.release + 0.05;
+  const osc = ctx.createOscillator();
+  osc.type = cfg.wave;
+  osc.frequency.value = Math.max(20, f);
+  osc.connect(env);
+  osc.start(t);
+  osc.stop(end);
+  if (cfg.detune !== 0) {
+    const twin = ctx.createOscillator();
+    twin.type = cfg.wave;
+    twin.frequency.value = Math.max(20, f);
+    twin.detune.value = cfg.detune;
+    const g = ctx.createGain();
+    g.gain.value = 0.6;
+    twin.connect(g).connect(env);
+    twin.start(t);
+    twin.stop(end);
+  }
+}
+
+/**
+ * Schedule the music bed and its duck automation onto the master's music bus.
+ * `speed` compresses the bed the same way it compresses the cue times.
+ */
+export function renderMusic(
+  ctx: BaseAudioContext,
+  master: MasterChain,
+  opts: {
+    profile: SoundProfile;
+    duration: number;
+    cues: SoundCue[];
+    when?: number;
+    speed?: number;
+    level?: number;
+    duck?: boolean;
+    seed?: number;
+  },
+): void {
+  const speed = opts.speed && opts.speed > 0 ? opts.speed : 1;
+  const when = opts.when ?? 0;
+  const outDur = opts.duration / speed;
+  const bed = buildMusicBed(opts.profile, outDur, opts.seed ?? 0x5f3759df);
+
+  const bus = ctx.createGain();
+  bus.gain.value = opts.level ?? 1;
+  bus.connect(master.music);
+
+  for (const note of bed.notes) renderNote(ctx, note, when, bus, opts.profile);
+
+  if (opts.duck !== false) {
+    const steps = duckAutomation(
+      opts.cues.map((c) => ({ ...c, time: c.time / speed })),
+      outDur,
+    );
+    const g = master.music.gain;
+    g.cancelScheduledValues(when);
+    g.setValueAtTime(1, when);
+    for (const step of steps) {
+      // Linear rather than exponential: a duck should track the hit, and an
+      // exponential ramp toward a non-zero floor lingers audibly.
+      g.linearRampToValueAtTime(Math.max(0.0001, step.gain), when + step.time);
+    }
+  }
 }
 
 /** Sound names, for exhaustiveness checks in tests. */

@@ -399,6 +399,8 @@ function MotionTab({
   const setLoop = useStudio((s) => s.setLoop);
   const sound = useStudio((s) => s.sound);
   const setSound = useStudio((s) => s.setSound);
+  const music = useStudio((s) => s.music);
+  const setMusic = useStudio((s) => s.setMusic);
   const soundPack = useStudio((s) => s.soundPack);
   const setSoundPack = useStudio((s) => s.setSoundPack);
   const length = baseDuration > 0 ? baseDuration / speed : 0;
@@ -531,6 +533,15 @@ function MotionTab({
             </div>
             <p className="mt-2 text-xs text-slate">
               {SOUND_PACKS.find((p) => p.id === soundPack)?.hint} Tuned for {PROFILE_LABEL[profileForTemplate(def)]}.
+            </p>
+
+            <label className="mt-5 flex items-center justify-between">
+              <span className="text-sm font-semibold text-graphite">Music bed</span>
+              <Switch checked={music} onChange={setMusic} label="Music bed" />
+            </label>
+            <p className="mt-1.5 text-xs text-slate">
+              A short loop written from this template&rsquo;s key and timed to its exact length. It ducks
+              under the effects automatically. Still synthesized — no audio files.
             </p>
           </>
         )}

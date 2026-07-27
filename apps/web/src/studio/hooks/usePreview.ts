@@ -41,6 +41,8 @@ interface Params {
   /** Seconds cut off the front / held on the end — also build-time. */
   trim: number;
   hold: number;
+  /** Play the procedural music bed under the effects. */
+  music: boolean;
   loop: boolean;
   sound: boolean;
   soundPack: SoundPack;
@@ -102,7 +104,13 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
       // The profile is the template's sonic character; the cues are its rhythm.
       // Both come from one call so the preview and the baked export match.
       const sheet = cuesForTemplate(runner.def, runner.timeline, runner.timelineDuration);
-      const scheduler = new CueScheduler({ enabled: params.sound, pack: params.soundPack, profile: sheet.profile });
+      const scheduler = new CueScheduler({
+        enabled: params.sound,
+        pack: params.soundPack,
+        profile: sheet.profile,
+        music: params.music,
+      });
+      scheduler.setSpeed(params.speed);
       // Cue times are timeline times; the playhead counts output time.
       scheduler.setCues(trimCues(sheet.cues, runner.trim));
       schedulerRef.current = scheduler;
@@ -196,6 +204,14 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
     schedulerRef.current?.setPack(params.soundPack);
   }, [params.soundPack]);
 
+  useEffect(() => {
+    schedulerRef.current?.setMusic(params.music);
+  }, [params.music]);
+
+  useEffect(() => {
+    schedulerRef.current?.setSpeed(params.speed);
+  }, [params.speed]);
+
   const player = () => playerRef.current;
   return {
     currentTime: state.t,
@@ -203,18 +219,27 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
     playing: state.playing,
     ready: state.ready,
     play: () => {
-      void schedulerRef.current?.resume(); // unlock audio from this gesture
+      // Unlock audio from this gesture, then start the bed once the context is
+      // actually running — scheduling into a suspended context does nothing.
+      void schedulerRef.current?.resume().then(() => {
+        schedulerRef.current?.start(playerRef.current?.duration ?? 0);
+      });
       player()?.play();
       setState((s) => ({ ...s, playing: true }));
     },
     pause: () => {
       player()?.pause();
+      schedulerRef.current?.stop();
       setState((s) => ({ ...s, playing: false }));
     },
     toggle: () => {
       const p = player();
       if (!p) return;
-      void schedulerRef.current?.resume(); // unlock audio from this gesture
+      const willPlay = !p.isPlaying;
+      void schedulerRef.current?.resume().then(() => {
+        if (willPlay) schedulerRef.current?.start(p.duration);
+        else schedulerRef.current?.stop();
+      });
       p.toggle();
       setState((s) => ({ ...s, playing: p.isPlaying }));
     },

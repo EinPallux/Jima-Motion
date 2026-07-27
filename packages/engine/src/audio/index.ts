@@ -4,6 +4,7 @@
 // Sound never affects the visual render or golden frames.
 export * from "./profile";
 export * from "./cues";
+export * from "./music";
 export * from "./voices";
 export * from "./sfx";
 export * from "./scheduler";
