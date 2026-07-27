@@ -485,6 +485,16 @@ import { communityPost } from "./community-post/index";
 import { musicPlayer } from "./music-player/index";
 import { goingLive } from "./going-live/index";
 import { repostQuote } from "./repost-quote/index";
+import { preOrder } from "./pre-order/index";
+import { referralOffer } from "./referral-offer/index";
+import { payInFour } from "./pay-in-four/index";
+import { trustBadges } from "./trust-badges/index";
+import { serviceCard } from "./service-card/index";
+import { bookingSlots } from "./booking-slots/index";
+import { menuBoard } from "./menu-board/index";
+import { openingHours } from "./opening-hours/index";
+import { deliveryTrack } from "./delivery-track/index";
+import { scratchReveal } from "./scratch-reveal/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -1030,6 +1040,17 @@ export const templates: TemplateDefinition[] = [
   musicPlayer,
   goingLive,
   repostQuote,
+  // Product & ads
+  preOrder,
+  referralOffer,
+  payInFour,
+  trustBadges,
+  serviceCard,
+  bookingSlots,
+  menuBoard,
+  openingHours,
+  deliveryTrack,
+  scratchReveal,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {
