@@ -454,6 +454,17 @@ import { seasonShift } from "./season-shift/index";
 import { skylineBuild } from "./skyline-build/index";
 import { horizonPan } from "./horizon-pan/index";
 import { flightMode } from "./flight-mode/index";
+// v1.19 — 10 new per gallery section.
+import { arcText } from "./arc-text/index";
+import { knockoutText } from "./knockout-text/index";
+import { chromaSplit } from "./chroma-split/index";
+import { justifyLock } from "./justify-lock/index";
+import { verticalType } from "./vertical-type/index";
+import { bandSlip } from "./band-slip/index";
+import { backspaceFix } from "./backspace-fix/index";
+import { penStroke } from "./pen-stroke/index";
+import { halfToneType } from "./half-tone-type/index";
+import { redactReveal } from "./redact-reveal/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -964,6 +975,19 @@ export const templates: TemplateDefinition[] = [
   horizonPan,
   // v1.18.1 — owner-requested one-off: iOS Control Center travel-vlog intro.
   flightMode,
+
+  // ── v1.19 ────────────────────────────────────────────────────────────────
+  // Text & titles
+  arcText,
+  knockoutText,
+  chromaSplit,
+  justifyLock,
+  verticalType,
+  bandSlip,
+  backspaceFix,
+  penStroke,
+  halfToneType,
+  redactReveal,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {
