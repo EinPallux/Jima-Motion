@@ -465,6 +465,16 @@ import { backspaceFix } from "./backspace-fix/index";
 import { penStroke } from "./pen-stroke/index";
 import { halfToneType } from "./half-tone-type/index";
 import { redactReveal } from "./redact-reveal/index";
+import { waveformBar } from "./waveform-bar/index";
+import { recipeStep } from "./recipe-step/index";
+import { translationBar } from "./translation-bar/index";
+import { circleHighlight } from "./circle-highlight/index";
+import { focusVignette } from "./focus-vignette/index";
+import { peelSticker } from "./peel-sticker/index";
+import { productPin } from "./product-pin/index";
+import { bracketLabel } from "./bracket-label/index";
+import { factCheck } from "./fact-check/index";
+import { leaderLine } from "./leader-line/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -988,6 +998,17 @@ export const templates: TemplateDefinition[] = [
   penStroke,
   halfToneType,
   redactReveal,
+  // Overlays & lower-thirds
+  waveformBar,
+  recipeStep,
+  translationBar,
+  circleHighlight,
+  focusVignette,
+  peelSticker,
+  productPin,
+  bracketLabel,
+  factCheck,
+  leaderLine,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {
