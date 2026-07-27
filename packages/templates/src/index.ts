@@ -475,6 +475,16 @@ import { productPin } from "./product-pin/index";
 import { bracketLabel } from "./bracket-label/index";
 import { factCheck } from "./fact-check/index";
 import { leaderLine } from "./leader-line/index";
+import { superChat } from "./super-chat/index";
+import { badgeUnlock } from "./badge-unlock/index";
+import { shoutout } from "./shoutout/index";
+import { viewsSpike } from "./views-spike/index";
+import { threadNumbers } from "./thread-numbers/index";
+import { stitchCut } from "./stitch-cut/index";
+import { communityPost } from "./community-post/index";
+import { musicPlayer } from "./music-player/index";
+import { goingLive } from "./going-live/index";
+import { repostQuote } from "./repost-quote/index";
 
 // Ordered for the gallery (roughly by how commonly social managers reach for them).
 export const templates: TemplateDefinition[] = [
@@ -1009,6 +1019,17 @@ export const templates: TemplateDefinition[] = [
   bracketLabel,
   factCheck,
   leaderLine,
+  // Social
+  superChat,
+  badgeUnlock,
+  shoutout,
+  viewsSpike,
+  threadNumbers,
+  stitchCut,
+  communityPost,
+  musicPlayer,
+  goingLive,
+  repostQuote,
 ];
 
 export function getTemplate(id: string): TemplateDefinition | undefined {
