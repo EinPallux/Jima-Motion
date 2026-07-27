@@ -1,7 +1,7 @@
 import { TemplateRunner, type RunnerConfig } from "../runtime/runner";
 import { sizeOf } from "../layout/aspect";
 import { TRANSPARENT_BG, type TemplateDefinition } from "../sdk/types";
-import { cuesForTemplate, renderCuesToBuffer, type SoundPack } from "../audio/index";
+import { cuesForTemplate, trimCues, renderCuesToBuffer, type SoundPack } from "../audio/index";
 import { detectCapabilities } from "./capabilities";
 import { exportVideo } from "./video";
 import { exportGif } from "./gif";
@@ -107,8 +107,8 @@ export async function exportTemplate(req: ExportRequest): Promise<ExportResult> 
       if (req.sound && audioCodec) {
         // Same cue sheet and same profile the preview played, so what the user
         // heard while editing is what lands in the file.
-        const sheet = cuesForTemplate(runner.def, runner.timeline, runner.duration);
-        audio = await renderCuesToBuffer(sheet.cues, runner.duration, {
+        const sheet = cuesForTemplate(runner.def, runner.timeline, runner.timelineDuration);
+        audio = await renderCuesToBuffer(trimCues(sheet.cues, runner.trim), runner.duration, {
           speed,
           profile: sheet.profile,
           ...(req.soundPack ? { pack: req.soundPack } : {}),

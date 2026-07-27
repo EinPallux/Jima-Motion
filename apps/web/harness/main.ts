@@ -107,6 +107,8 @@ async function main(): Promise<void> {
   const fontId = param("font") || undefined;
   const seed = Number(param("seed", "6682")) || 6682;
   const energyParam = param("energy");
+  const trimParam = param("trim");
+  const holdParam = param("hold");
 
   let values: Values | undefined;
   const raw = param("v");
@@ -135,6 +137,8 @@ async function main(): Promise<void> {
     ...(fontId ? { fonts: createFontRegistry({ headline: fontId }) } : {}),
     ...(transparentParam ? { transparent: true } : {}),
     ...(energyParam !== "" ? { energy: Number(energyParam) } : {}),
+    ...(trimParam !== "" ? { trim: Number(trimParam) } : {}),
+    ...(holdParam !== "" ? { hold: Number(holdParam) } : {}),
     seed,
   };
 

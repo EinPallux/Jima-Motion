@@ -391,6 +391,10 @@ function MotionTab({
   const setSpeed = useStudio((s) => s.setSpeed);
   const energy = useStudio((s) => s.energy);
   const setEnergy = useStudio((s) => s.setEnergy);
+  const trim = useStudio((s) => s.trim);
+  const setTrim = useStudio((s) => s.setTrim);
+  const hold = useStudio((s) => s.hold);
+  const setHold = useStudio((s) => s.setHold);
   const loop = useStudio((s) => s.loop);
   const setLoop = useStudio((s) => s.setLoop);
   const sound = useStudio((s) => s.sound);
@@ -398,6 +402,8 @@ function MotionTab({
   const soundPack = useStudio((s) => s.soundPack);
   const setSoundPack = useStudio((s) => s.setSoundPack);
   const length = baseDuration > 0 ? baseDuration / speed : 0;
+  // What the export will actually be: the trimmed, held window at the set speed.
+  const outLength = Math.max(0.1, baseDuration - Math.min(trim, baseDuration) + hold) / speed;
   return (
     <div className="flex flex-col gap-7">
       <div>
@@ -444,6 +450,44 @@ function MotionTab({
         </div>
         <p className="mt-2 text-xs text-slate">
           How much bounce and travel the motion has. Timing doesn&rsquo;t change — that&rsquo;s Speed.
+        </p>
+      </div>
+
+      <div className="border-t border-mist pt-6">
+        <div className="flex items-baseline justify-between">
+          <p className={groupLabelCls}>Trim &amp; hold</p>
+          <span className="text-sm tabular-nums text-slate">{outLength.toFixed(1)}s out</span>
+        </div>
+
+        <label className="mt-3 block text-xs font-semibold text-graphite" htmlFor="jima-trim">
+          Start at <span className="tabular-nums font-normal text-slate">{trim.toFixed(1)}s</span>
+        </label>
+        <input
+          id="jima-trim"
+          type="range"
+          className="mt-1.5 h-1.5 w-full cursor-pointer accent-emerald"
+          min={0}
+          max={Math.max(0, baseDuration - 0.3)}
+          step={0.1}
+          value={Math.min(trim, Math.max(0, baseDuration - 0.3))}
+          onChange={(e) => setTrim(Number(e.target.value))}
+        />
+
+        <label className="mt-4 block text-xs font-semibold text-graphite" htmlFor="jima-hold">
+          Hold last frame <span className="tabular-nums font-normal text-slate">{hold.toFixed(1)}s</span>
+        </label>
+        <input
+          id="jima-hold"
+          type="range"
+          className="mt-1.5 h-1.5 w-full cursor-pointer accent-emerald"
+          min={0}
+          max={5}
+          step={0.1}
+          value={hold}
+          onChange={(e) => setHold(Number(e.target.value))}
+        />
+        <p className="mt-2 text-xs text-slate">
+          Skip a slow intro, or leave the final frame on screen long enough to read.
         </p>
       </div>
 

@@ -298,6 +298,18 @@ export function profileForTemplate(def: Pick<TemplateDefinition, "category" | "s
   return def.sound ?? profileForCategory(def.category);
 }
 
+/**
+ * Re-base a cue sheet onto output time when the start has been trimmed.
+ *
+ * Cue times are timeline times; the output clock starts at `trim`. Anything that
+ * sounded before the new in-point never happens, so it is dropped rather than
+ * piled onto t=0.
+ */
+export function trimCues(cues: SoundCue[], trim: number): SoundCue[] {
+  if (trim <= 0) return cues;
+  return cues.filter((c) => c.time >= trim).map((c) => ({ ...c, time: c.time - trim }));
+}
+
 /** Cue sheet for a template — the entry point preview and export both use. */
 export function cuesForTemplate(
   def: Pick<TemplateDefinition, "category" | "sound">,

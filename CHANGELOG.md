@@ -51,6 +51,14 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
   the other how long it *takes*. At 100% the transform is the exact identity, so posters and golden
   frames are unaffected.
 
+- **Trim and hold.** "Start at" skips a slow intro; "Hold last frame" leaves the end card on screen
+  long enough to actually read. Both reshape the *output clock* rather than the motion: the runner
+  maps output time to timeline time (`min(timelineDuration, trim + t)`), so the player, the scrubber
+  and both export loops count in output seconds and never need to know either control exists. The
+  sound layer is re-based to match — cues shift with the trim, and cues from before the new in-point
+  are dropped rather than piled onto t=0, which would fire a burst of exactly what the trim was
+  meant to skip. The Motion tab shows the resulting output length live.
+
 ### Changed
 
 - **The sound system is rebuilt (ADR-012a).** The owner's report was that the sounds didn't fit the

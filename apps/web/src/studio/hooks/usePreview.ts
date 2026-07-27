@@ -3,6 +3,7 @@ import {
   createFontRegistry,
   CueScheduler,
   cuesForTemplate,
+  trimCues,
   isImageRef,
   PreviewPlayer,
   TemplateRunner,
@@ -37,6 +38,9 @@ interface Params {
   speed: number;
   /** Motion energy 0–2. Baked into the timeline at build, so it recreates the runner. */
   energy: number;
+  /** Seconds cut off the front / held on the end — also build-time. */
+  trim: number;
+  hold: number;
   loop: boolean;
   sound: boolean;
   soundPack: SoundPack;
@@ -86,6 +90,8 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
         fonts: createFontRegistry({ headline: params.font, body: params.bodyFont }),
         resolution: 1,
         energy: params.energy,
+        trim: params.trim,
+        hold: params.hold,
       });
       if (disposed) {
         runner.destroy();
@@ -95,9 +101,10 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
 
       // The profile is the template's sonic character; the cues are its rhythm.
       // Both come from one call so the preview and the baked export match.
-      const sheet = cuesForTemplate(runner.def, runner.timeline, runner.duration);
+      const sheet = cuesForTemplate(runner.def, runner.timeline, runner.timelineDuration);
       const scheduler = new CueScheduler({ enabled: params.sound, pack: params.soundPack, profile: sheet.profile });
-      scheduler.setCues(sheet.cues);
+      // Cue times are timeline times; the playhead counts output time.
+      scheduler.setCues(trimCues(sheet.cues, runner.trim));
       schedulerRef.current = scheduler;
 
       const canvas = runner.canvas;
@@ -151,7 +158,7 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
     // Energy is baked into the timeline at build time, so it belongs in this
     // list with the other structural inputs rather than in a live-update effect.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.def, params.aspect, imagesKey, params.font, params.bodyFont, params.energy]);
+  }, [params.def, params.aspect, imagesKey, params.font, params.bodyFont, params.energy, params.trim, params.hold]);
 
   // Rebuild scene on value/palette changes (debounced, in place).
   useEffect(() => {
@@ -162,7 +169,9 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
       runner.rebuildScene(engineValues(runner.def, params.values), params.paletteId);
       setState((s) => ({ ...s, duration: runner.duration }));
       // Editing values can change the motion (and its timing) → refit the cues.
-      schedulerRef.current?.setCues(cuesForTemplate(runner.def, runner.timeline, runner.duration).cues);
+      schedulerRef.current?.setCues(
+        trimCues(cuesForTemplate(runner.def, runner.timeline, runner.timelineDuration).cues, runner.trim),
+      );
       if (player && !player.isPlaying) runner.renderAt(player.currentTime);
     }, 60);
     return () => clearTimeout(id);

@@ -35,6 +35,8 @@ export function StudioApp() {
             values,
             speed: saved.speed,
             energy: saved.energy ?? 1,
+            trim: saved.trim ?? 0,
+            hold: saved.hold ?? 0,
             loop: saved.loop,
           }),
         );
@@ -69,6 +71,8 @@ export function StudioApp() {
           values: s.values,
           speed: s.speed,
           energy: s.energy,
+          trim: s.trim,
+          hold: s.hold,
           loop: s.loop,
         });
       }, 500);
@@ -103,6 +107,8 @@ export function StudioApp() {
           values,
           speed: resume.speed,
           energy: resume.energy ?? 1,
+          trim: resume.trim ?? 0,
+          hold: resume.hold ?? 0,
           loop: resume.loop,
         });
       }}

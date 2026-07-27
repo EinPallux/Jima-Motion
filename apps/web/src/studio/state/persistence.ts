@@ -25,6 +25,9 @@ export interface PersistedProject {
   speed: number;
   /** Motion energy 0–2. Optional: projects saved before v1.19 predate it. */
   energy?: number;
+  /** Seconds trimmed off the front / held on the end. Optional for the same reason. */
+  trim?: number;
+  hold?: number;
   loop: boolean;
   updatedAt: number;
 }

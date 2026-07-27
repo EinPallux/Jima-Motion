@@ -52,6 +52,15 @@ export interface RunnerConfig {
    * {@link JimaTimeline.applyEnergy}.
    */
   energy?: number;
+  /** Seconds cut off the front — the output starts at this point in the timeline. */
+  trim?: number;
+  /** Seconds the final frame is held after the timeline ends. */
+  hold?: number;
+}
+
+/** Output length once the front is trimmed and the tail is held. */
+export function outputDuration(timelineDuration: number, trim: number, hold: number): number {
+  return Math.max(0.1, timelineDuration - Math.min(trim, timelineDuration) + hold);
 }
 
 /** Energy → the two gains {@link JimaTimeline.applyEnergy} takes. */
@@ -86,7 +95,17 @@ export class TemplateRunner {
   readonly size: Size;
   root: Container;
   timeline: JimaTimeline;
+  /**
+   * Output length in seconds — what the player and the exporter count in. With
+   * trim/hold at their defaults this is exactly the timeline's own length.
+   */
   duration: number;
+  /** The template's own length, before trim and hold. */
+  timelineDuration: number;
+  /** Seconds cut off the front. */
+  readonly trim: number;
+  /** Seconds the last frame is held on the end. */
+  readonly hold: number;
   private update: ((t: number) => void) | undefined;
   private images: ImageMap;
   private readonly imageBitmaps: ImageBitmap[];
@@ -110,13 +129,18 @@ export class TemplateRunner {
     fonts: FontRegistry;
     seed: number;
     energy: number | undefined;
+    trim: number;
+    hold: number;
   }) {
     this.def = args.def;
     this.aspect = args.aspect;
     this.size = args.size;
     this.root = args.root;
     this.timeline = args.timeline;
-    this.duration = args.duration;
+    this.trim = args.trim;
+    this.hold = args.hold;
+    this.timelineDuration = args.duration;
+    this.duration = outputDuration(args.duration, args.trim, args.hold);
     this.update = args.update;
     this.images = args.images;
     this.imageBitmaps = args.imageBitmaps;
@@ -134,6 +158,8 @@ export class TemplateRunner {
 
     const seed = config.seed ?? 0x1a1a;
     const energy = config.energy;
+    const trim = Math.max(0, config.trim ?? 0);
+    const hold = Math.max(0, config.hold ?? 0);
     const { map: images, bitmaps: imageBitmaps } = await loadImages(def, resolveValues(def, config.values));
     const built = buildScene(def, {
       size,
@@ -167,6 +193,8 @@ export class TemplateRunner {
       fonts,
       seed,
       energy,
+      trim,
+      hold,
     });
     scene.onContextLost(() => runner.renderAt(runner.lastT));
     return runner;
@@ -199,7 +227,8 @@ export class TemplateRunner {
     this.root.destroy({ children: true });
     this.root = built.root;
     this.timeline = built.timeline;
-    this.duration = built.duration;
+    this.timelineDuration = built.duration;
+    this.duration = outputDuration(built.duration, this.trim, this.hold);
     this.update = built.update;
     this.renderAt(Math.min(this.lastT, this.duration));
   }
@@ -210,11 +239,23 @@ export class TemplateRunner {
     this.renderAt(this.lastT);
   }
 
-  /** Evaluate the timeline at t (seconds) and paint one frame. */
+  /**
+   * Map an **output** time to a timeline time.
+   *
+   * Trim slides the window forward; hold clamps at the end so the final frame
+   * simply persists. Everything downstream — the player, the export loops, the
+   * scrubber — counts in output time and never needs to know either exists.
+   */
+  timelineTime(outputT: number): number {
+    return Math.min(this.timelineDuration, Math.max(0, this.trim + outputT));
+  }
+
+  /** Evaluate at output time t (seconds) and paint one frame. */
   renderAt(t: number): void {
     this.lastT = t;
-    this.timeline.evaluate(t);
-    this.update?.(t);
+    const tt = this.timelineTime(t);
+    this.timeline.evaluate(tt);
+    this.update?.(tt);
     this.scene.render(this.root);
   }
 
@@ -233,7 +274,7 @@ export class TemplateRunner {
     this.scene.renderAveraged(this.root, n, (i) => {
       // Centred box filter over the shutter, sampled at bin centres.
       const offset = shutter > 0 ? ((i + 0.5) / n - 0.5) * shutter : 0;
-      const sub = Math.min(this.duration, Math.max(0, t + offset));
+      const sub = this.timelineTime(Math.min(this.duration, Math.max(0, t + offset)));
       this.timeline.evaluate(sub);
       this.update?.(sub);
     });

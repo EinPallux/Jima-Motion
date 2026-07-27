@@ -17,6 +17,10 @@ export interface EditableState {
   speed: number;
   /** Motion energy 0–2 (1 = as authored): how punchy vs. calm the motion feels. */
   energy: number;
+  /** Seconds cut off the front of the animation. */
+  trim: number;
+  /** Seconds the last frame is held on the end. */
+  hold: number;
   loop: boolean;
   /** Headline font id (FONT_CHOICES); undefined = template default. */
   font: string | undefined;
@@ -60,6 +64,8 @@ interface StudioStore extends EditableState {
   applyTheme: (themeId: string) => void;
   setSpeed: (speed: number) => void;
   setEnergy: (energy: number) => void;
+  setTrim: (trim: number) => void;
+  setHold: (hold: number) => void;
   setLoop: (loop: boolean) => void;
   setSound: (on: boolean) => void;
   setSoundPack: (pack: SoundPack) => void;
@@ -132,6 +138,8 @@ function snapshot(s: EditableState): EditableState {
     values: { ...s.values },
     speed: s.speed,
     energy: s.energy,
+    trim: s.trim,
+    hold: s.hold,
     loop: s.loop,
     font: s.font,
     bodyFont: s.bodyFont,
@@ -145,6 +153,8 @@ export const useStudio = create<StudioStore>((set, get) => ({
   values: {},
   speed: 1,
   energy: 1,
+  trim: 0,
+  hold: 0,
   loop: false,
   font: undefined,
   bodyFont: undefined,
@@ -172,6 +182,8 @@ export const useStudio = create<StudioStore>((set, get) => ({
       values,
       speed: initial?.speed ?? 1,
       energy: initial?.energy ?? 1,
+      trim: initial?.trim ?? 0,
+      hold: initial?.hold ?? 0,
       loop: initial?.loop ?? def.loopable,
       font: initial?.font ?? undefined,
       bodyFont: initial?.bodyFont ?? undefined,
@@ -279,6 +291,38 @@ export const useStudio = create<StudioStore>((set, get) => ({
       future: [],
       energy: clamped,
       lastEditKey: "__energy",
+      lastEditAt: now,
+    });
+  },
+
+  // Trim and hold reshape the output clock, not the motion. Coalesced per drag
+  // like the other sliders.
+  setTrim: (trim) => {
+    const s = get();
+    const clamped = Math.max(0, Math.min(30, trim));
+    if (clamped === s.trim) return;
+    const now = Date.now();
+    const coalesce = s.lastEditKey === "__trim" && now - s.lastEditAt < COALESCE_MS;
+    set({
+      past: coalesce ? s.past : [...s.past, snapshot(s)].slice(-HISTORY_LIMIT),
+      future: [],
+      trim: clamped,
+      lastEditKey: "__trim",
+      lastEditAt: now,
+    });
+  },
+
+  setHold: (hold) => {
+    const s = get();
+    const clamped = Math.max(0, Math.min(10, hold));
+    if (clamped === s.hold) return;
+    const now = Date.now();
+    const coalesce = s.lastEditKey === "__hold" && now - s.lastEditAt < COALESCE_MS;
+    set({
+      past: coalesce ? s.past : [...s.past, snapshot(s)].slice(-HISTORY_LIMIT),
+      future: [],
+      hold: clamped,
+      lastEditKey: "__hold",
       lastEditAt: now,
     });
   },
