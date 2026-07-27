@@ -42,6 +42,12 @@ import "@fontsource/outfit/400.css";
 import "@fontsource/outfit/500.css";
 import "@fontsource/outfit/600.css";
 import "@fontsource/outfit/700.css";
+// Noto Emoji — the last-resort emoji face (OFL-1.1). It sits at the end of every
+// role's fallback chain, after the platform colour emoji fonts, so it is only
+// reached on a machine with no emoji font at all. Fontsource splits it into ten
+// unicode-range subsets, so even then the browser fetches one small file rather
+// than the megabyte.
+import "@fontsource/noto-emoji/400.css";
 // Parkinsans — STATIC instances (family "Parkinsans"). Deliberately separate from
 // the variable import above (family "Parkinsans Variable"): a canvas `font`
 // string cannot express variable-font axes, so rendering template text at a

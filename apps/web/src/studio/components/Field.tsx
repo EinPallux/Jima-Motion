@@ -13,6 +13,17 @@ interface FieldProps {
   blobKeyPrefix: string;
 }
 
+/**
+ * A short, opinionated emoji set for social copy — the ones that actually turn
+ * up in captions. Not a full picker: the OS already has one (and a 3,000-glyph
+ * grid in a sidebar would be worse than the OS one), this is just the fast path.
+ */
+const EMOJI = [
+  "🔥", "✨", "🎉", "💫", "⭐", "❤️", "😍", "😂", "🙌", "👀",
+  "✅", "📈", "💡", "🚀", "🎁", "🏆", "📣", "⏰", "💰", "🛒",
+  "📍", "✈️", "☀️", "🌙", "🍀", "☕", "🎧", "📷", "👉", "🤝",
+];
+
 const labelCls = "block text-sm font-semibold text-graphite";
 const helpCls = "mt-1 text-xs text-slate";
 const inputCls =
@@ -28,7 +39,16 @@ export function Field({ field, value, onChange, blobKeyPrefix }: FieldProps) {
           {field.optional && field.type !== "color" ? <span className="ml-1 font-normal text-slate">(optional)</span> : null}
         </label>
         {field.type === "text" || field.type === "textarea" ? (
-          <CharCount value={value} max={field.maxLength} />
+          <div className="flex shrink-0 items-center gap-2">
+            <EmojiButton
+              label={field.label}
+              disabled={
+                field.maxLength !== undefined && typeof value === "string" && value.length >= field.maxLength
+              }
+              onPick={(emoji) => onChange(`${typeof value === "string" ? value : ""}${emoji}`)}
+            />
+            <CharCount value={value} max={field.maxLength} />
+          </div>
         ) : null}
       </div>
       <div className="mt-1.5">
@@ -92,6 +112,77 @@ function Control({
     case "image":
       return <ImageControl id={id} value={value} onChange={onChange} blobKeyPrefix={blobKeyPrefix} fieldKey={field.key} />;
   }
+}
+
+/**
+ * Appends an emoji to a text field. Deliberately append-only: tracking the
+ * caret across a controlled input, undo coalescing and IME composition is a lot
+ * of machinery for "put a fire at the end", which is what people do anyway.
+ */
+function EmojiButton({
+  label,
+  disabled,
+  onPick,
+}: {
+  label: string;
+  disabled?: boolean;
+  onPick: (emoji: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const boxRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent): void => {
+      if (!boxRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent): void => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div className="relative" ref={boxRef}>
+      <button
+        type="button"
+        disabled={disabled}
+        aria-expanded={open}
+        aria-label={`Add an emoji to ${label}`}
+        onClick={() => setOpen((v) => !v)}
+        className="rounded-md px-1 text-sm leading-none text-slate transition-colors hover:bg-subtle hover:text-graphite disabled:pointer-events-none disabled:opacity-40"
+      >
+        <span aria-hidden>☺</span>
+      </button>
+      {open && (
+        <div
+          role="group"
+          aria-label="Emoji"
+          className="absolute right-0 top-6 z-30 grid w-56 grid-cols-6 gap-0.5 rounded-xl border border-mist bg-paper p-2 shadow-pop"
+        >
+          {EMOJI.map((e) => (
+            <button
+              key={e}
+              type="button"
+              aria-label={e}
+              onClick={() => {
+                onPick(e);
+                setOpen(false);
+              }}
+              className="rounded-md py-1 text-lg leading-none transition-colors hover:bg-subtle"
+            >
+              <span aria-hidden>{e}</span>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function TextList({ field, value, onChange }: { id: string; field: TemplateField; value: unknown; onChange: (v: unknown) => void }) {

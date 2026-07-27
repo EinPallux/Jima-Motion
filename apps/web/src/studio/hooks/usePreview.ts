@@ -174,6 +174,9 @@ export function usePreview(containerRef: RefObject<HTMLElement | null>, params: 
     const player = playerRef.current;
     if (!runner) return;
     const id = setTimeout(() => {
+      // Typing an emoji may need a face that is not loaded yet; fetch it first
+      // so the rebuilt scene paints the glyph rather than a box.
+      void runner.ensureFontsFor(engineValues(runner.def, params.values));
       runner.rebuildScene(engineValues(runner.def, params.values), params.paletteId);
       setState((s) => ({ ...s, duration: runner.duration }));
       // Editing values can change the motion (and its timing) → refit the cues.

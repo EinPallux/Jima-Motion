@@ -71,6 +71,16 @@ export function energyGains(energy: number | undefined): { ease: number; travel:
   return { ease: e, travel: 0.55 + 0.45 * e };
 }
 
+/** Every user-supplied string in a value bag, concatenated. */
+function textOf(values: Values): string {
+  const parts: string[] = [];
+  for (const v of Object.values(values)) {
+    if (typeof v === "string") parts.push(v);
+    else if (Array.isArray(v)) for (const item of v) if (typeof item === "string") parts.push(item);
+  }
+  return parts.join(" ");
+}
+
 function pickPalette(def: TemplateDefinition, id?: string): Palette {
   if (id) {
     const found = def.palettes.find((p) => p.id === id);
@@ -160,7 +170,11 @@ export class TemplateRunner {
     const energy = config.energy;
     const trim = Math.max(0, config.trim ?? 0);
     const hold = Math.max(0, config.hold ?? 0);
-    const { map: images, bitmaps: imageBitmaps } = await loadImages(def, resolveValues(def, config.values));
+    const resolved = resolveValues(def, config.values);
+    // Emoji live in user text, so the face they need can only be known here —
+    // after the values are resolved and before the first frame is painted.
+    await fonts.ensureEmoji(textOf(resolved));
+    const { map: images, bitmaps: imageBitmaps } = await loadImages(def, resolved);
     const built = buildScene(def, {
       size,
       aspect,
@@ -209,6 +223,14 @@ export class TemplateRunner {
    * Reuses already-loaded image textures — add/remove of an image should go
    * through a full recreate (the Studio keys the preview on image changes).
    */
+  /**
+   * Load any emoji face the new values need. Call before {@link rebuildScene}
+   * when text may have changed — it is async, and rebuilding is not.
+   */
+  async ensureFontsFor(values?: Values): Promise<void> {
+    await this.fonts.ensureEmoji(textOf(resolveValues(this.def, values)));
+  }
+
   rebuildScene(values?: Values, paletteId?: string): void {
     // Build the new scene BEFORE tearing down the current one. If buildScene
     // throws on a transient bad value (e.g. a half-typed hex color reaching a

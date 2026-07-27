@@ -77,6 +77,22 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
   from every hit the two are bit-for-bit the same, so the duck genuinely recovers rather than just
   turning the music down.
 
+- **Emoji.** Template families are Latin webfonts with no emoji coverage at all, so an emoji in a
+  headline had nothing to resolve to but whatever the browser happened to fall back to. Every font
+  role now carries an explicit emoji chain — the platform's colour fonts first (someone typing 😂
+  wants the yellow face their phone shows, not a monochrome outline), with Jima's own shipped
+  **Noto Emoji** (OFL-1.1) last, purely so a machine with no emoji font at all draws a glyph rather
+  than tofu.
+
+  The shipped face costs nothing on a normal device: it is last in the chain, and it is only
+  *fetched* when the text actually contains emoji **and** a width probe shows the platform can't
+  draw them itself. Fontsource splits it into ten unicode-range subsets, so even then the browser
+  pulls one small file rather than the megabyte. The stack goes to the measuring canvas as well as
+  to Pixi, so emoji measure against the same faces they are painted with and text still fits.
+
+  The Studio's text fields also gained a small emoji picker — thirty that actually turn up in social
+  copy, not a 3,000-glyph grid the OS already does better.
+
 ### Changed
 
 - **The sound system is rebuilt (ADR-012a).** The owner's report was that the sounds didn't fit the

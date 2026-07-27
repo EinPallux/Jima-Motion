@@ -77,6 +77,8 @@ declare global {
     __jimaHarnessReady?: boolean;
     __jima?: HarnessApi;
     __jimaError?: string;
+    /** Raw canvas pixels, for tests that need to inspect what was painted. */
+    __jimaReadCanvas?: () => { rgba: Uint8Array; width: number; height: number };
   }
 }
 
@@ -331,6 +333,8 @@ async function main(): Promise<void> {
       };
     },
   };
+  // Raw pixels, for tests that inspect what was actually painted.
+  window.__jimaReadCanvas = () => readCanvasRGBA(runner.canvas);
   window.__jimaHarnessReady = true;
 }
 

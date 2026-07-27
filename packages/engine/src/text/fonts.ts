@@ -19,9 +19,35 @@ export interface MeasureStyle {
   letterSpacing?: number;
 }
 
+/**
+ * Emoji fallback chain, appended after every role's own family.
+ *
+ * The template families are Latin webfonts with no emoji coverage at all, so an
+ * emoji in a headline resolves through this list instead. The system colour
+ * fonts come first — a user who types 😂 wants the yellow face their phone
+ * shows, not a monochrome outline — and Jima's own shipped **Noto Emoji** is
+ * last, purely so a machine with no emoji font at all draws a glyph rather than
+ * tofu. Because it is last and Fontsource splits it by unicode-range, the
+ * browser never fetches a byte of it on a machine that has colour emoji.
+ */
+const EMOJI_FALLBACKS = [
+  "Apple Color Emoji",
+  "Segoe UI Emoji",
+  "Noto Color Emoji",
+  "Segoe UI Symbol",
+  "Noto Emoji",
+];
+
+/** The family plus the emoji fallbacks, as a CSS font-family list. */
+export function withEmojiFallback(family: string): string {
+  return [family, ...EMOJI_FALLBACKS].map((f) => `"${f}"`).join(", ");
+}
+
 function cssFont(weight: number, size: number, family: string): string {
-  // Quote the family to be safe with multi-word names ("Space Grotesk").
-  return `${weight} ${size}px "${family}"`;
+  // `family` may already be a quoted stack (see withEmojiFallback); only wrap a
+  // bare name. Quoting is for multi-word families like "Space Grotesk".
+  const list = family.includes('"') ? family : `"${family}"`;
+  return `${weight} ${size}px ${list}`;
 }
 
 export class FontRegistry {
@@ -39,7 +65,17 @@ export class FontRegistry {
     return s;
   }
 
+  /**
+   * The CSS font-family list for a role — the registered family plus the emoji
+   * fallbacks. This is what both Pixi and the measuring canvas get, so text
+   * measures against exactly the faces it will be painted with.
+   */
   family(role: FontRole): string {
+    return withEmojiFallback(this.spec(role).family);
+  }
+
+  /** The bare registered family name, for loading and `check()`. */
+  familyName(role: FontRole): string {
     return this.spec(role).family;
   }
 
@@ -52,6 +88,47 @@ export class FontRegistry {
     } catch {
       // Non-fatal: fall through; check() below will report reality.
     }
+  }
+
+  /**
+   * Make sure emoji in `text` can be painted, loading Jima's shipped Noto Emoji
+   * only if the platform cannot draw them itself.
+   *
+   * Emoji resolve through the fallback chain, and on every normal device the
+   * platform's colour font wins — so the shipped face is dead weight there and
+   * must not be fetched. The probe is the standard one: compare the rendered
+   * width of an emoji against a codepoint that is guaranteed to be missing
+   * everywhere. Equal widths means both drew the same "no glyph" box.
+   */
+  async ensureEmoji(text: string): Promise<void> {
+    if (typeof document === "undefined" || !document.fonts) return;
+    const emoji = [...text].filter((ch) => ch.codePointAt(0)! > 0x2000).join("");
+    if (emoji.length === 0) return;
+    if (this.platformDrawsEmoji()) return;
+    try {
+      // The second argument restricts the load to the characters actually used,
+      // so only the unicode-range subsets that matter are fetched.
+      await document.fonts.load(cssFont(400, 64, "Noto Emoji"), emoji);
+    } catch {
+      /* Non-fatal — worst case the platform's own fallback draws. */
+    }
+  }
+
+  private emojiSupport: boolean | null = null;
+
+  private platformDrawsEmoji(): boolean {
+    if (this.emojiSupport !== null) return this.emojiSupport;
+    try {
+      const ctx = this.ctx();
+      ctx.font = "64px sans-serif";
+      const glyph = ctx.measureText("\u{1F600}").width;
+      // U+FFFF is a permanent noncharacter — nothing anywhere has a glyph for it.
+      const missing = ctx.measureText("\uFFFF").width;
+      this.emojiSupport = glyph > 0 && Math.abs(glyph - missing) > 0.5;
+    } catch {
+      this.emojiSupport = false;
+    }
+    return this.emojiSupport;
   }
 
   /** Load every registered role/weight. Call before first render + before export. */
