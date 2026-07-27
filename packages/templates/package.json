@@ -5,7 +5,8 @@
   "type": "module",
   "description": "Jima Motion launch template library.",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./durations": "./src/durations.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json"

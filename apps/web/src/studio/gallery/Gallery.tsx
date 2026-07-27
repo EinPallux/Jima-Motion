@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import type { TemplateDefinition } from "@jima/engine";
 import { TemplateCard } from "./TemplateCard";
 import { GROUPS, groupOf } from "./groups";
+import { FACETS, facetCounts, matchesAll, type FacetId } from "./facets";
+import { useFavourites } from "../state/favourites";
 import type { PersistedProject } from "../state/persistence";
 import { Button, Card, JimaLogo, cn } from "../../ui";
 
@@ -61,6 +63,11 @@ export function Gallery({
 }) {
   const [query, setQuery] = useState("");
   const [group, setGroup] = useState<string>("all");
+  const [facets, setFacets] = useState<FacetId[]>([]);
+  const favourites = useFavourites();
+
+  const toggleFacet = (id: FacetId): void =>
+    setFacets((cur) => (cur.includes(id) ? cur.filter((f) => f !== id) : [...cur, id]));
 
   // Count templates per group (for the rail badges).
   const counts = useMemo(() => {
@@ -80,11 +87,20 @@ export function Gallery({
     const terms = q ? q.split(/\s+/).filter(Boolean) : [];
     return templates.filter((t) => {
       if (group !== "all" && groupOf(t.category).id !== group) return false;
+      if (!matchesAll(t, facets, favourites.ids)) return false;
       if (terms.length === 0) return true;
       const hay = searchText(t);
       return terms.every((term) => hay.includes(term));
     });
-  }, [templates, group, q]);
+  }, [templates, group, q, facets, favourites.ids]);
+
+  // Counts are computed against the group + the *other* facets, so a chip says
+  // what turning it on would give you rather than what you already have.
+  const inGroup = useMemo(
+    () => (group === "all" ? templates : templates.filter((t) => groupOf(t.category).id === group)),
+    [templates, group],
+  );
+  const facetTotals = useMemo(() => facetCounts(inGroup, facets, favourites.ids), [inGroup, facets, favourites.ids]);
 
   const resumeDef = resume ? templates.find((t) => t.id === resume.templateId) : null;
   const activeGroup = group === "all" ? null : GROUPS.find((g) => g.id === group);
@@ -209,15 +225,71 @@ export function Gallery({
             </span>
           </div>
 
+          {/* Facet chips. Everything here is derived from the template definition,
+              so the filters can never drift from the library. */}
+          {/* Scrolls sideways on a phone, where nine chips would wrap into five
+              rows and push the grid off screen; wraps everywhere else, so no
+              filter is ever hidden behind a scroll nobody notices. */}
+          <div
+            className="-mx-1 mt-5 flex items-center gap-1.5 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:gap-y-2 sm:overflow-x-visible"
+            role="group"
+            aria-label="Filter by length, shape and content"
+          >
+            {FACETS.map((f, i) => {
+              const on = facets.includes(f.id);
+              const n = facetTotals.get(f.id) ?? 0;
+              // A chip that would empty the grid is shown, but inert — it still
+              // tells you the library has nothing of that kind here.
+              const dead = n === 0 && !on;
+              const newGroup = i > 0 && FACETS[i - 1]!.group !== f.group;
+              return (
+                <span key={f.id} className="flex shrink-0 items-center gap-1.5">
+                  {newGroup && <span aria-hidden className="mx-1 h-4 w-px bg-mist" />}
+                  <button
+                    type="button"
+                    aria-pressed={on}
+                    disabled={dead}
+                    title={f.hint}
+                    onClick={() => toggleFacet(f.id)}
+                    className={cn(
+                      "inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1.5 text-[13px] font-bold transition-colors",
+                      on
+                        ? "border-primary-strong bg-emerald-tint text-ink"
+                        : "border-mist bg-paper text-graphite hover:border-slate hover:text-ink",
+                      dead && "cursor-default text-muted hover:border-mist hover:text-muted",
+                    )}
+                  >
+                    {f.id === "favourites" && <span aria-hidden>{on ? "★" : "☆"}</span>}
+                    {f.label}
+                    <span className={cn("font-semibold tabular-nums", on ? "text-primary-strong" : "text-muted")}>{n}</span>
+                  </button>
+                </span>
+              );
+            })}
+            {facets.length > 0 && (
+              <button
+                type="button"
+                onClick={() => setFacets([])}
+                className="shrink-0 whitespace-nowrap rounded-full px-2.5 py-1.5 text-[13px] font-bold text-primary-strong underline-offset-2 hover:underline"
+              >
+                Clear filters
+              </button>
+            )}
+          </div>
+
           {filtered.length > 0 ? (
-            <div className="mt-7 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+            <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
               {filtered.map((t) => (
                 <TemplateCard key={t.id} def={t} onOpen={onOpen} />
               ))}
             </div>
           ) : (
             <div className="mt-7 rounded-bento border-2 border-dashed border-mist bg-paper py-16 text-center">
-              <p className="text-base font-medium text-graphite">No templates match {q ? `“${query}”` : "this filter"}.</p>
+              <p className="text-base font-medium text-graphite">
+                {facets.includes("favourites") && favourites.ids.length === 0
+                  ? "You haven’t starred anything yet — tap the ☆ on any card to keep it here."
+                  : `No templates match ${q ? `“${query}”` : "this filter"}.`}
+              </p>
               <Button
                 variant="secondary"
                 size="sm"
@@ -225,6 +297,7 @@ export function Gallery({
                 onClick={() => {
                   setQuery("");
                   setGroup("all");
+                  setFacets([]);
                 }}
               >
                 Clear filters

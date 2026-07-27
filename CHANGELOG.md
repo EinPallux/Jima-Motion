@@ -93,6 +93,35 @@ entries are dated documentation drops. Every phase completion in `ROADMAP.md` mu
   The Studio's text fields also gained a small emoji picker — thirty that actually turn up in social
   copy, not a 3,000-glyph grid the OS already does better.
 
+- **Favourites.** A star on every card and a Favourites filter in the library. 445 templates is well
+  past the point where scrolling is a strategy, and a shortlist is the cheapest fix. It lives in
+  `localStorage` like every other preference here — no account, nothing leaves the browser. The star
+  is a sibling of the card button rather than a child (a button inside a button is invalid HTML and
+  would open the template on every star click), it rides along with the card's hover lift, and it
+  stays visible on touch, where a hover-only control is just an invisible tap target.
+
+- **Filters that describe what a template actually is.** Nine chips across three groups — length
+  (under 4s / over 4.5s), shape (vertical / square-4:5 / widescreen) and content (takes a photo /
+  takes a list / alpha-safe / lots to tweak) — combining with the category rail and the search box.
+  Every one is *derived from the template definition*, not from hand-written tags, so a new template
+  is classified correctly by construction and the filters can never drift from the library.
+
+  Each chip carries the count it would leave, computed against the **other** active filters, so the
+  number is what pressing it gives you rather than what you already have; a chip that would empty
+  the grid goes inert instead of becoming a dead end. The set was chosen by measuring the real
+  library, not by guessing: two candidates were cut for failing that check — "cinematic sound" was
+  really just the Openers category under another name, and "six or more fields" matched 87% of the
+  library, which is not a filter. Every shipped chip now matches between 15% and 45% of the library,
+  and a Playwright test enforces that as the library grows.
+
+- **Template lengths ship as data** (`@jima/templates/durations`). The gallery needs a length to
+  filter on and cannot build 445 scenes to find one, and only 76 templates carried an
+  `estimateDuration`, so a duration filter built on that would have been wrong for the other 369.
+  The figures now live in one table that the golden suite asserts against the duration the engine
+  really produces — for every template, plus a check that the table covers exactly the library. A
+  template whose timing changes, or a new one that never lands in the table, fails CI instead of
+  quietly filtering wrong.
+
 ### Changed
 
 - **The sound system is rebuilt (ADR-012a).** The owner's report was that the sounds didn't fit the

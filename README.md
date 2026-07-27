@@ -38,7 +38,10 @@ leaves the device · fast is a feature · true light-mode, modern-SaaS design in
 
 1. **Open the link** in a modern browser — Chrome, Edge, Safari or Firefox — on desktop or phone.
    Nothing to install, no sign-up, no email. It just opens.
-2. **Click "Open the Studio"** and pick a template from the gallery.
+2. **Click "Open the Studio"** and pick a template from the gallery. With 445 to choose from, the
+   filter chips narrow it fast — by length, by shape (vertical, square, widescreen), or by what a
+   template takes (a photo, a list, a transparent background). Star the ones you like and they
+   come back under **Favourites**, saved in your browser.
 3. **Type your words** into the form on the right, and drop in an image if the template uses one.
    In the **Style** tab, pick a palette or set the background/text/object colors individually, and
    choose a **font** for the headline; nudge the speed in **Motion**. The preview updates live.

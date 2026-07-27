@@ -296,6 +296,14 @@ yield to UI every N frames → progress = frame/total, cancelable
 - **Autosave:** debounced 500 ms → localStorage (JSON state, schema-versioned `jima.v1.*`) +
   IndexedDB for image blobs; restore prompt on return ("Continue where you left off?"). Reset per
   template. Clear-all in footer ("Your data lives only in this browser").
+- **Favourites:** `jima.favourites` in localStorage — a plain id array behind a module-level
+  subscriber set (`studio/state/favourites.ts`), so cards and the chip count stay in sync without
+  lifting the state through the whole gallery. Never blocking: a write that fails (quota, private
+  mode) is swallowed.
+- **Library facets:** `studio/gallery/facets.ts` derives every filter from the `TemplateDefinition`;
+  lengths come from `@jima/templates/durations`, a table the golden suite asserts against the real
+  built duration for all 445 templates (plus a completeness check), so the gallery can filter on
+  length without building a scene and the table cannot silently go stale.
 - **Preview player:** rAF loop sets `t`; play/pause/scrub/loop; pauses when tab hidden; respects
   `prefers-reduced-motion` (autoplay off, manual play always allowed).
 - **Gallery previews:** poster frames rendered on mount (cheap, single frame at `posterTime`);

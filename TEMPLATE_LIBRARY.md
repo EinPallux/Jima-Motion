@@ -369,6 +369,8 @@ drop (v1 must still total ≥ 10 — P0 count is 10).
 - [ ] 60 fps preview on reference laptop; export at 1080p produces no dropped/duplicated frames
 - [ ] All 4 palettes verified for contrast (text ≥ 4.5:1 against its background in end frame)
 - [ ] GIF export ≤ 8 MB at default settings (480p/12.5fps GIF profile) — see export profiles
+- [ ] Entered in `packages/templates/src/durations.ts` with the length the runner actually reports
+      (the gallery's length filters read it; the golden suite fails if it is missing or wrong)
 
 ## 6. Post-v1 template backlog (not in scope now; parked ideas)
 

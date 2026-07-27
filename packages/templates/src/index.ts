@@ -969,3 +969,8 @@ export const templates: TemplateDefinition[] = [
 export function getTemplate(id: string): TemplateDefinition | undefined {
   return templates.find((t) => t.id === id);
 }
+
+// Length at default values, as data — the gallery filters on it without paying
+// to build 445 scenes. Also importable as "@jima/templates/durations" by tools
+// that want the numbers without pulling in Pixi and the whole library.
+export { TEMPLATE_DURATIONS, templateDuration } from "./durations";

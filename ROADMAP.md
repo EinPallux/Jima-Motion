@@ -290,5 +290,11 @@ rendering, AI credits, dark mode.
 | +5 clean/modern/smooth templates for every gallery section | ✅ 2026-07-25 — **v1.18.0**, library 399 → 444 |
 | Flight-mode Control Center travel intro (owner request) | ✅ 2026-07-25 — **v1.18.1**, library 444 → 445 |
 | Official logo + 3 fonts (Parkinsans/Jakarta/Inter) + body-font picker + 18 theme presets + brand kit | ✅ 2026-07-25 — **v1.17.0** |
+| Landing: edge-faded full-bleed sections, 15-template animated hero carousel, Voice Note editor mockup | ✅ 2026-07-27 |
+| Sound system rebuilt (motion-matched cues, profiles, transient+body voices, room, limiter) | ✅ 2026-07-27 |
+| Motion blur on export · squash & stretch · Energy slider · trim & hold | ✅ 2026-07-27 |
+| Procedural music bed + cue-driven auto-ducking | ✅ 2026-07-27 |
+| Emoji (platform fonts + shipped Noto Emoji fallback) + emoji picker | ✅ 2026-07-27 |
+| Library: favourites (localStorage) + 9 definition-derived filter facets + shipped duration table | ✅ 2026-07-27 |
 
 *(Update this table + CHANGELOG.md at every phase transition.)*

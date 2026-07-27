@@ -156,8 +156,15 @@ No SEO work — no sitemap, JSON-LD, or programmatic pages (ADR-011, personal de
   row of **use-case group chips with live counts** (All · Text & titles · Overlays & lower-thirds ·
   Social · Product & ads · Showcase · Explainers & data · Brand & quotes · Openers & backgrounds ·
   Events & travel) + a result count — filtering **one uniform grid** (no stacked sections).
+- Below the title, a row of **facet chips** in four groups — Favourites · length (Under 4s ·
+  Over 4.5s) · shape (Vertical · Square/4:5 · Widescreen) · content (Takes a photo · Takes a list ·
+  Alpha-safe · Lots to tweak). They intersect with each other, with the group rail and with the
+  search box. Each carries the count it *would* leave (computed against the other active filters);
+  a chip that would empty the grid is disabled rather than a dead end. Every facet is derived from
+  the template definition, so the filters cannot drift from the library.
 - Card: a **uniform 16:9 poster** (engine-rendered at `posterTime`, lazy via IntersectionObserver),
-  name, tagline, category chip. **Hover/focus plays the default animation live** (a short-lived
+  name, tagline, category chip, and a **favourite star** (top-left; visible on hover, always on
+  touch, `localStorage` only). **Hover/focus plays the default animation live** (a short-lived
   `LivePreview` runner — at most one live WebGL context at a time; `prefers-reduced-motion` → static
   poster). Click → editor.
 - If a saved project exists: top banner "Continue where you left off — *Kinetic Headline*, edited
